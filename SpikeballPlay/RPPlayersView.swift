@@ -1,0 +1,72 @@
+//
+//  RandomPlayPlayersView.swift
+//  SpikeballPlay
+//
+//  Created by Jordan Davis on 8/2/17.
+//  Copyright © 2017 HoverSlam. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+class RPPlayersView : UIViewController, UIPickerViewDelegate,
+UIPickerViewDataSource {
+    
+    var numOfPlayersSelected: Int = 0
+    var pickerData: [Int] = [Int]()
+    var controller: RPController = RPController()
+    @IBOutlet weak var playerNumberPicker: UIPickerView!
+    @IBOutlet weak var playerTextFieldStack: UIStackView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        playerNumberPicker.delegate = self
+        playerNumberPicker.dataSource = self
+        
+        pickerData = [1, 2, 3, 4, 5, 6]
+    }
+    
+    //MARK: - Player Picker Data
+    
+    @available(iOS 2.0, *)
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerData.count
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    internal func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return String(pickerData[row])
+    }
+    
+    // Catpure the picker view selection
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        // This method is triggered whenever the user makes a change to the picker selection.
+        // The parameter named row and component represents what was selected.
+        numOfPlayersSelected = row + 1
+        updatePlayerTextFields();
+    }
+    
+    func updatePlayerTextFields() {
+        for i in 1...self.numOfPlayersSelected {
+            let textField = UITextField()
+            textField.placeholder = String(i) + ". Player Name"
+            textField.frame = CGRect(x: 0, y: 55 * i, width: 335, height: 50)
+            textField.borderStyle = UITextBorderStyle.roundedRect
+            textField.tag = i
+            playerTextFieldStack.addSubview(textField)
+        }
+    }
+    
+    //MARK: - Submit Button processing
+    
+    @IBAction func submitButtonClicked(_ sender: UIButton) {
+        for field in playerTextFieldStack.subviews as! [UITextField] {
+            let player = RandomPlayer(id: field.tag, name: field.text!)
+            controller.addPlayer(player: player)
+        }
+    }
+}
