@@ -82,20 +82,62 @@ public class RPNewGameView : UIViewController,
     
     //MARK: Submit logic
     @IBAction func submitButtonClicked(_ sender: UIButton) {
-        // check that all fields are correct
-        // send ids/names and scores to match controller for point assignment
+        // save ids/names and scores to match controller for point assignment
         let playerOne = pickerDataSource[playerOnePicker.selectedRow(inComponent: 0)]
         let playerTwo = pickerDataSource[playerTwoPicker.selectedRow(inComponent: 0)]
         
         let playerThree = pickerDataSource[playerThreePicker.selectedRow(inComponent: 0)]
         let playerFour = pickerDataSource[playerFourPicker.selectedRow(inComponent: 0)]
         
-        let gameController: RPGameController = RPGameController()
-        gameController.submitMatch(playerOne: playerOne, playerTwo: playerTwo,
-                                   playerThree: playerThree, playerFour: playerFour,
-                                   teamOneScore: Int(teamOneScoreSlider.value),
-                                   teamTwoScore: Int(teamTwoScoreSlider.value))
-
-
+        let teamOneScore = Int(teamOneScoreLabel.text!)
+        let teamTwoScore = Int(teamTwoScoreLabel.text!)
+        
+        // check that all fields are correct
+        
+        // score isn't the same and ahead by atleast 2
+        if teamOneScore != teamTwoScore {
+            // difference of atleast one, all set.
+        } else {
+            //scores match
+            let alert = UIAlertController(title: "Score Error",
+                                          message: "Scores cannot match",
+                preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                return
+            }))
+            
+            present(alert, animated: true, completion: nil)
+        }
+        
+        // no players match
+        
+        
+        // confirm game
+        let alert = UIAlertController(title: "Submit Game",
+                                      message: "\(playerOne.name)/\(playerTwo.name) : \(teamOneScore!) \n VS. \n\(playerThree.name)/\(playerFour.name) : \(teamTwoScore!)  ",
+                                        preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+            // move on
+            let gameController: RPGameController = RPGameController()
+            gameController.submitMatch(playerOne: playerOne, playerTwo: playerTwo,
+                                       playerThree: playerThree, playerFour: playerFour,
+                                       teamOneScore: teamOneScore!,
+                                       teamTwoScore: teamTwoScore!)
+            // clear all values
+            self.resetViewValues()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+            // cancel
+            return
+        }))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func resetViewValues() {
+        // reset everything back to normal
     }
 }

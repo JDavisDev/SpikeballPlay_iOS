@@ -8,9 +8,14 @@
 
 import Foundation
 
-class RandomPlayer {
-    var id: Int
-    var name: String
+public class RandomPlayer {
+    public var id: Int
+    public var name: String
+    public var wins: Int = 0
+    public var losses: Int = 0
+    public var pointsFor: Int = 0
+    public var pointsAgainst: Int = 0
+    public var rating: Int = 0
     
     init(id: Int, name: String) {
         self.id = id

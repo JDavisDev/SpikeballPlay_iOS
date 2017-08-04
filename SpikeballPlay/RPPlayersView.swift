@@ -12,7 +12,7 @@ import UIKit
 class RPPlayersView : UIViewController, UIPickerViewDelegate,
 UIPickerViewDataSource {
     
-    var numOfPlayersSelected: Int = 0
+    var numOfPlayersSelected: Int = 4
     var pickerData: [Int] = [Int]()
     var controller: RPController = RPController()
     @IBOutlet weak var playerNumberPicker: UIPickerView!
@@ -24,7 +24,7 @@ UIPickerViewDataSource {
         playerNumberPicker.delegate = self
         playerNumberPicker.dataSource = self
         
-        pickerData = [1, 2, 3, 4, 5, 6]
+        pickerData = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     }
     
     //MARK: - Player Picker Data
@@ -46,11 +46,17 @@ UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         // This method is triggered whenever the user makes a change to the picker selection.
         // The parameter named row and component represents what was selected.
-        numOfPlayersSelected = row + 1
+        numOfPlayersSelected = row + 4
         updatePlayerTextFields();
     }
     
     func updatePlayerTextFields() {
+        // clear values first
+        for i in self.playerTextFieldStack.subviews {
+            i.removeFromSuperview()
+        }
+        
+        // re add views
         for i in 1...self.numOfPlayersSelected {
             let textField = UITextField()
             textField.placeholder = String(i) + ". Player Name"

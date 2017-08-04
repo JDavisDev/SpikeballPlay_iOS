@@ -23,8 +23,22 @@ class RPGameController {
                                  teamOneScore: teamOneScore, teamTwoScore: teamTwoScore)
         
         // store game in controller
+        RPController.addGame(game: newGame)
         
         // parse game for score accumulation
+        parseGameForStats(game: newGame)
+    }
+    
+    func parseGameForStats(game: RandomGame) {
+        if game.teamOneScore > game.teamTwoScore {
+            // teamOne won
+            game.playerOne.wins += 1
+            game.playerTwo.wins += 1
+            game.playerThree.losses += 1
+            game.playerFour.losses += 1
+        } else {
+            // teamTwo won
+        }
     }
     
 }

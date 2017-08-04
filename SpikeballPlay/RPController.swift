@@ -12,6 +12,7 @@ import Foundation
 class RPController {
     
     static var playersList = [RandomPlayer]()
+    static var gameList = [RandomGame]()
     
     public func addPlayer(player: RandomPlayer) {
         RPController.playersList.append(player)
@@ -25,5 +26,9 @@ class RPController {
         }
         
         return RandomPlayer(id: 0, name: "nil")
+    }
+    
+    static func addGame(game: RandomGame) {
+        RPController.gameList.append(game)
     }
 }
