@@ -10,13 +10,14 @@ import Foundation
 import UIKit
 
 class RPPlayersView : UIViewController, UIPickerViewDelegate,
-UIPickerViewDataSource {
+UIPickerViewDataSource, UITextFieldDelegate {
     
     var numOfPlayersSelected: Int = 4
     var pickerData: [Int] = [Int]()
     var controller: RPController = RPController()
     @IBOutlet weak var playerNumberPicker: UIPickerView!
     @IBOutlet weak var playerTextFieldStack: UIStackView!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,11 @@ UIPickerViewDataSource {
         playerNumberPicker.dataSource = self
         
         pickerData = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        
+        // call this method so we don't start with null num of players
+        numOfPlayersSelected = RPController.playersList.count >= 4 ?
+                               RPController.playersList.count : 4
+        updatePlayerTextFields()
     }
     
     //MARK: - Player Picker Data
@@ -47,7 +53,7 @@ UIPickerViewDataSource {
         // This method is triggered whenever the user makes a change to the picker selection.
         // The parameter named row and component represents what was selected.
         numOfPlayersSelected = row + 4
-        updatePlayerTextFields();
+        updatePlayerTextFields()
     }
     
     func updatePlayerTextFields() {
@@ -63,16 +69,27 @@ UIPickerViewDataSource {
             textField.frame = CGRect(x: 0, y: 55 * i, width: 335, height: 50)
             textField.borderStyle = UITextBorderStyle.roundedRect
             textField.tag = i
+            textField.delegate = self
             playerTextFieldStack.addSubview(textField)
         }
+    }
+    
+    // on return press, keyboard hides
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
     
     //MARK: - Submit Button processing
     
     @IBAction func submitButtonClicked(_ sender: UIButton) {
+        RPController.playersList.removeAll()
         for field in playerTextFieldStack.subviews as! [UITextField] {
             let player = RandomPlayer(id: field.tag, name: field.text!)
             controller.addPlayer(player: player)
         }
+        
+        // move to next page!
+        self.tabBarController?.selectedIndex = 1
     }
 }

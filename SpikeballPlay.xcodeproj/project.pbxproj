@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		47E9323A1F3508FA00145E28 /* RPStatisticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932391F3508FA00145E28 /* RPStatisticsController.swift */; };
+		47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E9323B1F35090900145E28 /* RPHistoryController.swift */; };
+		47E932401F35405600145E28 /* RulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E9323F1F35405600145E28 /* RulesWebView.swift */; };
+		47E932421F356A0800145E28 /* RPRandomizingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932411F356A0800145E28 /* RPRandomizingController.swift */; };
 		47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7E21F32814900C88DEA /* AppDelegate.swift */; };
 		47F9F7E51F32814900C88DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7E41F32814900C88DEA /* MainViewController.swift */; };
 		47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7E61F32814900C88DEA /* Main.storyboard */; };
@@ -20,6 +24,8 @@
 		47F9F8101F33B51400C88DEA /* RPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F80F1F33B51400C88DEA /* RPController.swift */; };
 		47F9F8121F33E08400C88DEA /* RPNewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8111F33E08400C88DEA /* RPNewGameView.swift */; };
 		47F9F8141F3414E000C88DEA /* RPGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8131F3414E000C88DEA /* RPGameController.swift */; };
+		47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */; };
+		47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8171F34B18800C88DEA /* RPHistoryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		47E932391F3508FA00145E28 /* RPStatisticsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPStatisticsController.swift; sourceTree = "<group>"; };
+		47E9323B1F35090900145E28 /* RPHistoryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryController.swift; sourceTree = "<group>"; };
+		47E9323F1F35405600145E28 /* RulesWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RulesWebView.swift; sourceTree = "<group>"; };
+		47E932411F356A0800145E28 /* RPRandomizingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPRandomizingController.swift; sourceTree = "<group>"; };
 		47F9F7DF1F32814900C88DEA /* SpikeballPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpikeballPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F9F7E21F32814900C88DEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47F9F7E41F32814900C88DEA /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +60,8 @@
 		47F9F80F1F33B51400C88DEA /* RPController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPController.swift; sourceTree = "<group>"; };
 		47F9F8111F33E08400C88DEA /* RPNewGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPNewGameView.swift; sourceTree = "<group>"; };
 		47F9F8131F3414E000C88DEA /* RPGameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPGameController.swift; sourceTree = "<group>"; };
+		47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPStatisticsView.swift; sourceTree = "<group>"; };
+		47F9F8171F34B18800C88DEA /* RPHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +82,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		47E9323D1F350B2F00145E28 /* Rules */ = {
+			isa = PBXGroup;
+			children = (
+				47E9323E1F35404100145E28 /* Views */,
+			);
+			name = Rules;
+			sourceTree = "<group>";
+		};
+		47E9323E1F35404100145E28 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				47E9323F1F35405600145E28 /* RulesWebView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		47F9F7D61F32814900C88DEA = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +119,7 @@
 		47F9F7E11F32814900C88DEA /* SpikeballPlay */ = {
 			isa = PBXGroup;
 			children = (
+				47E9323D1F350B2F00145E28 /* Rules */,
 				47F9F8031F32D50C00C88DEA /* Tournaments */,
 				47F9F8021F32D4FA00C88DEA /* Random Play */,
 				47F9F7E21F32814900C88DEA /* AppDelegate.swift */,
@@ -144,6 +173,9 @@
 			children = (
 				47F9F80F1F33B51400C88DEA /* RPController.swift */,
 				47F9F8131F3414E000C88DEA /* RPGameController.swift */,
+				47E932391F3508FA00145E28 /* RPStatisticsController.swift */,
+				47E9323B1F35090900145E28 /* RPHistoryController.swift */,
+				47E932411F356A0800145E28 /* RPRandomizingController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -153,6 +185,8 @@
 			children = (
 				47F9F80B1F32DD0400C88DEA /* RPPlayersView.swift */,
 				47F9F8111F33E08400C88DEA /* RPNewGameView.swift */,
+				47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */,
+				47F9F8171F34B18800C88DEA /* RPHistoryView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -207,6 +241,7 @@
 				TargetAttributes = {
 					47F9F7DE1F32814900C88DEA = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = BDZ5E2UH8N;
 						ProvisioningStyle = Automatic;
 					};
 					47F9F7F21F32814900C88DEA = {
@@ -263,12 +298,18 @@
 				47F9F8141F3414E000C88DEA /* RPGameController.swift in Sources */,
 				47F9F80E1F33B4A400C88DEA /* RandomGame.swift in Sources */,
 				47F9F80C1F32DD0400C88DEA /* RPPlayersView.swift in Sources */,
+				47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */,
+				47E9323A1F3508FA00145E28 /* RPStatisticsController.swift in Sources */,
+				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
+				47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */,
 				47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */,
 				47F9F80A1F32D8ED00C88DEA /* RandomPlaySession.swift in Sources */,
 				47F9F7E51F32814900C88DEA /* MainViewController.swift in Sources */,
 				47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */,
 				47F9F8101F33B51400C88DEA /* RPController.swift in Sources */,
+				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
 				47F9F8121F33E08400C88DEA /* RPNewGameView.swift in Sources */,
+				47E932421F356A0800145E28 /* RPRandomizingController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +450,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = BDZ5E2UH8N;
 				INFOPLIST_FILE = SpikeballPlay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.SpikeballPlay;
@@ -421,6 +463,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = BDZ5E2UH8N;
 				INFOPLIST_FILE = SpikeballPlay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.SpikeballPlay;
