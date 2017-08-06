@@ -11,6 +11,8 @@
 		47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E9323B1F35090900145E28 /* RPHistoryController.swift */; };
 		47E932401F35405600145E28 /* RulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E9323F1F35405600145E28 /* RulesWebView.swift */; };
 		47E932421F356A0800145E28 /* RPRandomizingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932411F356A0800145E28 /* RPRandomizingController.swift */; };
+		47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932431F36C29C00145E28 /* StatisticCell.swift */; };
+		47E932481F36C9D900145E28 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932471F36C9D900145E28 /* Statistics.swift */; };
 		47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7E21F32814900C88DEA /* AppDelegate.swift */; };
 		47F9F7E51F32814900C88DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7E41F32814900C88DEA /* MainViewController.swift */; };
 		47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7E61F32814900C88DEA /* Main.storyboard */; };
@@ -43,6 +45,8 @@
 		47E9323B1F35090900145E28 /* RPHistoryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryController.swift; sourceTree = "<group>"; };
 		47E9323F1F35405600145E28 /* RulesWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RulesWebView.swift; sourceTree = "<group>"; };
 		47E932411F356A0800145E28 /* RPRandomizingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPRandomizingController.swift; sourceTree = "<group>"; };
+		47E932431F36C29C00145E28 /* StatisticCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
+		47E932471F36C9D900145E28 /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		47F9F7DF1F32814900C88DEA /* SpikeballPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpikeballPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F9F7E21F32814900C88DEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47F9F7E41F32814900C88DEA /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -164,6 +168,8 @@
 				47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */,
 				47F9F8091F32D8ED00C88DEA /* RandomPlaySession.swift */,
 				47F9F80D1F33B4A400C88DEA /* RandomGame.swift */,
+				47E932431F36C29C00145E28 /* StatisticCell.swift */,
+				47E932471F36C9D900145E28 /* Statistics.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -301,8 +307,10 @@
 				47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */,
 				47E9323A1F3508FA00145E28 /* RPStatisticsController.swift in Sources */,
 				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
+				47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */,
 				47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */,
 				47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */,
+				47E932481F36C9D900145E28 /* Statistics.swift in Sources */,
 				47F9F80A1F32D8ED00C88DEA /* RandomPlaySession.swift in Sources */,
 				47F9F7E51F32814900C88DEA /* MainViewController.swift in Sources */,
 				47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */,

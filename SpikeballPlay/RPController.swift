@@ -32,6 +32,17 @@ class RPController {
         RPController.gameList.append(game)
     }
     
+    // Deletes a player from list
+    public func deletePlayer(playerName: String) {
+        if RPController.playersList.count > 0 {
+            // finds player by name, and uses their ID to fetch their index for list deletion
+            RPController.playersList.remove(at: RPController.getPlayerByName(
+            name: playerName.trimmingCharacters(in: .whitespacesAndNewlines)).id - 1)
+        } else {
+            RPController.playersList.removeAll()
+        }
+    }
+    
     public func getFourRandomPlayers() -> [Int] {
         // return four integers for the positions
         // since I'm not using 0 as an id, I can send back player id
@@ -52,4 +63,5 @@ class RPController {
         
         return true
     }
+
 }

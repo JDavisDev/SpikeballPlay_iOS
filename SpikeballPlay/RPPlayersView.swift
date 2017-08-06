@@ -9,50 +9,17 @@
 import Foundation
 import UIKit
 
-class RPPlayersView : UIViewController, UIPickerViewDelegate,
-UIPickerViewDataSource, UITextFieldDelegate {
+class RPPlayersView : UIViewController, UITextFieldDelegate {
     
-    var numOfPlayersSelected: Int = 4
-    var pickerData: [Int] = [Int]()
+    var numOfPlayersSelected: Int = 0
     var controller: RPController = RPController()
-    @IBOutlet weak var playerNumberPicker: UIPickerView!
     @IBOutlet weak var playerTextFieldStack: UIStackView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var newPlayerTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        playerNumberPicker.delegate = self
-        playerNumberPicker.dataSource = self
-        
-        pickerData = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        
-        // call this method so we don't start with null num of players
-        numOfPlayersSelected = RPController.playersList.count >= 4 ?
-                               RPController.playersList.count : 4
-        updatePlayerTextFields()
-    }
-    
-    //MARK: - Player Picker Data
-    
-    @available(iOS 2.0, *)
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerData.count
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    internal func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return String(pickerData[row])
-    }
-    
-    // Catpure the picker view selection
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        // This method is triggered whenever the user makes a change to the picker selection.
-        // The parameter named row and component represents what was selected.
-        numOfPlayersSelected = row + 4
         updatePlayerTextFields()
     }
     
@@ -62,16 +29,49 @@ UIPickerViewDataSource, UITextFieldDelegate {
             i.removeFromSuperview()
         }
         
-        // re add views
-        for i in 1...self.numOfPlayersSelected {
-            let textField = UITextField()
-            textField.placeholder = String(i) + ". Player Name"
-            textField.frame = CGRect(x: 0, y: 55 * i, width: 335, height: 50)
-            textField.borderStyle = UITextBorderStyle.roundedRect
-            textField.tag = i
-            textField.delegate = self
-            playerTextFieldStack.addSubview(textField)
+        if RPController.playersList.count == 0 {
+            return
         }
+        
+        // re add views
+        for i in 0...RPController.playersList.count - 1 {
+            let button = UIButton()
+            button.setTitle(" " + RPController.playersList[i].name, for: .normal)
+            button.frame = CGRect(x: 0, y: 55 * i + 1, width: 335, height: 50)
+            button.tag = i + 1
+            button.contentHorizontalAlignment = .left
+            button.backgroundColor = UIColor.darkGray
+            button.setTitleColor(UIColor.white, for: .normal)
+            button.addTarget(self, action: #selector(RPPlayersView.playerButtonClicked(_:)), for: .touchUpInside)
+            // see if player for this index already exists
+            // so users can add players without clearing their stats
+            playerTextFieldStack.addSubview(button)
+        }
+        
+        updatePlayerIds()
+    }
+    
+    func playerButtonClicked(_ sender: UIButton!) {
+        // prompt for deletion with dialog!
+        // Delete player confirmation
+        // maybe add delete all button? 
+        let alert = UIAlertController(title: "Delete Player",
+                                      message: "Do you want to delete\(sender.titleLabel?.text ?? "this player")?",
+            preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (action: UIAlertAction!) in
+            // delete!
+            self.controller.deletePlayer(playerName: (sender.titleLabel?.text)!)
+            self.updatePlayerTextFields()
+        }))
+        
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
+            // cancel
+            self.updatePlayerTextFields()
+            return
+        }))
+        
+        present(alert, animated: true, completion: nil)
     }
     
     // on return press, keyboard hides
@@ -80,16 +80,26 @@ UIPickerViewDataSource, UITextFieldDelegate {
         return false
     }
     
-    //MARK: - Submit Button processing
+    //MARK: - Add Player Button processing
     
-    @IBAction func submitButtonClicked(_ sender: UIButton) {
-        RPController.playersList.removeAll()
-        for field in playerTextFieldStack.subviews as! [UITextField] {
-            let player = RandomPlayer(id: field.tag, name: field.text!)
-            controller.addPlayer(player: player)
-        }
+    @IBAction func addPlayerButtonClicked(_ sender: UIButton) {
+        // if text field is empty, use the player index as their name
+        let name = (newPlayerTextField.text?.isEmpty)! ? String(RPController.playersList.count + 1) : newPlayerTextField.text
+        let player = RandomPlayer(id: RPController.playersList.count + 1,
+                                  name: name!)
+        controller.addPlayer(player: player)
+        newPlayerTextField.text = ""
         
-        // move to next page!
-        self.tabBarController?.selectedIndex = 1
+        updatePlayerTextFields()
+    }
+    
+    // in case of deletions and weird additions
+    // make sure we have linear, updated ids
+    func updatePlayerIds() {
+        var id = 1
+        for player in RPController.playersList {
+            player.id = id
+            id += 1
+        }
     }
 }
