@@ -26,7 +26,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         statsTable.reloadData()
     }
     
-    
+    // wipe them away and start fresh to stay up to date.
     func initStats() {
         stats.removeAll()
         for player in RPController.playersList {
