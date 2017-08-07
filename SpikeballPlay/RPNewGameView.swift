@@ -85,11 +85,10 @@ public class RPNewGameView : UIViewController,
         return String(row == 0 ? "Select Player" : pickerDataSource[row - 1].name)
     }
     
-    // Catpure the picker view selection
-    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        // This method is triggered whenever the user makes a change to the picker selection.
-        // The parameter named row and component represents what was selected.
-
+    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let titleData = String(row == 0 ? "Select Player" : pickerDataSource[row - 1].name)
+        let myTitle = NSAttributedString(string: titleData!, attributes: [NSForegroundColorAttributeName: UIColor.white])
+        return myTitle
     }
     
     //MARK: Submit logic
@@ -226,13 +225,15 @@ public class RPNewGameView : UIViewController,
     }
     
     @IBAction func gameRandomize() {
-        let controller = RPController()
-        let playerArray = controller.getFourRandomPlayers()
+        if(RPController.playersList.count >= 4) {
+            let controller = RPController()
+            let playerArray = controller.getFourRandomPlayers()
         
-        playerOnePicker.selectRow(playerArray[0], inComponent: 0, animated: true)
-        playerTwoPicker.selectRow(playerArray[1], inComponent: 0, animated: true)
-        playerThreePicker.selectRow(playerArray[2], inComponent: 0, animated: true)
-        playerFourPicker.selectRow(playerArray[3], inComponent: 0, animated: true)
+            playerOnePicker.selectRow(playerArray[0], inComponent: 0, animated: true)
+            playerTwoPicker.selectRow(playerArray[1], inComponent: 0, animated: true)
+            playerThreePicker.selectRow(playerArray[2], inComponent: 0, animated: true)
+            playerFourPicker.selectRow(playerArray[3], inComponent: 0, animated: true)
+        }
     }
     
     func getRandomPlayerIndex() -> Int {

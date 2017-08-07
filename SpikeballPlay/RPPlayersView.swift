@@ -59,7 +59,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
                                       message: "Do you want to delete\(sender.titleLabel?.text ?? "this player")?",
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (action: UIAlertAction!) in
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
             self.controller.deletePlayer(playerName: (sender.titleLabel?.text)!)
             self.updatePlayerTextFields()
