@@ -13,25 +13,25 @@ class RPStatisticsController {
     //MARK: Sort statistics page
     public func sort(sortMethod: String) {
         switch sortMethod {
-            case "Sort By Wins":
+            case "Wins":
                 RPController.playersList = RPController.playersList.sorted(by: winsSorter)
             break
-            case "Sort By Losses":
+            case "Losses":
                 RPController.playersList = RPController.playersList.sorted(by: lossSorter)
             break
-            case "Sort By Points For":
+            case "Points For":
             RPController.playersList = RPController.playersList.sorted(by: pointsForSorter)
             break
-            case "Sort By Points Against":
+            case "Points Against":
             RPController.playersList = RPController.playersList.sorted(by: pointsAgainstSorter)
             break
-            case "Sort By Point Differential":
+            case "Point Differential":
             RPController.playersList = RPController.playersList.sorted(by: pointDifferentialSorter)
             break
-            case "Sort By Name":
+            case "Name":
             RPController.playersList = RPController.playersList.sorted(by: nameSorter)
             break
-            case "Sort By Rating":
+            case "Rating":
             RPController.playersList = RPController.playersList.sorted(by: ratingSorter)
             break
             default:
@@ -64,6 +64,6 @@ class RPStatisticsController {
     }
     
     func nameSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.wins > that.wins
+        return this.name > that.name
     }
 }

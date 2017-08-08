@@ -37,13 +37,13 @@ UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func initpickerData() {
-        pickerDataSource.append("Sort By Wins")
-        pickerDataSource.append("Sort By Losses")
-        pickerDataSource.append("Sort By Name")
-        pickerDataSource.append("Sort By Points For")
-        pickerDataSource.append("Sort By Points Against")
-        pickerDataSource.append("Sort By Point Differential")
-        pickerDataSource.append("Sort By Rank")
+        pickerDataSource.append("Wins")
+        pickerDataSource.append("Losses")
+        pickerDataSource.append("Name")
+        pickerDataSource.append("Points For")
+        pickerDataSource.append("Points Against")
+        pickerDataSource.append("Point Differential")
+        pickerDataSource.append("Rank")
     }
     
     // wipe them away and start fresh to stay up to date.

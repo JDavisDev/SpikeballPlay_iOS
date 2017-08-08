@@ -39,7 +39,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
             button.setTitle(" " + RPController.playersList[i].name, for: .normal)
             button.frame = CGRect(x: 0, y: 55 * i + 1, width: 335, height: 50)
             button.tag = i + 1
-            button.contentHorizontalAlignment = .left
+            button.contentHorizontalAlignment = .center
             button.backgroundColor = UIColor.darkGray
             button.setTitleColor(UIColor.white, for: .normal)
             button.addTarget(self, action: #selector(RPPlayersView.playerButtonClicked(_:)), for: .touchUpInside)
@@ -51,7 +51,9 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         updatePlayerIds()
     }
     
+    // Player item tapped for deletion
     func playerButtonClicked(_ sender: UIButton!) {
+        resignFirstResponder()
         // prompt for deletion with dialog!
         // Delete player confirmation
         // maybe add delete all button? 
@@ -82,6 +84,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     
     //MARK: - Add Player Button processing
     
+    // Add Player Button Clicked
     @IBAction func addPlayerButtonClicked(_ sender: UIButton) {
         // if text field is empty, use the player index as their name
         let name = (newPlayerTextField.text?.isEmpty)! ? String(RPController.playersList.count + 1) : newPlayerTextField.text
@@ -89,7 +92,6 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
                                   name: name!)
         controller.addPlayer(player: player)
         newPlayerTextField.text = ""
-        
         updatePlayerTextFields()
     }
     

@@ -11,10 +11,11 @@ import Foundation
 class RPHistoryController {
     
     func deleteHistoryMatch(game: RandomGame) {
-        RPController.gameList = RPController.gameList.filter { $0 !== game }
         deleteFromPlayerStatistics(game: game)
+        RPController.gameList = RPController.gameList.filter { $0 !== game }
     }
     
+    // remove stats from players if a match is deleted
     func deleteFromPlayerStatistics(game: RandomGame) {
         if game.teamOneScore > game.teamTwoScore {
             // Team one won
@@ -22,22 +23,22 @@ class RPHistoryController {
             game.playerTwo.wins -= 1
             game.playerThree.losses -= 1
             game.playerFour.losses -= 1
-            
-            game.playerOne.pointsFor -= game.teamOneScore
-            game.playerTwo.pointsFor -= game.teamOneScore
-            game.playerThree.pointsAgainst -= game.teamTwoScore
-            game.playerFour.pointsAgainst -= game.teamTwoScore
         } else {
             // Team two won
             game.playerOne.losses -= 1
             game.playerTwo.losses -= 1
             game.playerThree.wins -= 1
             game.playerFour.wins -= 1
-            
-            game.playerOne.pointsAgainst -= game.teamOneScore
-            game.playerTwo.pointsAgainst -= game.teamOneScore
-            game.playerThree.pointsFor -= game.teamTwoScore
-            game.playerFour.pointsFor -= game.teamTwoScore
         }
+        
+        game.playerOne.pointsFor -= game.teamOneScore
+        game.playerTwo.pointsFor -= game.teamOneScore
+        game.playerOne.pointsAgainst -= game.teamTwoScore
+        game.playerTwo.pointsAgainst -= game.teamTwoScore
+        
+        game.playerThree.pointsFor -= game.teamTwoScore
+        game.playerFour.pointsFor -= game.teamTwoScore
+        game.playerThree.pointsAgainst -= game.teamOneScore
+        game.playerFour.pointsAgainst -= game.teamOneScore
     }
 }
