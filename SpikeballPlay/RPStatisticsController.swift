@@ -64,6 +64,6 @@ class RPStatisticsController {
     }
     
     func nameSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.name > that.name
+        return this.name < that.name
     }
 }

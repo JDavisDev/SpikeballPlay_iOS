@@ -9,16 +9,24 @@
 import Foundation
 import UIKit
 
-public class RPNewGameView : UIViewController,
-    UIPickerViewDelegate,
-    UIPickerViewDataSource {
+public class RPNewGameView : UIViewController {
     
-    // Pickers
-    @IBOutlet weak var playerOnePicker: UIPickerView!
-    @IBOutlet weak var playerTwoPicker: UIPickerView!
-    @IBOutlet weak var playerThreePicker: UIPickerView!
-    @IBOutlet weak var playerFourPicker: UIPickerView!
-    @IBOutlet weak var groupIDPicker: UIPickerView!
+    let controller = RPRandomizingController()
+    
+    // keep a reference to the names and update them
+    // as user changes players
+    // use these for randomizing
+    // will help with keeping logic in controller
+    var playerOneName = ""
+    var playerTwoName = ""
+    var playerThreeName = ""
+    var playerFourName = ""
+    
+    // Player Selection buttons
+    @IBOutlet weak var playerOneButton: UIButton!
+    @IBOutlet weak var playerTwoButton: UIButton!
+    @IBOutlet weak var playerThreeButton: UIButton!
+    @IBOutlet weak var playerFourButton: UIButton!
     
     // Labels
     @IBOutlet weak var teamOneScoreLabel: UILabel!
@@ -39,25 +47,53 @@ public class RPNewGameView : UIViewController,
         for player in RPController.playersList {
             pickerDataSource.append(player)
         }
-        
-        // init pickers
-        playerOnePicker.dataSource = self
-        playerOnePicker.delegate = self
-        
-        playerTwoPicker.dataSource = self
-        playerTwoPicker.delegate = self
-        
-        playerThreePicker.dataSource = self
-        playerThreePicker.delegate = self
-        
-        playerFourPicker.dataSource = self
-        playerFourPicker.delegate = self
     }
     
+    // View did Appear
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         viewDidLoad()
     }
+
+    //MARK:  Player Selection Buttons
+    /// Each button calls an action sheet to select a player
+    
+    @IBAction func selectPlayerButtonClicked(_ sender: UIButton) {
+        let actionSheet = UIAlertController(title: "Select Player", message: "", preferredStyle: .actionSheet)
+        for player in RPController.playersList {
+            let action = UIAlertAction(title: "\(player.name)", style: .default) { (action: UIAlertAction) in
+                // we have a selection!
+                // store it
+                sender.setTitle("\(action.title!)", for: .normal)
+                switch sender.accessibilityIdentifier! {
+                    case "PlayerOne":
+                        self.playerOneName = action.title!
+                        break
+                    case "PlayerTwo":
+                        self.playerTwoName = action.title!
+                        break
+                    case "PlayerThree":
+                        self.playerThreeName = action.title!
+                        break
+                    case "PlayerFour":
+                        self.playerFourName = action.title!
+                        break
+                    default:
+                        // nothing
+                        break
+                }
+            }
+    
+            actionSheet.addAction(action)
+        }
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action: UIAlertAction) in
+            // reset this selection to "Select Player One"
+        }
+        actionSheet.addAction(actionCancel)
+        present(actionSheet, animated: true, completion: nil)
+    }
+
     
     //MARK: Sliders and score
     
@@ -68,28 +104,7 @@ public class RPNewGameView : UIViewController,
     @IBAction func teamTwoSliderValueChanged(_ sender: UISlider) {
         teamTwoScoreLabel.text = String(Int(round(sender.value) / 1 * 1))
     }
-
-    //MARK: Picker stuff
     
-    @available(iOS 2.0, *)
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerDataSource.count + 1
-    }
-    
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        // this weird stuff is so the first item in the picker is not a player and will help with randomizing
-        return String(row == 0 ? "Select Player" : pickerDataSource[row - 1].name)
-    }
-    
-    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let titleData = String(row == 0 ? "Select Player" : pickerDataSource[row - 1].name)
-        let myTitle = NSAttributedString(string: titleData!, attributes: [NSForegroundColorAttributeName: UIColor.white])
-        return myTitle
-    }
     
     //MARK: Submit logic
     @IBAction func submitButtonClicked(_ sender: UIButton) {
@@ -128,13 +143,13 @@ public class RPNewGameView : UIViewController,
             
             present(alert, animated: true, completion: nil)
         } else {
-            let playerOne = pickerDataSource[playerOnePicker.selectedRow(inComponent: 0) - 1]
-            let playerTwo = pickerDataSource[playerTwoPicker.selectedRow(inComponent: 0) - 1]
+            let playerOne = RPController.getPlayerByName(name: playerOneName)
+            let playerTwo = RPController.getPlayerByName(name: playerTwoName)
             
-            let playerThree = pickerDataSource[playerThreePicker.selectedRow(inComponent: 0) - 1]
-            let playerFour = pickerDataSource[playerFourPicker.selectedRow(inComponent: 0) - 1]
+            let playerThree = RPController.getPlayerByName(name: playerThreeName)
+            let playerFour = RPController.getPlayerByName(name: playerFourName)
         
-            // confirm game
+//            // confirm game
             let alert = UIAlertController(title: "Submit Game",
                                       message: "\(playerOne.name)/\(playerTwo.name) : \(teamOneScore!) \n VS. \n\(playerThree.name)/\(playerFour.name) : \(teamTwoScore!)  ",
                                         preferredStyle: .alert)
@@ -146,8 +161,6 @@ public class RPNewGameView : UIViewController,
                                        playerThree: playerThree, playerFour: playerFour,
                                        teamOneScore: teamOneScore!,
                                        teamTwoScore: teamTwoScore!)
-                // clear all values
-                self.resetViewValues()
             }))
         
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -162,22 +175,23 @@ public class RPNewGameView : UIViewController,
     // Make sure no picker has the 0th value selected on submit
     // 0th value is "Select A Player"
     func allPickersAreValid() -> Bool {
-        if playerOnePicker.selectedRow(inComponent: 0) == 0  ||
-            playerTwoPicker.selectedRow(inComponent: 0) == 0  ||
-            playerThreePicker.selectedRow(inComponent: 0) == 0 ||
-            playerFourPicker.selectedRow(inComponent: 0) == 0 {
-            return false
+        // check if all buttons have a title that is not "Select Player"
+        if playerOneButton.currentTitle != "Select Player" &&
+            playerTwoButton.currentTitle != "Select Player" &&
+            playerThreeButton.currentTitle != "Select Player" &&
+            playerFourButton.currentTitle != "Select Player" {
+            return true
         }
         
-        return true
+        return false
     }
     
     // make sure all pickers are unique
     func allPlayersAreUnique() -> Bool {
-        let one = playerOnePicker.selectedRow(inComponent: 0)
-        let two = playerTwoPicker.selectedRow(inComponent: 0)
-        let three = playerThreePicker.selectedRow(inComponent: 0)
-        let four = playerFourPicker.selectedRow(inComponent: 0)
+        let one = playerOneName
+        let two = playerTwoName
+        let three = playerThreeName
+        let four = playerFourName
         
         if one == two || one == three || one == four ||
             two == three || two == four ||
@@ -189,83 +203,60 @@ public class RPNewGameView : UIViewController,
     }
     
     
-    
-    
     //MARK: Randomize Section
-    
-    
-    
-    
     
     // Randomize Button Clicks
     // While randomly chosen player is NOT unique, 
     // pick a new random player until unique
     @IBAction func playerFourRandomize() {
-        playerFourPicker.selectRow(0, inComponent: 0, animated: false)
-        let index = getRandomPlayerIndex()
-        playerFourPicker.selectRow(index, inComponent: 0, animated: true)
+        let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
+        if index != -1 {
+            playerFourButton.setTitle(RPController.playersList[index].name, for: .normal)
+        }
+        updatePlayerNames()
     }
     
     @IBAction func playerThreeRandomize() {
-        playerThreePicker.selectRow(0, inComponent: 0, animated: false)
-        let index = getRandomPlayerIndex()
-        playerThreePicker.selectRow(index, inComponent: 0, animated: true)
+        let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
+        if index != -1 {
+            playerThreeButton.setTitle(RPController.playersList[index].name, for: .normal)
+        }
+        updatePlayerNames()
     }
     
     @IBAction func playerTwoRandomize() {
-        playerTwoPicker.selectRow(0, inComponent: 0, animated: false)
-        let index = getRandomPlayerIndex()
-        playerTwoPicker.selectRow(index, inComponent: 0, animated: true)
+        let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
+        if index != -1 {
+            playerTwoButton.setTitle(RPController.playersList[index].name, for: .normal)
+        }
+        updatePlayerNames()
     }
     
     @IBAction func playerOneRandomize() {
-        playerOnePicker.selectRow(0, inComponent: 0, animated: false)
-        let index = getRandomPlayerIndex()
-        playerOnePicker.selectRow(index, inComponent: 0, animated: true)
+        let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
+        if index != -1 {
+            playerOneButton.setTitle(RPController.playersList[index].name, for: .normal)
+        }
+        updatePlayerNames()
     }
     
     @IBAction func gameRandomize() {
         if(RPController.playersList.count >= 4) {
-            let controller = RPController()
             let playerArray = controller.getFourRandomPlayers()
-        
-            playerOnePicker.selectRow(playerArray[0], inComponent: 0, animated: true)
-            playerTwoPicker.selectRow(playerArray[1], inComponent: 0, animated: true)
-            playerThreePicker.selectRow(playerArray[2], inComponent: 0, animated: true)
-            playerFourPicker.selectRow(playerArray[3], inComponent: 0, animated: true)
+            
+            playerOneButton.setTitle(RPController.playersList[playerArray[0]].name, for: .normal)
+            playerTwoButton.setTitle(RPController.playersList[playerArray[1]].name, for: .normal)
+            playerThreeButton.setTitle(RPController.playersList[playerArray[2]].name, for: .normal)
+            playerFourButton.setTitle(RPController.playersList[playerArray[3]].name, for: .normal)
+            
+            updatePlayerNames()
         }
     }
     
-    func getRandomPlayerIndex() -> Int {
-        var index = Int(arc4random_uniform(UInt32(RPController.playersList.count + 1)))
-        while !isPlayerSelectedUnique(playerIndex: index) || index == 0 {
-            index = Int(arc4random_uniform(UInt32(RPController.playersList.count + 1)))
-        }
-        
-        return index
-        
+    func updatePlayerNames() {
+        playerOneName = playerOneButton.currentTitle!
+        playerTwoName = playerTwoButton.currentTitle!
+        playerThreeName = playerThreeButton.currentTitle!
+        playerFourName = playerFourButton.currentTitle!
     }
-    
-    func isPlayerSelectedUnique(playerIndex: Int) -> Bool {
-        if  playerIndex == 0 ||
-            playerIndex == playerOnePicker.selectedRow(inComponent: 0) ||
-            playerIndex == playerTwoPicker.selectedRow(inComponent: 0) ||
-            playerIndex == playerThreePicker.selectedRow(inComponent: 0) ||
-            playerIndex == playerFourPicker.selectedRow(inComponent: 0) {
-            return false
-        }
-        
-        return true;
-    }
-    
-    func resetViewValues() {
-        // reset everything back to normal - maybe?
-//        teamOneScoreSlider.setValue(10, animated: true)
-//        teamTwoScoreSlider.setValue(10, animated: true)
-//        
-//        teamOneScoreLabel.text = "10"
-//        teamTwoScoreLabel.text = "10"
-    }
-    
-    
 }

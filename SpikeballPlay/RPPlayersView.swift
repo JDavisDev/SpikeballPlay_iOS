@@ -57,9 +57,10 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         // prompt for deletion with dialog!
         // Delete player confirmation
         // maybe add delete all button? 
+        // ADD EDIT FUNCTION to edit name
         let alert = UIAlertController(title: "Delete Player",
                                       message: "Do you want to delete\(sender.titleLabel?.text ?? "this player")?",
-            preferredStyle: .alert)
+            preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
