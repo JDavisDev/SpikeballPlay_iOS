@@ -20,7 +20,7 @@ class RPController {
     
     static func getPlayerByName(name: String) -> RandomPlayer {
         for player in playersList {
-            if player.name == name {
+            if player.name.trimmingCharacters(in: .whitespaces) == name.trimmingCharacters(in: .whitespaces) {
                 return player
             }
         }

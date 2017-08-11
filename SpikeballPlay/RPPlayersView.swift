@@ -53,14 +53,30 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     
     // Player item tapped for deletion
     func playerButtonClicked(_ sender: UIButton!) {
+        let selectedPlayer = RPController.getPlayerByName(name: sender.currentTitle!)
         resignFirstResponder()
         // prompt for deletion with dialog!
         // Delete player confirmation
         // maybe add delete all button? 
         // ADD EDIT FUNCTION to edit name
-        let alert = UIAlertController(title: "Delete Player",
-                                      message: "Do you want to delete\(sender.titleLabel?.text ?? "this player")?",
-            preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Edit Player",
+                                      message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+            _ = alert.textFields![0] as UITextField
+            let player = RPController.getPlayerByName(name: sender.currentTitle!)
+            let newName = alert.textFields![0].text!
+            player.name = newName
+            self.updatePlayerTextFields()
+        }
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Name"
+            textField.text = selectedPlayer.name
+        }
+        
+        alert.addAction(action)
+
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
@@ -68,7 +84,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
             self.updatePlayerTextFields()
         }))
         
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
             // cancel
             self.updatePlayerTextFields()
             return
@@ -84,7 +100,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     }
     
     //MARK: - Add Player Button processing
-    
+    // CHECK FOR DUPLICATES
     // Add Player Button Clicked
     @IBAction func addPlayerButtonClicked(_ sender: UIButton) {
         // if text field is empty, use the player index as their name

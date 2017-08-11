@@ -23,17 +23,20 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
 
     @IBAction func tournamentButtonClicked(_ sender: UIButton) {
-        let alert = UIAlertController(title: "Coming Soon", message: "Sorry, this is not quite ready yet.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-            // cancel
-            return
-        }))
+        let tournamentsEnabled = true
         
-        present(alert, animated: true, completion: nil)
-    }
-    
-    
-    @IBAction func randomPlayButtonClicked(_ sender: UIButton) {
+        if !tournamentsEnabled {
+            let alert = UIAlertController(title: "Coming Soon", message: "Sorry, this is not quite ready yet.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+                // cancel
+                return
+            }))
+        
+            present(alert, animated: true, completion: nil)
+        } else {
+//            let nextViewController = storyboard?.instantiateViewController(withIdentifier: "tournamentSplitView") as! UISplitViewController
+//            self.present(nextViewController, animated:true, completion:nil)
+        }
     }
     
     // compose email to me!
