@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4720BE201F37E06B006E55C5 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4720BE1F1F37E06B006E55C5 /* History.swift */; };
 		4720BE221F37E11B006E55C5 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4720BE211F37E11B006E55C5 /* HistoryCell.swift */; };
+		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
 		47DE962A1F3E075400F944F0 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96291F3E075400F944F0 /* Tournament.swift */; };
 		47DE962C1F3E075C00F944F0 /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE962B1F3E075C00F944F0 /* Pool.swift */; };
 		47DE962F1F3E07DD00F944F0 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE962E1F3E07DD00F944F0 /* Team.swift */; };
@@ -57,6 +58,7 @@
 /* Begin PBXFileReference section */
 		4720BE1F1F37E06B006E55C5 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		4720BE211F37E11B006E55C5 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
+		473689651F40240700C04FD4 /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Division.swift; sourceTree = "<group>"; };
 		47DE96291F3E075400F944F0 /* Tournament.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
 		47DE962B1F3E075C00F944F0 /* Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		47DE962E1F3E07DD00F944F0 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				47DE962B1F3E075C00F944F0 /* Pool.swift */,
 				47DE962E1F3E07DD00F944F0 /* Team.swift */,
 				47DE96301F3E080300F944F0 /* Bracket.swift */,
+				473689651F40240700C04FD4 /* Division.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */,
 				47DE962F1F3E07DD00F944F0 /* Team.swift in Sources */,
 				47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */,
+				473689661F40240700C04FD4 /* Division.swift in Sources */,
 				47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */,
 				47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */,
 				47DE96351F3E2CB500F944F0 /* TournamentsHomeViewController.swift in Sources */,

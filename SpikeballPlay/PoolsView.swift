@@ -11,7 +11,6 @@ import UIKit
 class PoolsView: UIViewController {
 
     var poolsController = PoolsViewController()
-    @IBOutlet weak var poolsStackView: UIStackView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

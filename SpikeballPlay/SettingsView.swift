@@ -9,27 +9,6 @@
 import UIKit
 
 class SettingsView: UIViewController {
-
-    enum Setting {
-        case Format
-        case PlayersPerPool
-    }
-    enum SettingFormat {
-        case SingleElimination
-        case DoubleElimination
-        case Spikeball
-    }
-    
-    enum SettingPlayersPerPool {
-        case Six
-        case Seven
-        case Eight
-        case Nine
-        case Ten
-    }
-    
-    static var SETTINGS = Dictionary<Setting, String>()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

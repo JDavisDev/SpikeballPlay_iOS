@@ -10,8 +10,16 @@ import Foundation
 
 class Team {
     var name: String
+    var pool: Pool
+    var division: Division
     
-    init(name: String) {
+    init(name: String, pool: Pool) {
         self.name = name
+        self.pool = pool
+        self.division = Division.Advanced
+    }
+    
+    func getPool() -> Pool {
+        return self.pool
     }
 }
