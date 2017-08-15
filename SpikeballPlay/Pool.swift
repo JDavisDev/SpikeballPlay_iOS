@@ -12,8 +12,8 @@ class Pool {
     var name: String
     var teams = [Team]()
     
-    init() {
-        self.name = "Pool"
+    init(name: String) {
+        self.name = "Pool \(name)"
     }
     
     func addTeamToPool(team: Team) {

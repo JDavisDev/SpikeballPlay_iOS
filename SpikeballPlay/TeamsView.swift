@@ -8,8 +8,9 @@
 
 import UIKit
 
-class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
+    
+    @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     var teamsController = TeamsViewController()
     var tableDataSource = [String]()
     @IBOutlet weak var teamNameTextField: UITextField!
@@ -19,6 +20,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate {
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
         initTableDataSource()
+        initGestureRecognizer()
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
@@ -43,6 +45,16 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate {
                 }
             }
         }
+    }
+    
+    func initGestureRecognizer() {
+        longPressRecognizer.delegate = self
+        longPressRecognizer.addTarget(self, action: #selector(self.onLongPress))
+        self.teamsTableView.addGestureRecognizer(longPressRecognizer)
+    }
+    
+    func onLongPress() {
+        teamsTableView.isEditing = true
     }
     
 
@@ -96,8 +108,43 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        // convert int to letter: 1 - A, 2 - B, etc.
-        return "Pool \(section)"
+        //Idk if this does anything but I think I need it here
+        return "Pool"
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
+        header?.textLabel?.text = PoolsViewController.poolsList[section].name
+        return header
+    }
+    
+    // Dragging teams around
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let movedObject = TeamsViewController.teamsList[sourceIndexPath.row]
+        TeamsViewController.teamsList.remove(at: sourceIndexPath.row)
+        TeamsViewController.teamsList.insert(movedObject, at: destinationIndexPath.row)
+        resetPoolTeams()
+        self.teamsTableView.reloadData()
+    }
+    
+    func resetPoolTeams() {
+        // teams were moved around, reset which pool they belong to
+        var poolIndex = 0
+        for index in 1...TeamsViewController.teamsList.count {
+            if index % 8 == 0 {
+                poolIndex += 1
+            }
+            
+            PoolsViewController.poolsList[poolIndex].addTeamToPool(team: TeamsViewController.teamsList[index - 1])
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

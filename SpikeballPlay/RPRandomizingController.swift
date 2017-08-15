@@ -19,17 +19,91 @@ class RPRandomizingController {
         // since I'm not using 0 as an id, I can send back player id
         var returnArray = [Int]()
         
-        // run this looop until return array is full
-        while returnArray.count < 4 {
-            let index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
-            if !returnArray.contains(index) {
-                returnArray.append(index)
+        while !isGameUnique(current: returnArray) {
+            returnArray.removeAll()
+            // run this looop until return array is full
+            while returnArray.count < 4 {
+                let index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
+                if !returnArray.contains(index) {
+                    returnArray.append(index)
+                }
             }
         }
         
         return returnArray
     }
     
+    // check if the game has been reported yet
+    func isGameUnique(current: [Int]) -> Bool {
+        if current.count < 4 { return false }
+        if !isUniqueGamesLeft() { return true } /// all unique games played, so return true to prevent infinite loop
+        
+        for game in RPController.gameList {
+            // try to fail fast
+            if isTeamIdsEqual(current: current, game: game) {
+                if isMatchupsEqual(current: current, game: game) {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    // see if all the unique games have been played
+    func isUniqueGamesLeft() -> Bool {
+        let numGamesPossible = factorial(num: RPController.playersList.count)
+        
+        return RPController.gameList.count >= numGamesPossible
+    }
+    
+    // Calculates the factorial of a number
+    func factorial(num: Int) -> Int {
+        if num == 0 {
+            return 1
+        }
+        var o: Int = 1
+        for i in 1...num {
+            o *= i
+        }
+        return o
+    }
+
+    
+    // check if team ids match, if they don't we know they are unique quicker
+    func isTeamIdsEqual(current: [Int], game: RandomGame) -> Bool {
+       if (current[0] + current[1] + 2   == game.playerOne.id + game.playerTwo.id) &&
+            (current[2] + current[3] + 2 == game.playerThree.id + game.playerFour.id) ||
+            (current[0] + current[1] + 2 == game.playerThree.id + game.playerFour.id) &&
+            (current[2] + current[3] + 2 == game.playerOne.id + game.playerTwo.id) {
+        return true
+       } else {
+        return false
+        }
+
+    }
+    
+    // check if these teams have played with each other and the match up is identical
+    func isMatchupsEqual(current: [Int], game: RandomGame) -> Bool {
+        if (current[0] + 1 == game.playerOne.id && current[1] + 1 == game.playerTwo.id) ||
+            (current[0] + 1 == game.playerTwo.id && current[1] + 1 == game.playerOne.id) {
+            if (current[2] + 1 == game.playerThree.id && current[3] + 1 == game.playerFour.id) ||
+                (current[2] + 1 == game.playerFour.id && current[3] + 1 == game.playerThree.id) {
+                return true
+            }
+        }
+        
+        if (current[2] + 1 == game.playerOne.id && current[3] + 1 == game.playerTwo.id) ||
+            (current[2] + 1 == game.playerTwo.id && current[3] + 1 == game.playerOne.id) {
+            if (current[0] + 1 == game.playerThree.id && current[1] + 1 == game.playerFour.id) ||
+                (current[0] + 1 == game.playerFour.id && current[1] + 1 == game.playerThree.id) {
+                return true
+            }
+        }
+        
+        return false
+    }
+
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
         if RPController.playersList.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&

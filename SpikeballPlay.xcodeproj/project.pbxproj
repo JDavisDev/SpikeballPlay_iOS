@@ -324,7 +324,7 @@
 				TargetAttributes = {
 					47F9F7DE1F32814900C88DEA = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = GH3P2YSF7D;
+						DevelopmentTeam = BDZ5E2UH8N;
 						ProvisioningStyle = Automatic;
 					};
 					47F9F7F21F32814900C88DEA = {
@@ -550,10 +550,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = GH3P2YSF7D;
+				DEVELOPMENT_TEAM = BDZ5E2UH8N;
 				INFOPLIST_FILE = SpikeballPlay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Spikeball.SpikeballPlay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.TwoPlay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -563,10 +563,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = GH3P2YSF7D;
+				DEVELOPMENT_TEAM = BDZ5E2UH8N;
 				INFOPLIST_FILE = SpikeballPlay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Spikeball.SpikeballPlay;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.TwoPlay;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

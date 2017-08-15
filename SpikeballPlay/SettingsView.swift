@@ -11,7 +11,7 @@ import UIKit
 class SettingsView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         // Do any additional setup after loading the view.
     }
 

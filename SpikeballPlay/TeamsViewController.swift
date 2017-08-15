@@ -26,7 +26,9 @@ class TeamsViewController {
         }
         
         // no available pool, create one, append it, and return it
-        let pool = Pool()
+        let poolCount = PoolsViewController.poolsList.count
+        let name = String(format: "%c", poolCount + 65) as String
+        let pool = Pool(name: name)
         PoolsViewController.poolsList.append(pool)
         return pool
     }

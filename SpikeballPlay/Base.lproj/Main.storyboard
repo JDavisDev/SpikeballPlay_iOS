@@ -889,8 +889,8 @@
                                     <action selector="addTeam:" destination="azJ-Pb-lAL" eventType="touchUpInside" id="FJj-FS-yJb"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="76" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="gIv-bm-bwe">
-                                <rect key="frame" x="16" y="127" width="343" height="483"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="76" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="gIv-bm-bwe">
+                                <rect key="frame" x="16" y="132" width="343" height="483"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" red="0.98958333330000003" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -937,13 +937,22 @@
                             <constraint firstItem="5Nf-mu-6jN" firstAttribute="centerY" secondItem="Y6f-xL-5vl" secondAttribute="centerY" id="WQC-hc-lQJ"/>
                             <constraint firstItem="Tkv-kT-iji" firstAttribute="top" secondItem="gIv-bm-bwe" secondAttribute="bottom" constant="8" symbolic="YES" id="XDu-cQ-Okm"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="dXC-FI-VEI" appends="YES" id="BS8-jT-4MK"/>
+                        </connections>
                     </view>
                     <tabBarItem key="tabBarItem" title="Teams" id="Eiq-bJ-hf6"/>
+                    <toolbarItems>
+                        <barButtonItem systemItem="add" id="csn-qI-bl0"/>
+                    </toolbarItems>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="longPressRecognizer" destination="dXC-FI-VEI" id="eez-wM-1Ft"/>
                         <outlet property="teamsTableView" destination="gIv-bm-bwe" id="diW-Zh-XNj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ob2-7J-UmU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="dXC-FI-VEI"/>
             </objects>
             <point key="canvasLocation" x="5572" y="-329.68515742128938"/>
         </scene>
@@ -989,7 +998,7 @@
                                 <rect key="frame" x="16" y="72" width="343" height="538"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="teamCell" textLabel="ohx-Nh-p0C" style="IBUITableViewCellStyleDefault" id="jEV-gP-Fh8">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="poolCell" textLabel="ohx-Nh-p0C" style="IBUITableViewCellStyleDefault" id="jEV-gP-Fh8">
                                         <rect key="frame" x="0.0" y="55.5" width="343" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jEV-gP-Fh8" id="GsU-dp-0st">
@@ -1196,6 +1205,7 @@
         <scene sceneID="V9E-g9-Cpf">
             <objects>
                 <tabBarController title="Pool Play" id="bnv-J0-AhU" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="LbP-Yb-IKw"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" barStyle="black" id="LwX-8X-kYU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1219,9 +1229,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="jbB-yX-6Yi"/>
-        <segue reference="QCO-GB-lYv"/>
         <segue reference="bgE-aY-1Jj"/>
-        <segue reference="VgL-tl-6Rn"/>
+        <segue reference="QCO-GB-lYv"/>
+        <segue reference="Ngl-xp-pfz"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
