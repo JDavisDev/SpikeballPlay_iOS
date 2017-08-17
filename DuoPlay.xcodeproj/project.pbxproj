@@ -77,14 +77,14 @@
 		47E932411F356A0800145E28 /* RPRandomizingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPRandomizingController.swift; sourceTree = "<group>"; };
 		47E932431F36C29C00145E28 /* StatisticCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
 		47E932471F36C9D900145E28 /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
-		47F9F7DF1F32814900C88DEA /* DuoPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuoPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		47F9F7DF1F32814900C88DEA /* Duo Play.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Duo Play.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F9F7E21F32814900C88DEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47F9F7E41F32814900C88DEA /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		47F9F7E71F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		47F9F7E91F32814900C88DEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		47F9F7EC1F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		47F9F7EE1F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		47F9F7F31F32814900C88DEA /* Doubles MatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Doubles MatchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Duo Play Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F9F7F71F32814900C88DEA /* SpikeballPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpikeballPlayTests.swift; sourceTree = "<group>"; };
 		47F9F7F91F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPlayer.swift; sourceTree = "<group>"; };
@@ -187,8 +187,8 @@
 		47F9F7E01F32814900C88DEA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				47F9F7DF1F32814900C88DEA /* DuoPlay.app */,
-				47F9F7F31F32814900C88DEA /* Doubles MatchTests.xctest */,
+				47F9F7DF1F32814900C88DEA /* Duo Play.app */,
+				47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -293,7 +293,7 @@
 			);
 			name = "Doubles Match";
 			productName = SpikeballPlay;
-			productReference = 47F9F7DF1F32814900C88DEA /* DuoPlay.app */;
+			productReference = 47F9F7DF1F32814900C88DEA /* Duo Play.app */;
 			productType = "com.apple.product-type.application";
 		};
 		47F9F7F21F32814900C88DEA /* Doubles MatchTests */ = {
@@ -311,7 +311,7 @@
 			);
 			name = "Doubles MatchTests";
 			productName = SpikeballPlayTests;
-			productReference = 47F9F7F31F32814900C88DEA /* Doubles MatchTests.xctest */;
+			productReference = 47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -557,7 +557,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.JordanDavis.DuoPlay;
 				PRODUCT_MODULE_NAME = DuoPlay;
-				PRODUCT_NAME = DuoPlay;
+				PRODUCT_NAME = "Duo Play";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -571,7 +571,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.JordanDavis.DuoPlay;
 				PRODUCT_MODULE_NAME = DuoPlay;
-				PRODUCT_NAME = DuoPlay;
+				PRODUCT_NAME = "Duo Play";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -583,8 +583,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SpikeballPlayTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.SpikeballPlayTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.DuoPlayTests;
+				PRODUCT_NAME = "Duo Play Tests";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Doubles Match.app/Doubles Match";
 			};
@@ -597,8 +597,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SpikeballPlayTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.SpikeballPlayTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.DuoPlayTests;
+				PRODUCT_NAME = "Duo Play Tests";
 				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Doubles Match.app/Doubles Match";
 			};
