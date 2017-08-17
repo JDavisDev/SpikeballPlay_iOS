@@ -77,14 +77,14 @@
 		47E932411F356A0800145E28 /* RPRandomizingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPRandomizingController.swift; sourceTree = "<group>"; };
 		47E932431F36C29C00145E28 /* StatisticCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
 		47E932471F36C9D900145E28 /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
-		47F9F7DF1F32814900C88DEA /* SpikeballPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpikeballPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		47F9F7DF1F32814900C88DEA /* DuoPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuoPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F9F7E21F32814900C88DEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		47F9F7E41F32814900C88DEA /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		47F9F7E71F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		47F9F7E91F32814900C88DEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		47F9F7EC1F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		47F9F7EE1F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		47F9F7F31F32814900C88DEA /* SpikeballPlayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpikeballPlayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		47F9F7F31F32814900C88DEA /* Doubles MatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Doubles MatchTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		47F9F7F71F32814900C88DEA /* SpikeballPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpikeballPlayTests.swift; sourceTree = "<group>"; };
 		47F9F7F91F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPlayer.swift; sourceTree = "<group>"; };
@@ -178,8 +178,8 @@
 		47F9F7D61F32814900C88DEA = {
 			isa = PBXGroup;
 			children = (
-				47F9F7E11F32814900C88DEA /* SpikeballPlay */,
-				47F9F7F61F32814900C88DEA /* SpikeballPlayTests */,
+				47F9F7E11F32814900C88DEA /* Duo Play */,
+				47F9F7F61F32814900C88DEA /* Duo Play Tests */,
 				47F9F7E01F32814900C88DEA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -187,13 +187,13 @@
 		47F9F7E01F32814900C88DEA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				47F9F7DF1F32814900C88DEA /* SpikeballPlay.app */,
-				47F9F7F31F32814900C88DEA /* SpikeballPlayTests.xctest */,
+				47F9F7DF1F32814900C88DEA /* DuoPlay.app */,
+				47F9F7F31F32814900C88DEA /* Doubles MatchTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		47F9F7E11F32814900C88DEA /* SpikeballPlay */ = {
+		47F9F7E11F32814900C88DEA /* Duo Play */ = {
 			isa = PBXGroup;
 			children = (
 				47E9323D1F350B2F00145E28 /* Rules */,
@@ -206,15 +206,17 @@
 				47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */,
 				47F9F7EE1F32814900C88DEA /* Info.plist */,
 			);
+			name = "Duo Play";
 			path = SpikeballPlay;
 			sourceTree = "<group>";
 		};
-		47F9F7F61F32814900C88DEA /* SpikeballPlayTests */ = {
+		47F9F7F61F32814900C88DEA /* Duo Play Tests */ = {
 			isa = PBXGroup;
 			children = (
 				47F9F7F71F32814900C88DEA /* SpikeballPlayTests.swift */,
 				47F9F7F91F32814900C88DEA /* Info.plist */,
 			);
+			name = "Duo Play Tests";
 			path = SpikeballPlayTests;
 			sourceTree = "<group>";
 		};
@@ -277,9 +279,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		47F9F7DE1F32814900C88DEA /* SpikeballPlay */ = {
+		47F9F7DE1F32814900C88DEA /* Doubles Match */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 47F9F7FC1F32814900C88DEA /* Build configuration list for PBXNativeTarget "SpikeballPlay" */;
+			buildConfigurationList = 47F9F7FC1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Doubles Match" */;
 			buildPhases = (
 				47F9F7DB1F32814900C88DEA /* Sources */,
 				47F9F7DC1F32814900C88DEA /* Frameworks */,
@@ -289,14 +291,14 @@
 			);
 			dependencies = (
 			);
-			name = SpikeballPlay;
+			name = "Doubles Match";
 			productName = SpikeballPlay;
-			productReference = 47F9F7DF1F32814900C88DEA /* SpikeballPlay.app */;
+			productReference = 47F9F7DF1F32814900C88DEA /* DuoPlay.app */;
 			productType = "com.apple.product-type.application";
 		};
-		47F9F7F21F32814900C88DEA /* SpikeballPlayTests */ = {
+		47F9F7F21F32814900C88DEA /* Doubles MatchTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 47F9F7FF1F32814900C88DEA /* Build configuration list for PBXNativeTarget "SpikeballPlayTests" */;
+			buildConfigurationList = 47F9F7FF1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Doubles MatchTests" */;
 			buildPhases = (
 				47F9F7EF1F32814900C88DEA /* Sources */,
 				47F9F7F01F32814900C88DEA /* Frameworks */,
@@ -307,9 +309,9 @@
 			dependencies = (
 				47F9F7F51F32814900C88DEA /* PBXTargetDependency */,
 			);
-			name = SpikeballPlayTests;
+			name = "Doubles MatchTests";
 			productName = SpikeballPlayTests;
-			productReference = 47F9F7F31F32814900C88DEA /* SpikeballPlayTests.xctest */;
+			productReference = 47F9F7F31F32814900C88DEA /* Doubles MatchTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -320,11 +322,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
 				LastUpgradeCheck = 0830;
-				ORGANIZATIONNAME = HoverSlam;
+				ORGANIZATIONNAME = "Jordan Davis";
 				TargetAttributes = {
 					47F9F7DE1F32814900C88DEA = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = BDZ5E2UH8N;
+						DevelopmentTeam = XCMCLK6E4Y;
 						ProvisioningStyle = Automatic;
 					};
 					47F9F7F21F32814900C88DEA = {
@@ -334,7 +336,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 47F9F7DA1F32814900C88DEA /* Build configuration list for PBXProject "SpikeballPlay" */;
+			buildConfigurationList = 47F9F7DA1F32814900C88DEA /* Build configuration list for PBXProject "DuoPlay" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -347,8 +349,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				47F9F7DE1F32814900C88DEA /* SpikeballPlay */,
-				47F9F7F21F32814900C88DEA /* SpikeballPlayTests */,
+				47F9F7DE1F32814900C88DEA /* Doubles Match */,
+				47F9F7F21F32814900C88DEA /* Doubles MatchTests */,
 			);
 		};
 /* End PBXProject section */
@@ -426,7 +428,7 @@
 /* Begin PBXTargetDependency section */
 		47F9F7F51F32814900C88DEA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 47F9F7DE1F32814900C88DEA /* SpikeballPlay */;
+			target = 47F9F7DE1F32814900C88DEA /* Doubles Match */;
 			targetProxy = 47F9F7F41F32814900C88DEA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -550,11 +552,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = BDZ5E2UH8N;
+				DEVELOPMENT_TEAM = XCMCLK6E4Y;
 				INFOPLIST_FILE = SpikeballPlay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.TwoPlay;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.JordanDavis.DuoPlay;
+				PRODUCT_MODULE_NAME = DuoPlay;
+				PRODUCT_NAME = DuoPlay;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -563,11 +566,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = BDZ5E2UH8N;
+				DEVELOPMENT_TEAM = XCMCLK6E4Y;
 				INFOPLIST_FILE = SpikeballPlay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.TwoPlay;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.JordanDavis.DuoPlay;
+				PRODUCT_MODULE_NAME = DuoPlay;
+				PRODUCT_NAME = DuoPlay;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -582,7 +586,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.SpikeballPlayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpikeballPlay.app/SpikeballPlay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Doubles Match.app/Doubles Match";
 			};
 			name = Debug;
 		};
@@ -596,14 +600,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.SpikeballPlayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpikeballPlay.app/SpikeballPlay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Doubles Match.app/Doubles Match";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		47F9F7DA1F32814900C88DEA /* Build configuration list for PBXProject "SpikeballPlay" */ = {
+		47F9F7DA1F32814900C88DEA /* Build configuration list for PBXProject "DuoPlay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				47F9F7FA1F32814900C88DEA /* Debug */,
@@ -612,7 +616,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		47F9F7FC1F32814900C88DEA /* Build configuration list for PBXNativeTarget "SpikeballPlay" */ = {
+		47F9F7FC1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Doubles Match" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				47F9F7FD1F32814900C88DEA /* Debug */,
@@ -621,7 +625,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		47F9F7FF1F32814900C88DEA /* Build configuration list for PBXNativeTarget "SpikeballPlayTests" */ = {
+		47F9F7FF1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Doubles MatchTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				47F9F8001F32814900C88DEA /* Debug */,

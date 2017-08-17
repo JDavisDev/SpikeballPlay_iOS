@@ -14,7 +14,7 @@
         <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="Home" id="BYZ-38-t0r" customClass="ViewController" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Home" id="BYZ-38-t0r" customClass="ViewController" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -24,20 +24,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="zZU-M1-zVP">
-                                <rect key="frame" x="36" y="104" width="303" height="300"/>
+                                <rect key="frame" x="36" y="104" width="303" height="213"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" verticalCompressionResistancePriority="748" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7S4-g5-mgS">
-                                        <rect key="frame" x="0.0" y="0.0" width="303" height="37"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="10"/>
-                                        <state key="normal" title="Tournaments"/>
-                                        <connections>
-                                            <action selector="tournamentButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SFy-II-cst"/>
-                                            <segue destination="o0F-K2-bEo" kind="show" id="Zuu-kj-vZj"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ara-no-Q7S">
-                                        <rect key="frame" x="0.0" y="87" width="303" height="37"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="303" height="37"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="10"/>
                                         <state key="normal" title="Random Play"/>
@@ -46,7 +36,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ayk-TE-mkR" userLabel="Rules">
-                                        <rect key="frame" x="0.0" y="174" width="303" height="37"/>
+                                        <rect key="frame" x="0.0" y="87" width="303" height="37"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="10"/>
                                         <state key="normal" title="Official Rules"/>
@@ -55,7 +45,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6zL-iP-70R">
-                                        <rect key="frame" x="0.0" y="261" width="303" height="39"/>
+                                        <rect key="frame" x="0.0" y="174" width="303" height="39"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <state key="normal" title="Contact Developer"/>
                                         <connections>
@@ -93,7 +83,7 @@
         <!--New Game-->
         <scene sceneID="sJg-Ks-iE4">
             <objects>
-                <viewController title="New Game" id="cUz-jN-6yj" customClass="RPNewGameView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="New Game" id="cUz-jN-6yj" customClass="RPNewGameView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vUl-z4-ARl"/>
                         <viewControllerLayoutGuide type="bottom" id="Hkg-05-kr5"/>
@@ -340,7 +330,7 @@
         <!--Statistics-->
         <scene sceneID="Z6Y-dg-cqm">
             <objects>
-                <viewController title="Statistics" id="26V-vw-vLv" customClass="RPStatisticsView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Statistics" id="26V-vw-vLv" customClass="RPStatisticsView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yUO-aw-enU"/>
                         <viewControllerLayoutGuide type="bottom" id="Exc-HK-jMW"/>
@@ -406,7 +396,7 @@
                                 <color key="sectionIndexBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexTrackingBackgroundColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="StatisticCell" id="jAq-j4-Qt5" customClass="StatisticCell" customModule="SpikeballPlay" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="StatisticCell" id="jAq-j4-Qt5" customClass="StatisticCell" customModule="DuoPlay" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" tableViewCell="jAq-j4-Qt5" id="YFL-Am-qMw">
@@ -518,7 +508,7 @@
         <!--Game History-->
         <scene sceneID="fWK-43-oWV">
             <objects>
-                <viewController title="Game History" id="Vja-t7-wfc" customClass="RPHistoryView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Game History" id="Vja-t7-wfc" customClass="RPHistoryView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DTg-9N-CYu"/>
                         <viewControllerLayoutGuide type="bottom" id="nMf-kH-pQb"/>
@@ -534,7 +524,7 @@
                                 <color key="sectionIndexColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HistoryCell" id="D8R-ca-92k" customClass="HistoryCell" customModule="SpikeballPlay" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HistoryCell" id="D8R-ca-92k" customClass="HistoryCell" customModule="DuoPlay" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="25" width="375" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D8R-ca-92k" id="mwK-sg-YeK">
@@ -643,7 +633,7 @@
         <!--Players-->
         <scene sceneID="BZK-CG-1jg">
             <objects>
-                <viewController title="Players" automaticallyAdjustsScrollViewInsets="NO" id="Fja-5X-pQi" customClass="RPPlayersView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Players" automaticallyAdjustsScrollViewInsets="NO" id="Fja-5X-pQi" customClass="RPPlayersView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BSO-Hd-TZh"/>
                         <viewControllerLayoutGuide type="bottom" id="ajz-J7-ic4"/>
@@ -757,7 +747,7 @@
         <!--Official Rules-->
         <scene sceneID="ajv-Wm-jUV">
             <objects>
-                <viewController title="Official Rules" id="soV-U4-uyL" customClass="RulesWebView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Official Rules" id="soV-U4-uyL" customClass="RulesWebView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="OAm-ad-r1r"/>
                         <viewControllerLayoutGuide type="bottom" id="Nkm-ir-fuc"/>
@@ -812,7 +802,7 @@
         <!--Tournaments-->
         <scene sceneID="nz7-Tc-8Sd">
             <objects>
-                <viewController title="Tournaments" id="o0F-K2-bEo" customClass="TournamentsHomeView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Tournaments" id="o0F-K2-bEo" customClass="TournamentsHomeView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="j2f-31-tyY"/>
                         <viewControllerLayoutGuide type="bottom" id="EAo-eh-dH9"/>
@@ -866,7 +856,7 @@
         <!--Teams-->
         <scene sceneID="UEZ-6c-mom">
             <objects>
-                <viewController title="Teams" id="azJ-Pb-lAL" customClass="TeamsView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Teams" id="azJ-Pb-lAL" customClass="TeamsView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ie8-So-TeA"/>
                         <viewControllerLayoutGuide type="bottom" id="Tkv-kT-iji"/>
@@ -985,7 +975,7 @@
         <!--Pools-->
         <scene sceneID="YyM-TL-deE">
             <objects>
-                <viewController title="Pools" id="iZ1-g6-UnG" customClass="PoolsView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Pools" id="iZ1-g6-UnG" customClass="PoolsView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Jhi-aF-b9O"/>
                         <viewControllerLayoutGuide type="bottom" id="CVu-yz-fEG"/>
@@ -1106,7 +1096,7 @@
         <!--Settings-->
         <scene sceneID="GWl-7S-7Yk">
             <objects>
-                <viewController title="Settings" id="6UP-Us-gnQ" customClass="SettingsView" customModule="SpikeballPlay" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Settings" id="6UP-Us-gnQ" customClass="SettingsView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zyo-er-aEt"/>
                         <viewControllerLayoutGuide type="bottom" id="bq5-JJ-g5j"/>
@@ -1228,7 +1218,6 @@
         <image name="Contacts" width="16" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="jbB-yX-6Yi"/>
         <segue reference="bgE-aY-1Jj"/>
         <segue reference="QCO-GB-lYv"/>
         <segue reference="Ngl-xp-pfz"/>
