@@ -1,0 +1,672 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4720BE201F37E06B006E55C5 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4720BE1F1F37E06B006E55C5 /* History.swift */; };
+		4720BE221F37E11B006E55C5 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4720BE211F37E11B006E55C5 /* HistoryCell.swift */; };
+		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
+		47DE962A1F3E075400F944F0 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96291F3E075400F944F0 /* Tournament.swift */; };
+		47DE962C1F3E075C00F944F0 /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE962B1F3E075C00F944F0 /* Pool.swift */; };
+		47DE962F1F3E07DD00F944F0 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE962E1F3E07DD00F944F0 /* Team.swift */; };
+		47DE96311F3E080300F944F0 /* Bracket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96301F3E080300F944F0 /* Bracket.swift */; };
+		47DE96331F3E2AE100F944F0 /* TournamentsHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96321F3E2AE100F944F0 /* TournamentsHomeView.swift */; };
+		47DE96351F3E2CB500F944F0 /* TournamentsHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96341F3E2CB500F944F0 /* TournamentsHomeViewController.swift */; };
+		47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96361F3E2F9900F944F0 /* TeamsView.swift */; };
+		47DE96391F3E305600F944F0 /* TeamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96381F3E305600F944F0 /* TeamsViewController.swift */; };
+		47DE963B1F3E3D5300F944F0 /* PoolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE963A1F3E3D5300F944F0 /* PoolsView.swift */; };
+		47DE963D1F3E3D8A00F944F0 /* PoolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE963C1F3E3D8A00F944F0 /* PoolsViewController.swift */; };
+		47DE963F1F3E425700F944F0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE963E1F3E425700F944F0 /* SettingsView.swift */; };
+		47DE96411F3E429100F944F0 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96401F3E429100F944F0 /* SettingsViewController.swift */; };
+		47E9323A1F3508FA00145E28 /* RPStatisticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932391F3508FA00145E28 /* RPStatisticsController.swift */; };
+		47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E9323B1F35090900145E28 /* RPHistoryController.swift */; };
+		47E932401F35405600145E28 /* RulesWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E9323F1F35405600145E28 /* RulesWebView.swift */; };
+		47E932421F356A0800145E28 /* RPRandomizingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932411F356A0800145E28 /* RPRandomizingController.swift */; };
+		47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932431F36C29C00145E28 /* StatisticCell.swift */; };
+		47E932481F36C9D900145E28 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E932471F36C9D900145E28 /* Statistics.swift */; };
+		47F15E171F4733AE00518901 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F15E151F4733AE00518901 /* Fabric.framework */; };
+		47F15E181F4733AE00518901 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47F15E161F4733AE00518901 /* Crashlytics.framework */; };
+		47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7E21F32814900C88DEA /* AppDelegate.swift */; };
+		47F9F7E51F32814900C88DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7E41F32814900C88DEA /* MainViewController.swift */; };
+		47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7E61F32814900C88DEA /* Main.storyboard */; };
+		47F9F7EA1F32814900C88DEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7E91F32814900C88DEA /* Assets.xcassets */; };
+		47F9F7ED1F32814900C88DEA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */; };
+		47F9F7F81F32814900C88DEA /* DuoPlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */; };
+		47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */; };
+		47F9F80A1F32D8ED00C88DEA /* RandomPlaySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8091F32D8ED00C88DEA /* RandomPlaySession.swift */; };
+		47F9F80C1F32DD0400C88DEA /* RPPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F80B1F32DD0400C88DEA /* RPPlayersView.swift */; };
+		47F9F80E1F33B4A400C88DEA /* RandomGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F80D1F33B4A400C88DEA /* RandomGame.swift */; };
+		47F9F8101F33B51400C88DEA /* RPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F80F1F33B51400C88DEA /* RPController.swift */; };
+		47F9F8121F33E08400C88DEA /* RPNewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8111F33E08400C88DEA /* RPNewGameView.swift */; };
+		47F9F8141F3414E000C88DEA /* RPGameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8131F3414E000C88DEA /* RPGameController.swift */; };
+		47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */; };
+		47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8171F34B18800C88DEA /* RPHistoryView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		47F9F7F41F32814900C88DEA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 47F9F7D71F32814900C88DEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 47F9F7DE1F32814900C88DEA;
+			remoteInfo = SpikeballPlay;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4720BE1F1F37E06B006E55C5 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		4720BE211F37E11B006E55C5 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
+		473689651F40240700C04FD4 /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Division.swift; sourceTree = "<group>"; };
+		47DE96291F3E075400F944F0 /* Tournament.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
+		47DE962B1F3E075C00F944F0 /* Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
+		47DE962E1F3E07DD00F944F0 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		47DE96301F3E080300F944F0 /* Bracket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bracket.swift; sourceTree = "<group>"; };
+		47DE96321F3E2AE100F944F0 /* TournamentsHomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TournamentsHomeView.swift; sourceTree = "<group>"; };
+		47DE96341F3E2CB500F944F0 /* TournamentsHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TournamentsHomeViewController.swift; sourceTree = "<group>"; };
+		47DE96361F3E2F9900F944F0 /* TeamsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsView.swift; sourceTree = "<group>"; };
+		47DE96381F3E305600F944F0 /* TeamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamsViewController.swift; sourceTree = "<group>"; };
+		47DE963A1F3E3D5300F944F0 /* PoolsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolsView.swift; sourceTree = "<group>"; };
+		47DE963C1F3E3D8A00F944F0 /* PoolsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolsViewController.swift; sourceTree = "<group>"; };
+		47DE963E1F3E425700F944F0 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		47DE96401F3E429100F944F0 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		47E932391F3508FA00145E28 /* RPStatisticsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPStatisticsController.swift; sourceTree = "<group>"; };
+		47E9323B1F35090900145E28 /* RPHistoryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryController.swift; sourceTree = "<group>"; };
+		47E9323F1F35405600145E28 /* RulesWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RulesWebView.swift; sourceTree = "<group>"; };
+		47E932411F356A0800145E28 /* RPRandomizingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPRandomizingController.swift; sourceTree = "<group>"; };
+		47E932431F36C29C00145E28 /* StatisticCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
+		47E932471F36C9D900145E28 /* Statistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
+		47F15E151F4733AE00518901 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		47F15E161F4733AE00518901 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		47F9F7DF1F32814900C88DEA /* Duo Play.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Duo Play.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		47F9F7E21F32814900C88DEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		47F9F7E41F32814900C88DEA /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		47F9F7E71F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		47F9F7E91F32814900C88DEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		47F9F7EC1F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		47F9F7EE1F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Duo Play Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoPlayTests.swift; sourceTree = "<group>"; };
+		47F9F7F91F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPlayer.swift; sourceTree = "<group>"; };
+		47F9F8091F32D8ED00C88DEA /* RandomPlaySession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPlaySession.swift; sourceTree = "<group>"; };
+		47F9F80B1F32DD0400C88DEA /* RPPlayersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPPlayersView.swift; sourceTree = "<group>"; };
+		47F9F80D1F33B4A400C88DEA /* RandomGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomGame.swift; sourceTree = "<group>"; };
+		47F9F80F1F33B51400C88DEA /* RPController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPController.swift; sourceTree = "<group>"; };
+		47F9F8111F33E08400C88DEA /* RPNewGameView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPNewGameView.swift; sourceTree = "<group>"; };
+		47F9F8131F3414E000C88DEA /* RPGameController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPGameController.swift; sourceTree = "<group>"; };
+		47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPStatisticsView.swift; sourceTree = "<group>"; };
+		47F9F8171F34B18800C88DEA /* RPHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		47F9F7DC1F32814900C88DEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47F15E181F4733AE00518901 /* Crashlytics.framework in Frameworks */,
+				47F15E171F4733AE00518901 /* Fabric.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47F9F7F01F32814900C88DEA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		47DE96261F3E073800F944F0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				47DE96321F3E2AE100F944F0 /* TournamentsHomeView.swift */,
+				47DE96361F3E2F9900F944F0 /* TeamsView.swift */,
+				47DE963A1F3E3D5300F944F0 /* PoolsView.swift */,
+				47DE963E1F3E425700F944F0 /* SettingsView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		47DE96271F3E074000F944F0 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				47DE96341F3E2CB500F944F0 /* TournamentsHomeViewController.swift */,
+				47DE96381F3E305600F944F0 /* TeamsViewController.swift */,
+				47DE963C1F3E3D8A00F944F0 /* PoolsViewController.swift */,
+				47DE96401F3E429100F944F0 /* SettingsViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		47DE96281F3E074700F944F0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				47DE96291F3E075400F944F0 /* Tournament.swift */,
+				47DE962B1F3E075C00F944F0 /* Pool.swift */,
+				47DE962E1F3E07DD00F944F0 /* Team.swift */,
+				47DE96301F3E080300F944F0 /* Bracket.swift */,
+				473689651F40240700C04FD4 /* Division.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		47DE962D1F3E07B600F944F0 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				47E932431F36C29C00145E28 /* StatisticCell.swift */,
+				4720BE211F37E11B006E55C5 /* HistoryCell.swift */,
+			);
+			name = TableViewCells;
+			sourceTree = "<group>";
+		};
+		47E9323D1F350B2F00145E28 /* Rules */ = {
+			isa = PBXGroup;
+			children = (
+				47E9323E1F35404100145E28 /* Views */,
+			);
+			name = Rules;
+			sourceTree = "<group>";
+		};
+		47E9323E1F35404100145E28 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				47E9323F1F35405600145E28 /* RulesWebView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		47F9F7D61F32814900C88DEA = {
+			isa = PBXGroup;
+			children = (
+				47F9F7E11F32814900C88DEA /* Duo Play */,
+				47F9F7F61F32814900C88DEA /* Duo Play Tests */,
+				47F9F7E01F32814900C88DEA /* Products */,
+				47F15E151F4733AE00518901 /* Fabric.framework */,
+				47F15E161F4733AE00518901 /* Crashlytics.framework */,
+			);
+			sourceTree = "<group>";
+		};
+		47F9F7E01F32814900C88DEA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				47F9F7DF1F32814900C88DEA /* Duo Play.app */,
+				47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		47F9F7E11F32814900C88DEA /* Duo Play */ = {
+			isa = PBXGroup;
+			children = (
+				47E9323D1F350B2F00145E28 /* Rules */,
+				47F9F8031F32D50C00C88DEA /* Tournaments */,
+				47F9F8021F32D4FA00C88DEA /* Random Play */,
+				47F9F7E21F32814900C88DEA /* AppDelegate.swift */,
+				47F9F7E41F32814900C88DEA /* MainViewController.swift */,
+				47F9F7E61F32814900C88DEA /* Main.storyboard */,
+				47F9F7E91F32814900C88DEA /* Assets.xcassets */,
+				47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */,
+				47F9F7EE1F32814900C88DEA /* Info.plist */,
+			);
+			path = "Duo Play";
+			sourceTree = "<group>";
+		};
+		47F9F7F61F32814900C88DEA /* Duo Play Tests */ = {
+			isa = PBXGroup;
+			children = (
+				47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */,
+				47F9F7F91F32814900C88DEA /* Info.plist */,
+			);
+			name = "Duo Play Tests";
+			path = SpikeballPlayTests;
+			sourceTree = "<group>";
+		};
+		47F9F8021F32D4FA00C88DEA /* Random Play */ = {
+			isa = PBXGroup;
+			children = (
+				47F9F8061F32D53200C88DEA /* Views */,
+				47F9F8051F32D52800C88DEA /* Controllers */,
+				47F9F8041F32D51C00C88DEA /* Models */,
+			);
+			name = "Random Play";
+			sourceTree = "<group>";
+		};
+		47F9F8031F32D50C00C88DEA /* Tournaments */ = {
+			isa = PBXGroup;
+			children = (
+				47DE96281F3E074700F944F0 /* Models */,
+				47DE96271F3E074000F944F0 /* Controllers */,
+				47DE96261F3E073800F944F0 /* Views */,
+			);
+			name = Tournaments;
+			sourceTree = "<group>";
+		};
+		47F9F8041F32D51C00C88DEA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				47DE962D1F3E07B600F944F0 /* TableViewCells */,
+				47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */,
+				47F9F8091F32D8ED00C88DEA /* RandomPlaySession.swift */,
+				47F9F80D1F33B4A400C88DEA /* RandomGame.swift */,
+				47E932471F36C9D900145E28 /* Statistics.swift */,
+				4720BE1F1F37E06B006E55C5 /* History.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		47F9F8051F32D52800C88DEA /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				47F9F80F1F33B51400C88DEA /* RPController.swift */,
+				47F9F8131F3414E000C88DEA /* RPGameController.swift */,
+				47E932391F3508FA00145E28 /* RPStatisticsController.swift */,
+				47E9323B1F35090900145E28 /* RPHistoryController.swift */,
+				47E932411F356A0800145E28 /* RPRandomizingController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		47F9F8061F32D53200C88DEA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				47F9F80B1F32DD0400C88DEA /* RPPlayersView.swift */,
+				47F9F8111F33E08400C88DEA /* RPNewGameView.swift */,
+				47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */,
+				47F9F8171F34B18800C88DEA /* RPHistoryView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		47F9F7DE1F32814900C88DEA /* Duo Play */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47F9F7FC1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Duo Play" */;
+			buildPhases = (
+				47F9F7DB1F32814900C88DEA /* Sources */,
+				47F9F7DC1F32814900C88DEA /* Frameworks */,
+				47F9F7DD1F32814900C88DEA /* Resources */,
+				47F15E141F4732E800518901 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Duo Play";
+			productName = SpikeballPlay;
+			productReference = 47F9F7DF1F32814900C88DEA /* Duo Play.app */;
+			productType = "com.apple.product-type.application";
+		};
+		47F9F7F21F32814900C88DEA /* Duo Play Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47F9F7FF1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Duo Play Tests" */;
+			buildPhases = (
+				47F9F7EF1F32814900C88DEA /* Sources */,
+				47F9F7F01F32814900C88DEA /* Frameworks */,
+				47F9F7F11F32814900C88DEA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				47F9F7F51F32814900C88DEA /* PBXTargetDependency */,
+			);
+			name = "Duo Play Tests";
+			productName = SpikeballPlayTests;
+			productReference = 47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		47F9F7D71F32814900C88DEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Jordan Davis";
+				TargetAttributes = {
+					47F9F7DE1F32814900C88DEA = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = XCMCLK6E4Y;
+						ProvisioningStyle = Automatic;
+					};
+					47F9F7F21F32814900C88DEA = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 47F9F7DE1F32814900C88DEA;
+					};
+				};
+			};
+			buildConfigurationList = 47F9F7DA1F32814900C88DEA /* Build configuration list for PBXProject "Duo Play" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 47F9F7D61F32814900C88DEA;
+			productRefGroup = 47F9F7E01F32814900C88DEA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				47F9F7DE1F32814900C88DEA /* Duo Play */,
+				47F9F7F21F32814900C88DEA /* Duo Play Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		47F9F7DD1F32814900C88DEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47F9F7ED1F32814900C88DEA /* LaunchScreen.storyboard in Resources */,
+				47F9F7EA1F32814900C88DEA /* Assets.xcassets in Resources */,
+				47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47F9F7F11F32814900C88DEA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		47F15E141F4732E800518901 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 98707f0c14e182d450a3a9384e605c6123168165 1a52cff37af564a84e6c54e0148f1725e0390f0703dd17c2f229939f8218286c";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		47F9F7DB1F32814900C88DEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4720BE201F37E06B006E55C5 /* History.swift in Sources */,
+				47F9F8141F3414E000C88DEA /* RPGameController.swift in Sources */,
+				47DE963B1F3E3D5300F944F0 /* PoolsView.swift in Sources */,
+				47F9F80E1F33B4A400C88DEA /* RandomGame.swift in Sources */,
+				47DE96311F3E080300F944F0 /* Bracket.swift in Sources */,
+				47F9F80C1F32DD0400C88DEA /* RPPlayersView.swift in Sources */,
+				47DE96391F3E305600F944F0 /* TeamsViewController.swift in Sources */,
+				47DE962A1F3E075400F944F0 /* Tournament.swift in Sources */,
+				47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */,
+				47E9323A1F3508FA00145E28 /* RPStatisticsController.swift in Sources */,
+				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
+				47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */,
+				47DE962F1F3E07DD00F944F0 /* Team.swift in Sources */,
+				47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */,
+				473689661F40240700C04FD4 /* Division.swift in Sources */,
+				47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */,
+				47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */,
+				47DE96351F3E2CB500F944F0 /* TournamentsHomeViewController.swift in Sources */,
+				47E932481F36C9D900145E28 /* Statistics.swift in Sources */,
+				47DE962C1F3E075C00F944F0 /* Pool.swift in Sources */,
+				4720BE221F37E11B006E55C5 /* HistoryCell.swift in Sources */,
+				47DE96411F3E429100F944F0 /* SettingsViewController.swift in Sources */,
+				47F9F80A1F32D8ED00C88DEA /* RandomPlaySession.swift in Sources */,
+				47DE96331F3E2AE100F944F0 /* TournamentsHomeView.swift in Sources */,
+				47F9F7E51F32814900C88DEA /* MainViewController.swift in Sources */,
+				47DE963F1F3E425700F944F0 /* SettingsView.swift in Sources */,
+				47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */,
+				47F9F8101F33B51400C88DEA /* RPController.swift in Sources */,
+				47DE963D1F3E3D8A00F944F0 /* PoolsViewController.swift in Sources */,
+				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
+				47F9F8121F33E08400C88DEA /* RPNewGameView.swift in Sources */,
+				47E932421F356A0800145E28 /* RPRandomizingController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		47F9F7EF1F32814900C88DEA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47F9F7F81F32814900C88DEA /* DuoPlayTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		47F9F7F51F32814900C88DEA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 47F9F7DE1F32814900C88DEA /* Duo Play */;
+			targetProxy = 47F9F7F41F32814900C88DEA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		47F9F7E61F32814900C88DEA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				47F9F7E71F32814900C88DEA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				47F9F7EC1F32814900C88DEA /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		47F9F7FA1F32814900C88DEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		47F9F7FB1F32814900C88DEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		47F9F7FD1F32814900C88DEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = XCMCLK6E4Y;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Duo Play/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.JordanDavis.DuoPlay;
+				PRODUCT_MODULE_NAME = DuoPlay;
+				PRODUCT_NAME = "Duo Play";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		47F9F7FE1F32814900C88DEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = XCMCLK6E4Y;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Duo Play/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.JordanDavis.DuoPlay;
+				PRODUCT_MODULE_NAME = DuoPlay;
+				PRODUCT_NAME = "Duo Play";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		47F9F8001F32814900C88DEA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = SpikeballPlayTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.DuoPlayTests;
+				PRODUCT_NAME = "Duo Play Tests";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Doubles Match.app/Doubles Match";
+			};
+			name = Debug;
+		};
+		47F9F8011F32814900C88DEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = SpikeballPlayTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.HoverSlam.DuoPlayTests;
+				PRODUCT_NAME = "Duo Play Tests";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Doubles Match.app/Doubles Match";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		47F9F7DA1F32814900C88DEA /* Build configuration list for PBXProject "Duo Play" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47F9F7FA1F32814900C88DEA /* Debug */,
+				47F9F7FB1F32814900C88DEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		47F9F7FC1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Duo Play" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47F9F7FD1F32814900C88DEA /* Debug */,
+				47F9F7FE1F32814900C88DEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		47F9F7FF1F32814900C88DEA /* Build configuration list for PBXNativeTarget "Duo Play Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47F9F8001F32814900C88DEA /* Debug */,
+				47F9F8011F32814900C88DEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 47F9F7D71F32814900C88DEA /* Project object */;
+}
