@@ -10,6 +10,8 @@ import Foundation
 
 class RPRandomizingController {
     
+    var sittingPlayersArray = [Int]()
+    var backupSittersArray = [Int]()
     init() {
         
     }
@@ -18,15 +20,39 @@ class RPRandomizingController {
         // return four integers for the positions
         // since I'm not using 0 as an id, I can send back player id
         var returnArray = [Int]()
+        backupSittersArray = [Int]()
         
+        // run until we get a unique game
         while !isGameUnique(current: returnArray) {
             returnArray.removeAll()
+            
+            // if the game was not unique, make sure we grab the sitters since we cleared them
+            returnArray = backupSittersArray
+            
             // run this looop until return array is full
             while returnArray.count < 4 {
-                let index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
-                if !returnArray.contains(index) {
-                    returnArray.append(index)
+                // no sitters, so grab 4 randoms
+                if sittingPlayersArray.count <= 0 {
+                    let index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
+                    if !returnArray.contains(index) {
+                        returnArray.append(index)
+                    }
+                } else {
+                    // we have sitters, so grab them and randomize them
+                    sittingPlayersArray = randomizeArray(array: sittingPlayersArray)
+                    backupSittersArray = sittingPlayersArray
+                    
+                    // this will add the sitters to our return Array
+                    // when empty, it may grab randoms and add them, though it may duplicate some
+                    returnArray = sittingPlayersArray
+                    sittingPlayersArray.removeAll()
                 }
+            }
+        }
+        
+        for index in 0..<RPController.playersList.count {
+            if !returnArray.contains(index) {
+                sittingPlayersArray.append(index)
             }
         }
         
@@ -52,7 +78,7 @@ class RPRandomizingController {
     
     // see if all the unique games have been played
     func isUniqueGamesLeft() -> Bool {
-        let numGamesPossible = factorial(num: RPController.playersList.count)
+        let numGamesPossible = factorial(num: RPController.playersList.count) / 8
         
         return RPController.gameList.count >= numGamesPossible
     }
@@ -67,6 +93,15 @@ class RPRandomizingController {
             o *= i
         }
         return o
+    }
+    
+    // mix up an array and return it
+    func randomizeArray(array: [Int]) -> [Int] {
+        var temp: Int
+        var randomIntOne = Int(arc4random_uniform(UInt32(array.count)))
+        
+        return array
+        
     }
 
     

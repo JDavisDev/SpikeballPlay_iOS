@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "47F9F7DE1F32814900C88DEA"
-               BuildableName = "DuoPlay.app"
+               BuildableName = "Duo Play.app"
                BlueprintName = "Doubles Match"
                ReferencedContainer = "container:DuoPlay.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "47F9F7F21F32814900C88DEA"
-               BuildableName = "Doubles MatchTests.xctest"
+               BuildableName = "Duo Play Tests.xctest"
                BlueprintName = "Doubles MatchTests"
                ReferencedContainer = "container:DuoPlay.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "47F9F7DE1F32814900C88DEA"
-            BuildableName = "DuoPlay.app"
+            BuildableName = "Duo Play.app"
             BlueprintName = "Doubles Match"
             ReferencedContainer = "container:DuoPlay.xcodeproj">
          </BuildableReference>
@@ -66,7 +66,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "47F9F7DE1F32814900C88DEA"
-            BuildableName = "DuoPlay.app"
+            BuildableName = "Duo Play.app"
             BlueprintName = "Doubles Match"
             ReferencedContainer = "container:DuoPlay.xcodeproj">
          </BuildableReference>
@@ -85,7 +85,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "47F9F7DE1F32814900C88DEA"
-            BuildableName = "DuoPlay.app"
+            BuildableName = "Duo Play.app"
             BlueprintName = "Doubles Match"
             ReferencedContainer = "container:DuoPlay.xcodeproj">
          </BuildableReference>

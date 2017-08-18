@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  SpikeballPlay
+//  Duo Play
 //
 //  Created by Jordan Davis on 8/2/17.
 //  Copyright © 2017 HoverSlam. All rights reserved.

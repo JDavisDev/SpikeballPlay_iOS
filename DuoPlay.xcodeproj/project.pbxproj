@@ -33,7 +33,7 @@
 		47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7E61F32814900C88DEA /* Main.storyboard */; };
 		47F9F7EA1F32814900C88DEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7E91F32814900C88DEA /* Assets.xcassets */; };
 		47F9F7ED1F32814900C88DEA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */; };
-		47F9F7F81F32814900C88DEA /* SpikeballPlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7F71F32814900C88DEA /* SpikeballPlayTests.swift */; };
+		47F9F7F81F32814900C88DEA /* DuoPlayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */; };
 		47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */; };
 		47F9F80A1F32D8ED00C88DEA /* RandomPlaySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8091F32D8ED00C88DEA /* RandomPlaySession.swift */; };
 		47F9F80C1F32DD0400C88DEA /* RPPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F80B1F32DD0400C88DEA /* RPPlayersView.swift */; };
@@ -85,7 +85,7 @@
 		47F9F7EC1F32814900C88DEA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		47F9F7EE1F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47F9F7F31F32814900C88DEA /* Duo Play Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Duo Play Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		47F9F7F71F32814900C88DEA /* SpikeballPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpikeballPlayTests.swift; sourceTree = "<group>"; };
+		47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuoPlayTests.swift; sourceTree = "<group>"; };
 		47F9F7F91F32814900C88DEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		47F9F8071F32D8D800C88DEA /* RandomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPlayer.swift; sourceTree = "<group>"; };
 		47F9F8091F32D8ED00C88DEA /* RandomPlaySession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPlaySession.swift; sourceTree = "<group>"; };
@@ -213,7 +213,7 @@
 		47F9F7F61F32814900C88DEA /* Duo Play Tests */ = {
 			isa = PBXGroup;
 			children = (
-				47F9F7F71F32814900C88DEA /* SpikeballPlayTests.swift */,
+				47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */,
 				47F9F7F91F32814900C88DEA /* Info.plist */,
 			);
 			name = "Duo Play Tests";
@@ -419,7 +419,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47F9F7F81F32814900C88DEA /* SpikeballPlayTests.swift in Sources */,
+				47F9F7F81F32814900C88DEA /* DuoPlayTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
