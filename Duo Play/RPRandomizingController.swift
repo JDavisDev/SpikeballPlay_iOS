@@ -79,8 +79,8 @@ class RPRandomizingController {
     // see if all the unique games have been played
     func isUniqueGamesLeft() -> Bool {
         let numGamesPossible = factorial(num: RPController.playersList.count) / 8
-        
-        return RPController.gameList.count >= numGamesPossible
+        let currentCount = RPController.gameList.count
+        return currentCount < numGamesPossible
     }
     
     // Calculates the factorial of a number
@@ -111,11 +111,10 @@ class RPRandomizingController {
             (current[2] + current[3] + 2 == game.playerThree.id + game.playerFour.id) ||
             (current[0] + current[1] + 2 == game.playerThree.id + game.playerFour.id) &&
             (current[2] + current[3] + 2 == game.playerOne.id + game.playerTwo.id) {
-        return true
+           return true
        } else {
-        return false
-        }
-
+           return false
+       }
     }
     
     // check if these teams have played with each other and the match up is identical
