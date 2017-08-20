@@ -11,9 +11,12 @@ import Foundation
 public class RandomPlaySession {
     
     var rpController = RPController()
+    var name: String
+    var id = 1
+    var dateCreated = Date()
     
-    init() {
-        
+    init(name: String) {
+        self.name = name
     }
     
     func getController() -> RPController {

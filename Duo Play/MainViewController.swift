@@ -11,17 +11,44 @@ import MessageUI
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
+    @IBOutlet weak var randomPlayButton: UIButton!
+    @IBOutlet weak var rulesButton: UIButton!
+    @IBOutlet weak var contactButton: UIButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        initButtonStyles()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func initButtonStyles() {
+        randomPlayButton.layer.cornerRadius = 8
+        randomPlayButton.layer.borderColor = UIColor.yellow.cgColor
+        randomPlayButton.layer.borderWidth = 1
+        
+        rulesButton.layer.cornerRadius = 8
+        rulesButton.layer.borderColor = UIColor.yellow.cgColor
+        rulesButton.layer.borderWidth = 1
+        
+        contactButton.layer.cornerRadius = 8
+        contactButton.layer.borderColor = UIColor.yellow.cgColor
+        contactButton.layer.borderWidth = 1
+    }
 
+    // pick up button clicked
+    @IBAction func pickUpButtonClicked(_ sender: UIButton) {
+        
+    }
 
+    // tournaments button clicked
+    // current no button exists...
     @IBAction func tournamentButtonClicked(_ sender: UIButton) {
         let tournamentsEnabled = true
         

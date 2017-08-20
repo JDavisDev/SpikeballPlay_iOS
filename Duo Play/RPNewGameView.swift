@@ -27,6 +27,9 @@ public class RPNewGameView : UIViewController {
     @IBOutlet weak var playerTwoButton: UIButton!
     @IBOutlet weak var playerThreeButton: UIButton!
     @IBOutlet weak var playerFourButton: UIButton!
+    var playerButtonList = [UIButton]()
+    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var randomizeAllButton: UIButton!
     
     // Labels
     @IBOutlet weak var teamOneScoreLabel: UILabel!
@@ -47,12 +50,21 @@ public class RPNewGameView : UIViewController {
         for player in RPController.playersList {
             pickerDataSource.append(player)
         }
+        
+        initPlayerButtonStyles()
     }
     
     // View did Appear
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         viewDidLoad()
+    }
+    
+    func initPlayerButtonStyles() {
+        playerButtonList.append(playerOneButton)
+        playerButtonList.append(playerTwoButton)
+        playerButtonList.append(playerThreeButton)
+        playerButtonList.append(playerFourButton)
     }
 
     //MARK:  Player Selection Buttons
@@ -258,5 +270,7 @@ public class RPNewGameView : UIViewController {
         playerTwoName = playerTwoButton.currentTitle!
         playerThreeName = playerThreeButton.currentTitle!
         playerFourName = playerFourButton.currentTitle!
+        
+        // can set resters here too so we have a dynamic list of those who sat out, no matter how we randomize
     }
 }

@@ -24,29 +24,39 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="zZU-M1-zVP">
-                                <rect key="frame" x="36" y="104" width="303" height="213"/>
+                                <rect key="frame" x="36" y="104" width="303" height="269.5"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ara-no-Q7S">
-                                        <rect key="frame" x="0.0" y="0.0" width="303" height="37"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="10"/>
-                                        <state key="normal" title="Random Play"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ara-no-Q7S">
+                                        <rect key="frame" x="0.0" y="0.0" width="303" height="55.5"/>
+                                        <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
+                                        <state key="normal">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Pick Up">
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system" size="22"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </state>
                                         <connections>
-                                            <segue destination="qxu-57-bsa" kind="show" identifier="randomPlaySegue" id="ahN-2s-4vB"/>
+                                            <action selector="pickUpButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LU7-X6-oRS"/>
+                                            <segue destination="YKT-aV-8M4" kind="show" id="PTG-Wq-C6N"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ayk-TE-mkR" userLabel="Rules">
-                                        <rect key="frame" x="0.0" y="87" width="303" height="37"/>
+                                        <rect key="frame" x="0.0" y="105.5" width="303" height="57"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Official Rules"/>
                                         <connections>
                                             <segue destination="soV-U4-uyL" kind="show" identifier="rulesSegue" id="QCO-GB-lYv"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6zL-iP-70R">
-                                        <rect key="frame" x="0.0" y="174" width="303" height="39"/>
+                                        <rect key="frame" x="0.0" y="212.5" width="303" height="57"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Contact Developer"/>
                                         <connections>
                                             <action selector="contactButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="akq-Dp-f8q"/>
@@ -71,9 +81,12 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="qxu-57-bsa" kind="show" identifier="homeRandomPlaySegue" id="bgE-aY-1Jj"/>
+                        <outlet property="contactButton" destination="6zL-iP-70R" id="vnf-Bj-0ed"/>
+                        <outlet property="randomPlayButton" destination="Ara-no-Q7S" id="0MJ-Km-X0q"/>
+                        <outlet property="rulesButton" destination="Ayk-TE-mkR" id="oUx-Jm-9E7"/>
                         <segue destination="soV-U4-uyL" kind="show" identifier="homeRulesSegue" id="7Z9-cP-3MF"/>
                         <segue destination="o0F-K2-bEo" kind="show" id="jbB-yX-6Yi"/>
+                        <segue destination="YKT-aV-8M4" kind="show" id="6zO-Kk-Wiy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -265,7 +278,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team One" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qX4-GH-p8q" userLabel="TeamOneLabel">
-                                <rect key="frame" x="125.5" y="72" width="124" height="33.5"/>
+                                <rect key="frame" x="125.5" y="28" width="124" height="33.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <color key="textColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -317,6 +330,8 @@
                         <outlet property="playerOneButton" destination="c4d-gI-KVw" id="7B9-GV-8gj"/>
                         <outlet property="playerThreeButton" destination="LCn-Fe-xAc" id="9a2-vQ-BHp"/>
                         <outlet property="playerTwoButton" destination="N9s-sJ-eqs" id="xDq-bv-yzQ"/>
+                        <outlet property="randomizeAllButton" destination="CGn-hN-9tA" id="D8f-tl-LeH"/>
+                        <outlet property="submitButton" destination="ogZ-wZ-kpn" id="LTA-aO-9Sn"/>
                         <outlet property="teamOneScoreLabel" destination="bXx-Kb-C6d" id="Jv1-ju-TOj"/>
                         <outlet property="teamOneScoreSlider" destination="igL-t5-2Mx" id="G7q-0d-Qoe"/>
                         <outlet property="teamTwoScoreLabel" destination="QAh-FI-1NC" id="Y7Y-Gd-f48"/>
@@ -340,7 +355,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="3uV-hk-3ir" userLabel="HeaderStackView">
-                                <rect key="frame" x="0.0" y="146" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="102" width="375" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QVv-5t-EhF">
                                         <rect key="frame" x="0.0" y="0.0" width="53" height="30"/>
@@ -387,7 +402,7 @@
                                 </constraints>
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="1000" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="q9C-qm-YWd" userLabel="StatsTable">
-                                <rect key="frame" x="0.0" y="180" width="375" height="438"/>
+                                <rect key="frame" x="0.0" y="136" width="375" height="482"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -413,13 +428,13 @@
                                                     <rect key="frame" x="131.5" y="11" width="235.5" height="26.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="center" verticalHuggingPriority="251" text="9" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="20" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jJo-p8-pkV" userLabel="Wins Label">
-                                                            <rect key="frame" x="0.0" y="0.0" width="33" height="26.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="32.5" height="26.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="20" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UaO-4G-9Fc" userLabel="Losses Label">
-                                                            <rect key="frame" x="51" y="0.0" width="32.5" height="26.5"/>
+                                                            <rect key="frame" x="50.5" y="0.0" width="33" height="26.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -470,7 +485,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fd3-xP-kcx">
-                                <rect key="frame" x="163" y="80" width="49" height="41"/>
+                                <rect key="frame" x="163" y="36" width="49" height="41"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <state key="normal" title="Sort">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -639,21 +654,21 @@
                         <viewControllerLayoutGuide type="bottom" id="ajz-J7-ic4"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="pnc-G5-7yI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1500"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="ivz-zY-hZ1">
-                                <rect key="frame" x="0.0" y="64" width="320" height="1687"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="1387"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8OD-8z-E7B">
-                                        <rect key="frame" x="-11" y="0.0" width="342" height="1800"/>
+                                        <rect key="frame" x="-11" y="0.0" width="397" height="1800"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Ujs-fm-BhP">
-                                                <rect key="frame" x="22" y="167" width="300" height="1633"/>
+                                                <rect key="frame" x="22" y="167" width="355" height="1633"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WLk-Yu-AYJ">
-                                                <rect key="frame" x="21" y="87" width="300" height="72"/>
+                                                <rect key="frame" x="21" y="87" width="355" height="72"/>
                                                 <color key="backgroundColor" red="0.36515303210134026" green="0.3682804404145078" blue="0.36496311823614314" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="72" id="DaB-jr-Laf"/>
@@ -674,7 +689,7 @@
                                                 </connections>
                                             </button>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player Name" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="fkJ-0e-c1K" userLabel="NewPlayerTextField">
-                                                <rect key="frame" x="83.5" y="49" width="175" height="30"/>
+                                                <rect key="frame" x="111" y="49" width="175" height="30"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <color key="tintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
@@ -722,7 +737,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" selectedImage="Contacts" systemItem="contacts" id="Vug-Ya-88i" userLabel="Players"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="1800"/>
+                    <size key="freeformSize" width="375" height="1500"/>
                     <connections>
                         <outlet property="newPlayerTextField" destination="fkJ-0e-c1K" id="yJJ-mP-8Xq"/>
                         <outlet property="playerTextFieldStack" destination="Ujs-fm-BhP" id="mV4-ha-ZLD"/>
@@ -784,6 +799,79 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Akj-wD-mlW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1944" y="849"/>
+        </scene>
+        <!--Pick Up Sessions-->
+        <scene sceneID="ZQm-Em-iYr">
+            <objects>
+                <viewController title="Pick Up Sessions" id="YKT-aV-8M4" customClass="RPSessionsView" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3Nu-Fr-Bos"/>
+                        <viewControllerLayoutGuide type="bottom" id="tad-qh-nDq"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jZe-6W-q24">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="bMS-pt-8GM">
+                                <rect key="frame" x="104" y="89" width="167" height="67"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
+                                <state key="normal" title="New Session"/>
+                                <connections>
+                                    <action selector="addNewSession:" destination="YKT-aV-8M4" eventType="touchUpInside" id="8Ca-47-g6w"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XBB-jt-Ieq">
+                                <rect key="frame" x="16" y="164" width="343" height="495"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="sectionIndexBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexTrackingBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="sessionButtonCell" id="0bA-FO-N0o">
+                                        <rect key="frame" x="0.0" y="28" width="343" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0bA-FO-N0o" id="fWF-LG-E7A">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zG6-4F-6Jq">
+                                                    <rect key="frame" x="8" y="6" width="327" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                    <state key="normal" title="Session One">
+                                                        <color key="titleColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <segue destination="qxu-57-bsa" kind="show" id="Ho2-LF-O37"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bMS-pt-8GM" firstAttribute="top" secondItem="3Nu-Fr-Bos" secondAttribute="bottom" constant="25" id="ZAk-Ez-M28"/>
+                            <constraint firstItem="bMS-pt-8GM" firstAttribute="centerX" secondItem="jZe-6W-q24" secondAttribute="centerX" id="bHO-Vp-XwI"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="newSessionButton" destination="bMS-pt-8GM" id="HSM-Cn-pAK"/>
+                        <outlet property="sessionTableView" destination="XBB-jt-Ieq" id="dl4-ff-S4d"/>
+                        <segue destination="qxu-57-bsa" kind="show" id="qYP-m7-xAH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zuO-wb-LH5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-834.39999999999998" y="774.96251874062978"/>
         </scene>
         <!--Random Play-->
         <scene sceneID="Pnf-OL-H2o">
@@ -1225,9 +1313,10 @@
         <image name="Contacts" width="16" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bgE-aY-1Jj"/>
+        <segue reference="PTG-Wq-C6N"/>
         <segue reference="QCO-GB-lYv"/>
         <segue reference="Ngl-xp-pfz"/>
+        <segue reference="qYP-m7-xAH"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

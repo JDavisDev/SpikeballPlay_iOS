@@ -17,6 +17,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newPlayerTextField: UITextField!
     
+    // TODO - Check our passed session for data! load RP controller or something
     override func viewDidLoad() {
         super.viewDidLoad()
         
