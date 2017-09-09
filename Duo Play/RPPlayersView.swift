@@ -12,7 +12,8 @@ import UIKit
 class RPPlayersView : UIViewController, UITextFieldDelegate {
     
     var numOfPlayersSelected: Int = 0
-    var controller: RPController = RPController()
+    // need to fetch controller from Session
+    weak var session: RandomPlaySession?
     @IBOutlet weak var playerTextFieldStack: UIStackView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newPlayerTextField: UITextField!
@@ -22,6 +23,15 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         updatePlayerTextFields()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+    }
+    
+    func setSesssion(session: RandomPlaySession) {
+        self.session = session
     }
     
     func updatePlayerTextFields() {
@@ -81,7 +91,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
-            self.controller.deletePlayer(playerName: (sender.titleLabel?.text)!)
+        //    self.session?.getController().deletePlayer(playerName: (sender.titleLabel?.text)!)
             self.updatePlayerTextFields()
         }))
         
@@ -108,7 +118,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         let name = (newPlayerTextField.text?.isEmpty)! ? String(RPController.playersList.count + 1) : newPlayerTextField.text
         let player = RandomPlayer(id: RPController.playersList.count + 1,
                                   name: name!)
-        controller.addPlayer(player: player)
+      //  self.session?.getController().addPlayer(player: player)
         newPlayerTextField.text = ""
         updatePlayerTextFields()
     }

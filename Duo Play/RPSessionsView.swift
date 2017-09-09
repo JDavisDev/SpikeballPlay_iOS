@@ -10,7 +10,8 @@ import UIKit
 import CoreData
 
 class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    
     @IBOutlet weak var newSessionButton: UIButton!
     @IBOutlet weak var sessionTableView: UITableView!
     var sessionList = [NSManagedObject]()
@@ -18,13 +19,8 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         sessionTableView.delegate = self
         sessionTableView.dataSource = self
-        // Do any additional setup after loading the view.
-        super.viewDidLoad()
-    }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        super.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -32,13 +28,21 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         updateSessionList()
     }
     
+    // Send tapped Session to new view
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let backItem = UIBarButtonItem()
         backItem.title = "Sessions"
         navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
+        
+        // send session
+        let indexPath = sessionTableView.indexPathForSelectedRow
+        let session = sessionList[(indexPath?.row)!] 
+        let controller = segue.destination as? RPPlayersView
+        controller?.session = session as? RandomPlaySession
     }
     
     // MARK: - Table View methods
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sessionList.count //RPManager.rpManager.sessionList.count
     }
@@ -46,9 +50,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sessionButtonCell")
         let button = cell?.contentView.subviews[0] as! UIButton
-        button.addTarget(self, action: #selector(self.sessionClicked), for: .touchUpInside)
-
-        // set button click method
         
         button.setTitle(sessionList[indexPath.row].value(forKey: "name") as? String, //RPManager.rpManager.sessionList[indexPath.row].value(forKey: "name") as? String,
                         for: .normal)
@@ -59,19 +60,34 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         return 1
     }
     
-    // Session item tapped
-    func sessionClicked() {
-    
-    }
-    
     // new session button clicked
     @IBAction func addNewSession(_ sender: UIButton) {
-        let session = RandomPlaySession(name: "Session 3")
+        let alert = UIAlertController(title: "New Session", message: "", preferredStyle: .alert)
+    
+        alert.addTextField { (textField) in
+            textField.placeholder = "Session Name"
+        }
         
-        // add this session to a list
-        self.saveSession(session: session)
-        self.updateSessionList()
-        sessionTableView.reloadData()
+        let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+            _ = alert.textFields![0] as UITextField
+            let newName = alert.textFields![0].text!
+            let session = NSEntityDescription.insertNewObject(forEntityName: "Session", into: AppDelegate.getContext())
+            session.setValue(newName, forKey: "name")
+            self.appDelegate?.saveContext()
+            
+            // add this session to a list
+            self.updateSessionList()
+            self.sessionTableView.reloadData()
+        }
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: .cancel) { (alertAction) in
+            return
+        }
+        
+        alert.addAction(action)
+        alert.addAction(actionCancel)
+        
+        present(alert, animated: true, completion: nil)
     }
     
     // Fetch from core data and update our local list
@@ -94,36 +110,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
             sessionList = try managedContext.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) as! [NSManagedObject]
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
-        }
-    }
-    
-    // Save a new session to local storage / Core Data
-    func saveSession(session: RandomPlaySession) {
-        guard let appDelegate =
-            UIApplication.shared.delegate as? AppDelegate else {
-                return
-        }
-        
-        // 1
-        let managedContext =
-            appDelegate.persistentContainer.viewContext
-        // 2
-        let entity =
-            NSEntityDescription.entity(forEntityName: "Session",
-                                       in: managedContext)!
-        
-        let newSession = NSManagedObject(entity: entity,
-                                     insertInto: managedContext)
-        
-        // 3
-        newSession.setValue(session.name, forKeyPath: "name")
-        
-        // 4
-        do {
-            try managedContext.save()
-            RPManager.rpManager.sessionList.append(newSession)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
         }
     }
 }

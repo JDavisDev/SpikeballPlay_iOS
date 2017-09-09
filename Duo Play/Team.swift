@@ -9,6 +9,8 @@
 import Foundation
 
 class Team {
+    var seed = 1
+    var id = 1
     var name: String
     var pool: Pool
     var division: Division

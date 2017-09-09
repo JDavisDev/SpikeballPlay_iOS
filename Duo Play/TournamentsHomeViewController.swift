@@ -16,6 +16,7 @@ class TournamentsHomeViewController {
     
     func addTournament(tournamentName: String) {
         let tournament = Tournament(name: tournamentName)
+       // TournamentsManager.addTournament(tournament)
         TournamentsHomeViewController.tournamentsList.append(tournament)
     }
 }

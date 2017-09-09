@@ -17,6 +17,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     @IBOutlet weak var teamsTableView: UITableView!
     
     override func viewDidLoad() {
+        title = "Teams"
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
         initTableDataSource()

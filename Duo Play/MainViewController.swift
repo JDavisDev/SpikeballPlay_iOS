@@ -11,10 +11,10 @@ import MessageUI
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
+    @IBOutlet weak var tournamentButton: UIButton!
     @IBOutlet weak var randomPlayButton: UIButton!
     @IBOutlet weak var rulesButton: UIButton!
     @IBOutlet weak var contactButton: UIButton!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,15 +29,19 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func initButtonStyles() {
-        randomPlayButton.layer.cornerRadius = 8
+        tournamentButton.layer.cornerRadius = 7
+        tournamentButton.layer.borderColor = UIColor.yellow.cgColor
+        tournamentButton.layer.borderWidth = 1
+        
+        randomPlayButton.layer.cornerRadius = 7
         randomPlayButton.layer.borderColor = UIColor.yellow.cgColor
         randomPlayButton.layer.borderWidth = 1
         
-        rulesButton.layer.cornerRadius = 8
+        rulesButton.layer.cornerRadius = 7
         rulesButton.layer.borderColor = UIColor.yellow.cgColor
         rulesButton.layer.borderWidth = 1
         
-        contactButton.layer.cornerRadius = 8
+        contactButton.layer.cornerRadius = 7
         contactButton.layer.borderColor = UIColor.yellow.cgColor
         contactButton.layer.borderWidth = 1
     }
