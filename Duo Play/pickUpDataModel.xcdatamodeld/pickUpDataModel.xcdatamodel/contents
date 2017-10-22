@@ -4,12 +4,13 @@
         <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="dateModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
+        <attribute name="rpController" optional="YES" attributeType="Transformable" customClassName="RPController" syncable="YES"/>
     </entity>
     <entity name="TournamentEntity" representedClassName="TournamentEntity" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Session" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="Session" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="TournamentEntity" positionX="-63" positionY="-9" width="128" height="60"/>
     </elements>
 </model>

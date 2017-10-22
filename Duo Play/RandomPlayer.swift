@@ -16,6 +16,7 @@ public class RandomPlayer {
     public var pointsFor: Int = 0
     public var pointsAgainst: Int = 0
     public var rating: Int = 0
+    public var isSuspended: Bool = false
     
     init(id: Int, name: String) {
         self.id = id

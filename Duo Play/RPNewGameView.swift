@@ -11,8 +11,7 @@ import UIKit
 
 public class RPNewGameView : UIViewController {
     
-    let controller = RPRandomizingController()
-    
+    var rpController = RPSessionsView.userSession.rpController
     // keep a reference to the names and update them
     // as user changes players
     // use these for randomizing
@@ -45,9 +44,8 @@ public class RPNewGameView : UIViewController {
     // View Did Load
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
         pickerDataSource.removeAll()
-        for player in RPController.playersList {
+        for player in (rpController?.playersList)! {
             pickerDataSource.append(player)
         }
         
@@ -72,7 +70,7 @@ public class RPNewGameView : UIViewController {
     
     @IBAction func selectPlayerButtonClicked(_ sender: UIButton) {
         let actionSheet = UIAlertController(title: "Select Player", message: "", preferredStyle: .actionSheet)
-        for player in RPController.playersList {
+        for player in (rpController?.playersList)! {
             let action = UIAlertAction(title: "\(player.name)", style: .default) { (action: UIAlertAction) in
                 // we have a selection!
                 // store it
@@ -155,22 +153,22 @@ public class RPNewGameView : UIViewController {
             
             present(alert, animated: true, completion: nil)
         } else {
-            let playerOne = RPController.getPlayerByName(name: playerOneName)
-            let playerTwo = RPController.getPlayerByName(name: playerTwoName)
+            let playerOne = rpController?.getPlayerByName(name: playerOneName)
+            let playerTwo = rpController?.getPlayerByName(name: playerTwoName)
             
-            let playerThree = RPController.getPlayerByName(name: playerThreeName)
-            let playerFour = RPController.getPlayerByName(name: playerFourName)
+            let playerThree = rpController?.getPlayerByName(name: playerThreeName)
+            let playerFour = rpController?.getPlayerByName(name: playerFourName)
         
 //            // confirm game
             let alert = UIAlertController(title: "Submit Game",
-                                      message: "\(playerOne.name)/\(playerTwo.name) : \(teamOneScore!) \n VS. \n\(playerThree.name)/\(playerFour.name) : \(teamTwoScore!)  ",
+                                      message: "\(playerOne?.name)/\(playerTwo?.name) : \(teamOneScore!) \n VS. \n\(playerThree?.name)/\(playerFour?.name) : \(teamTwoScore!)  ",
                                         preferredStyle: .alert)
         
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
                 // move on
-                let gameController: RPGameController = RPGameController()
-                gameController.submitMatch(playerOne: playerOne, playerTwo: playerTwo,
-                                       playerThree: playerThree, playerFour: playerFour,
+                let gameController = RPGameController(session: RPSessionsView.userSession)
+                gameController.submitMatch(playerOne: playerOne!, playerTwo: playerTwo!,
+                                       playerThree: playerThree!, playerFour: playerFour!,
                                        teamOneScore: teamOneScore!,
                                        teamTwoScore: teamTwoScore!)
             }))
@@ -221,45 +219,55 @@ public class RPNewGameView : UIViewController {
     // While randomly chosen player is NOT unique, 
     // pick a new random player until unique
     @IBAction func playerFourRandomize() {
+        var controller = RPRandomizingController(controller: rpController!)
+
         let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
         if index != -1 {
-            playerFourButton.setTitle(RPController.playersList[index].name, for: .normal)
+            playerFourButton.setTitle(rpController?.playersList![index].name, for: .normal)
         }
         updatePlayerNames()
     }
     
     @IBAction func playerThreeRandomize() {
+        var controller = RPRandomizingController(controller: rpController!)
+
         let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
         if index != -1 {
-            playerThreeButton.setTitle(RPController.playersList[index].name, for: .normal)
+            playerThreeButton.setTitle(rpController?.playersList![index].name, for: .normal)
         }
         updatePlayerNames()
     }
     
     @IBAction func playerTwoRandomize() {
+        var controller = RPRandomizingController(controller: rpController!)
+
         let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
         if index != -1 {
-            playerTwoButton.setTitle(RPController.playersList[index].name, for: .normal)
+            playerTwoButton.setTitle(rpController?.playersList![index].name, for: .normal)
         }
         updatePlayerNames()
     }
     
     @IBAction func playerOneRandomize() {
+        var controller = RPRandomizingController(controller: rpController!)
+
         let index = controller.getRandomPlayerIndex(nameOne: playerOneName, nameTwo: playerTwoName, nameThree: playerThreeName,nameFour: playerFourName)
         if index != -1 {
-            playerOneButton.setTitle(RPController.playersList[index].name, for: .normal)
+            playerOneButton.setTitle(rpController?.playersList![index].name, for: .normal)
         }
         updatePlayerNames()
     }
     
     @IBAction func gameRandomize() {
-        if(RPController.playersList.count >= 4) {
+        var controller = RPRandomizingController(controller: rpController!)
+
+        if((rpController?.playersList?.count)! >= 4) {
             let playerArray = controller.getFourRandomPlayers()
             
-            playerOneButton.setTitle(RPController.playersList[playerArray[0]].name, for: .normal)
-            playerTwoButton.setTitle(RPController.playersList[playerArray[1]].name, for: .normal)
-            playerThreeButton.setTitle(RPController.playersList[playerArray[2]].name, for: .normal)
-            playerFourButton.setTitle(RPController.playersList[playerArray[3]].name, for: .normal)
+            playerOneButton.setTitle(rpController?.playersList![playerArray[0]].name, for: .normal)
+            playerTwoButton.setTitle(rpController?.playersList![playerArray[1]].name, for: .normal)
+            playerThreeButton.setTitle(rpController?.playersList![playerArray[2]].name, for: .normal)
+            playerFourButton.setTitle(rpController?.playersList![playerArray[3]].name, for: .normal)
             
             updatePlayerNames()
         }

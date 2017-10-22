@@ -10,6 +10,14 @@ import Foundation
 
 class RPGameController {
     
+    var session: RandomPlaySession
+    var rpController: RPController
+    
+    init(session: RandomPlaySession) {
+        self.session = session
+        self.rpController = session.rpController!
+    }
+    
     //MARK: Submit Match
     func submitMatch(playerOne: RandomPlayer,
                      playerTwo: RandomPlayer,
@@ -24,7 +32,7 @@ class RPGameController {
                                  teamOneScore: teamOneScore, teamTwoScore: teamTwoScore)
         
         // store game in controller
-        RPController.addGame(game: newGame)
+        rpController.addGame(game: newGame)
         
         // parse game for score accumulation
         parseGameForStats(game: newGame)

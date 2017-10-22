@@ -39,8 +39,8 @@ class PoolDetailView : UIViewController, UITableViewDelegate, UITableViewDataSou
         let cell = tableView.dequeueReusableCell(withIdentifier: "MatchupCell")
         let section = indexPath.section
         let matchupIndex = section * 2 + indexPath.row
-        cell!.textLabel?.text = "(\(pool.matchupList[matchupIndex].teamOne.id)) \(pool.matchupList[matchupIndex].teamOne.name)        VS." +
-                "        (\(pool.matchupList[matchupIndex].teamTwo.id)) \(pool.matchupList[matchupIndex].teamTwo.name)"
+        cell!.textLabel?.text = "(\(pool.matchupList[matchupIndex].teamOne.id)) \(pool.matchupList[matchupIndex].teamOne.name) \n" +
+                "(\(pool.matchupList[matchupIndex].teamTwo.id)) \(pool.matchupList[matchupIndex].teamTwo.name)"
         return cell!
     }
     

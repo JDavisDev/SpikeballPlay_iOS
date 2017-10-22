@@ -55,7 +55,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
     
     func onLongPress() {
-        teamsTableView.isEditing = true
+            teamsTableView.setEditing(true, animated: true)
     }
     
 
@@ -71,6 +71,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     
     
     @IBAction func addTeam(_ sender: UIButton) {
+        teamsTableView.setEditing(false, animated: true)
         // let's present an alert to enter a team. cleaner ui
         let alert = UIAlertController(title: "Add Team",
                                       message: "", preferredStyle: .alert)
@@ -124,8 +125,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let movedObject = TeamsViewController.teamsList[sourceIndexPath.row]
         TeamsViewController.teamsList.remove(at: sourceIndexPath.row)
         TeamsViewController.teamsList.insert(movedObject, at: destinationIndexPath.row)
-        resetPoolTeams()
         self.teamsTableView.reloadData()
+        resetPoolTeams()
     }
     
     func resetPoolTeams() {
@@ -148,8 +149,11 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         return .none
     }
     
+    // moving and reassigning seems to work okay.
+    // Just need help accessing each row in each section.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
+        
         cell!.textLabel?.text = TeamsViewController.teamsList[indexPath.row].name
         cell?.detailTextLabel?.text = String(describing: TeamsViewController.teamsList[indexPath.row].division)
         return cell!

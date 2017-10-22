@@ -12,7 +12,6 @@
 		472103F41F59FF6B00CA76C3 /* TournamentsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103F31F59FF6B00CA76C3 /* TournamentsManager.swift */; };
 		472103F61F5A191F00CA76C3 /* TournamentDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103F51F5A191F00CA76C3 /* TournamentDAO.swift */; };
 		472103FC1F5D524C00CA76C3 /* PoolPlayMatchGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103FB1F5D524C00CA76C3 /* PoolPlayMatchGenerator.swift */; };
-		472103FE1F5D542000CA76C3 /* PoolPlayGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103FD1F5D542000CA76C3 /* PoolPlayGame.swift */; };
 		472104001F5D568400CA76C3 /* PoolPlayMatchup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103FF1F5D568400CA76C3 /* PoolPlayMatchup.swift */; };
 		472104041F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472104031F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift */; };
 		472104061F62939A00CA76C3 /* PoolPlayMatchReporterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472104051F62939A00CA76C3 /* PoolPlayMatchReporterController.swift */; };
@@ -74,7 +73,6 @@
 		472103F31F59FF6B00CA76C3 /* TournamentsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TournamentsManager.swift; sourceTree = "<group>"; };
 		472103F51F5A191F00CA76C3 /* TournamentDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TournamentDAO.swift; sourceTree = "<group>"; };
 		472103FB1F5D524C00CA76C3 /* PoolPlayMatchGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchGenerator.swift; sourceTree = "<group>"; };
-		472103FD1F5D542000CA76C3 /* PoolPlayGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayGame.swift; sourceTree = "<group>"; };
 		472103FF1F5D568400CA76C3 /* PoolPlayMatchup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchup.swift; sourceTree = "<group>"; };
 		472104031F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchReporterView.swift; sourceTree = "<group>"; };
 		472104051F62939A00CA76C3 /* PoolPlayMatchReporterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchReporterController.swift; sourceTree = "<group>"; };
@@ -175,7 +173,6 @@
 		472103FA1F5D4F5E00CA76C3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				472103FD1F5D542000CA76C3 /* PoolPlayGame.swift */,
 				472103FF1F5D568400CA76C3 /* PoolPlayMatchup.swift */,
 			);
 			name = Models;
@@ -347,11 +344,11 @@
 		47F9F8061F32D53200C88DEA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				47232F531F494D9600EED453 /* RPSessionsView.swift */,
 				47F9F80B1F32DD0400C88DEA /* RPPlayersView.swift */,
 				47F9F8111F33E08400C88DEA /* RPNewGameView.swift */,
 				47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */,
 				47F9F8171F34B18800C88DEA /* RPHistoryView.swift */,
-				47232F531F494D9600EED453 /* RPSessionsView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -402,7 +399,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Jordan Davis";
 				TargetAttributes = {
 					47F9F7DE1F32814900C88DEA = {
@@ -499,7 +496,6 @@
 				472103FC1F5D524C00CA76C3 /* PoolPlayMatchGenerator.swift in Sources */,
 				47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */,
 				473689661F40240700C04FD4 /* Division.swift in Sources */,
-				472103FE1F5D542000CA76C3 /* PoolPlayGame.swift in Sources */,
 				47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */,
 				47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */,
 				47DE96351F3E2CB500F944F0 /* TournamentsHomeViewController.swift in Sources */,
@@ -571,7 +567,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -579,7 +577,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -622,7 +624,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -630,7 +634,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

@@ -12,8 +12,10 @@ class RPRandomizingController {
     
     var sittingPlayersArray = [Int]()
     var backupSittersArray = [Int]()
-    init() {
-        
+    var controller: RPController
+    
+    init(controller: RPController) {
+            self.controller = controller
     }
     
     public func getFourRandomPlayers() -> [Int] {
@@ -33,7 +35,7 @@ class RPRandomizingController {
             while returnArray.count < 4 {
                 // no sitters, so grab 4 randoms
                 if sittingPlayersArray.count <= 0 {
-                    let index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
+                    let index = Int(arc4random_uniform(UInt32(controller.playersList!.count)))
                     if !returnArray.contains(index) {
                         returnArray.append(index)
                     }
@@ -50,7 +52,7 @@ class RPRandomizingController {
             }
         }
         
-        for index in 0..<RPController.playersList.count {
+        for index in 0..<controller.playersList!.count {
             if !returnArray.contains(index) {
                 sittingPlayersArray.append(index)
             }
@@ -64,7 +66,7 @@ class RPRandomizingController {
         if current.count < 4 { return false }
         if !isUniqueGamesLeft() { return true } /// all unique games played, so return true to prevent infinite loop
         
-        for game in RPController.gameList {
+        for game in controller.gameList! {
             // try to fail fast
             if isTeamIdsEqual(current: current, game: game) {
                 if isMatchupsEqual(current: current, game: game) {
@@ -78,9 +80,9 @@ class RPRandomizingController {
     
     // see if all the unique games have been played
     func isUniqueGamesLeft() -> Bool {
-        let numGamesPossible = factorial(num: RPController.playersList.count) / 8
-        let currentCount = RPController.gameList.count
-        return currentCount < numGamesPossible
+        let numGamesPossible = factorial(num: (controller.playersList?.count)!) / 8
+        let currentCount = controller.gameList?.count
+        return currentCount! < numGamesPossible
     }
     
     // Calculates the factorial of a number
@@ -139,15 +141,15 @@ class RPRandomizingController {
     }
 
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
-        if RPController.playersList.count == 4 &&
+        if controller.playersList?.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&
             nameOne != "Select Player" && nameTwo != "Select Player" && nameThree != "Select Player" && nameFour != "Select Player"   {
             return -1
         }
         
-        var index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
+        var index = Int(arc4random_uniform(UInt32(controller.playersList!.count)))
         while !isPlayerSelectedUnique(playerIndex: index, nameOne: nameOne, nameTwo: nameTwo, nameThree: nameThree,nameFour: nameFour) {
-            index = Int(arc4random_uniform(UInt32(RPController.playersList.count)))
+            index = Int(arc4random_uniform(UInt32(controller.playersList!.count)))
         }
         
         return index
@@ -155,12 +157,13 @@ class RPRandomizingController {
     }
     
     func isPlayerSelectedUnique(playerIndex: Int, nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Bool {
-        let name = RPController.playersList[playerIndex].name
+        let name = controller.playersList![playerIndex].name
         if  name.isEmpty ||
             name == nameOne ||
             name == nameTwo ||
             name == nameThree ||
-            name == nameFour {
+            name == nameFour ||
+            controller.playersList![playerIndex].isSuspended {
             return false
         }
         

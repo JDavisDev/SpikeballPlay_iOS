@@ -11,31 +11,31 @@ import Foundation
 class RPStatisticsController {
     
     //MARK: Sort statistics page
-    public func sort(sortMethod: String) {
+    public func sort(sortMethod: String, controller: RPController) {
         switch sortMethod {
             case "Wins":
-                RPController.playersList = RPController.playersList.sorted(by: winsSorter)
+                controller.playersList = controller.playersList?.sorted(by: winsSorter)
             break
             case "Losses":
-                RPController.playersList = RPController.playersList.sorted(by: lossSorter)
+                controller.playersList = controller.playersList?.sorted(by: lossSorter)
             break
             case "Points For":
-            RPController.playersList = RPController.playersList.sorted(by: pointsForSorter)
+                controller.playersList = controller.playersList?.sorted(by: pointsForSorter)
             break
             case "Points Against":
-            RPController.playersList = RPController.playersList.sorted(by: pointsAgainstSorter)
+                controller.playersList = controller.playersList?.sorted(by: pointsAgainstSorter)
             break
             case "Point Differential":
-            RPController.playersList = RPController.playersList.sorted(by: pointDifferentialSorter)
+                controller.playersList = controller.playersList?.sorted(by: pointDifferentialSorter)
             break
             case "Name":
-            RPController.playersList = RPController.playersList.sorted(by: nameSorter)
+                controller.playersList = controller.playersList?.sorted(by: nameSorter)
             break
             case "Rating":
-            RPController.playersList = RPController.playersList.sorted(by: ratingSorter)
+                controller.playersList = controller.playersList?.sorted(by: ratingSorter)
             break
             default:
-                RPController.playersList = RPController.playersList.sorted(by: nameSorter)
+                controller.playersList = controller.playersList?.sorted(by: nameSorter)
             break
             
         }

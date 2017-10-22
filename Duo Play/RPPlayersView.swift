@@ -11,9 +11,9 @@ import UIKit
 
 class RPPlayersView : UIViewController, UITextFieldDelegate {
     
+    var session = RPSessionsView.userSession
+    var rpController = RPSessionsView.userSession.rpController
     var numOfPlayersSelected: Int = 0
-    // need to fetch controller from Session
-    weak var session: RandomPlaySession?
     @IBOutlet weak var playerTextFieldStack: UIStackView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newPlayerTextField: UITextField!
@@ -21,17 +21,13 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     // TODO - Check our passed session for data! load RP controller or something
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.rpController = session.rpController 
+    
         updatePlayerTextFields()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-    }
-    
-    func setSesssion(session: RandomPlaySession) {
-        self.session = session
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
     }
     
     func updatePlayerTextFields() {
@@ -40,14 +36,14 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
             i.removeFromSuperview()
         }
         
-        if RPController.playersList.count == 0 {
+        if rpController?.playersList?.count == 0 {
             return
         }
         
         // re add views
-        for i in 0...RPController.playersList.count - 1 {
+        for i in 0...(rpController?.playersList?.count)! - 1 {
             let button = UIButton()
-            button.setTitle(" " + RPController.playersList[i].name, for: .normal)
+            button.setTitle(" " + (rpController?.playersList![i].name)!, for: .normal)
             button.frame = CGRect(x: 0, y: 55 * i + 1, width: 335, height: 50)
             button.tag = i + 1
             button.contentHorizontalAlignment = .center
@@ -64,29 +60,31 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     
     // Player item tapped for deletion
     func playerButtonClicked(_ sender: UIButton!) {
-        let selectedPlayer = RPController.getPlayerByName(name: sender.currentTitle!)
+        let selectedPlayer = rpController?.getPlayerByName(name: sender.currentTitle!)
         resignFirstResponder()
-        // prompt for deletion with dialog!
-        // Delete player confirmation
-        // maybe add delete all button? 
-        // ADD EDIT FUNCTION to edit name
         let alert = UIAlertController(title: "Edit Player",
                                       message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
             _ = alert.textFields![0] as UITextField
-            let player = RPController.getPlayerByName(name: sender.currentTitle!)
+            let player = self.rpController?.getPlayerByName(name: sender.currentTitle!)
             let newName = alert.textFields![0].text!
-            player.name = newName
+            player?.name = newName
             self.updatePlayerTextFields()
         }
         
         alert.addTextField { (textField) in
             textField.placeholder = "Name"
-            textField.text = selectedPlayer.name
+            textField.text = selectedPlayer?.name
         }
         
         alert.addAction(action)
+        
+        alert.addAction(UIAlertAction(title: "Suspend", style: .default, handler: { (action: UIAlertAction!) in
+            // suspend player so their stats remain but they won't be included in games!
+            self.session.rpController?.getPlayerByName(name: (sender.titleLabel?.text)!).isSuspended = true
+            self.updatePlayerTextFields()
+        }))
 
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
@@ -115,10 +113,10 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     // Add Player Button Clicked
     @IBAction func addPlayerButtonClicked(_ sender: UIButton) {
         // if text field is empty, use the player index as their name
-        let name = (newPlayerTextField.text?.isEmpty)! ? String(RPController.playersList.count + 1) : newPlayerTextField.text
-        let player = RandomPlayer(id: RPController.playersList.count + 1,
+        let name = (newPlayerTextField.text?.isEmpty)! ? String((rpController?.playersList?.count)! + 1) : newPlayerTextField.text
+        let player = RandomPlayer(id: (rpController?.playersList?.count)! + 1,
                                   name: name!)
-      //  self.session?.getController().addPlayer(player: player)
+        self.session.rpController?.addPlayer(player: player)
         newPlayerTextField.text = ""
         updatePlayerTextFields()
     }
@@ -127,7 +125,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     // make sure we have linear, updated ids
     func updatePlayerIds() {
         var id = 1
-        for player in RPController.playersList {
+        for player in (rpController?.playersList)! {
             player.id = id
             id += 1
         }

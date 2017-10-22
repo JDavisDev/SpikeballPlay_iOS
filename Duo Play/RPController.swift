@@ -9,17 +9,42 @@
 import Foundation
 
 
-class RPController {
+class RPController : NSObject, NSCoding {
     
-    static var playersList = [RandomPlayer]()
-    static var gameList = [RandomGame]()
+    public var playersList: [RandomPlayer]?
+    public var gameList: [RandomGame]?
     
-    public func addPlayer(player: RandomPlayer) {
-        RPController.playersList.append(player)
+    init(playersList: [RandomPlayer], gameList: [RandomGame]) {
+        self.playersList = playersList
+        self.gameList = gameList
+        super.init()
+    }
+    func encode(with aCoder: NSCoder) {
+        guard let playersList = playersList else {
+            return
+        }
+        
+        guard let gameList = gameList else {
+            return
+        }
+        
+        aCoder.encode(playersList, forKey: "playersList")
+        aCoder.encode(gameList, forKey: "gameList")
     }
     
-    static func getPlayerByName(name: String) -> RandomPlayer {
-        for player in playersList {
+    required init?(coder aDecoder: NSCoder) {
+        playersList = [RandomPlayer]()
+        gameList = [RandomGame]()
+        
+        super.init()
+    }
+    
+    public func addPlayer(player: RandomPlayer) {
+        playersList?.append(player)
+    }
+    
+    func getPlayerByName(name: String) -> RandomPlayer {
+        for player in playersList! {
             if player.name.trimmingCharacters(in: .whitespaces) == name.trimmingCharacters(in: .whitespaces) {
                 return player
             }
@@ -28,18 +53,17 @@ class RPController {
         return RandomPlayer(id: 0, name: "nil")
     }
     
-    static func addGame(game: RandomGame) {
-        RPController.gameList.append(game)
+    func addGame(game: RandomGame) {
+        gameList?.append(game)
     }
     
     // Deletes a player from list
     public func deletePlayer(playerName: String) {
-        if RPController.playersList.count > 0 {
+        if playersList!.count > 0 {
             // finds player by name, and uses their ID to fetch their index for list deletion
-            RPController.playersList.remove(at: RPController.getPlayerByName(
-            name: playerName.trimmingCharacters(in: .whitespacesAndNewlines)).id - 1)
+            playersList?.remove(at: getPlayerByName(name: playerName.trimmingCharacters(in: .whitespacesAndNewlines)).id - 1)
         } else {
-            RPController.playersList.removeAll()
+            playersList?.removeAll()
         }
     }
     

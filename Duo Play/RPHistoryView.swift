@@ -13,15 +13,18 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var historyTableView: UITableView!
     var historyList = [History]()
-    var controller = RPHistoryController()
+    var controller = RPHistoryController(session: RPSessionsView.userSession)
+    var rpController = RPSessionsView.userSession.rpController
     var gameList = [RandomGame]()
     
     override func viewDidLoad() {
         historyTableView.delegate = self
         historyTableView.dataSource = self
-        gameList = RPController.gameList
+        rpController = controller.session.rpController!
+        gameList = (rpController?.gameList)!
         super.viewDidLoad()
     }
+
     
     func updateHistoryList() {
         historyList.removeAll()
@@ -31,7 +34,7 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        gameList = RPController.gameList
+        gameList = (rpController?.gameList)!
         updateHistoryList()
         historyTableView.reloadData()
     }
@@ -64,7 +67,7 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
-            self.controller.deleteHistoryMatch(game: self.gameList[indexPath.row])
+            self.controller.deleteHistoryMatch(game: self.gameList[indexPath.row], session: [RPSessionsView.userSession])
             // update history list
             self.viewDidAppear(true)
         }))

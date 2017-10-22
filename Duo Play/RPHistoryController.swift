@@ -10,9 +10,14 @@ import Foundation
 
 class RPHistoryController {
     
-    func deleteHistoryMatch(game: RandomGame) {
+    public var session: RandomPlaySession
+    
+    init(session: RandomPlaySession) {
+        self.session = session
+    }
+    func deleteHistoryMatch(game: RandomGame, session: [RandomPlaySession]) {
         deleteFromPlayerStatistics(game: game)
-        RPController.gameList = RPController.gameList.filter { $0 !== game }
+        self.session.rpController?.gameList = (self.session.rpController?.gameList?.filter { $0 !== game })!
     }
     
     // remove stats from players if a match is deleted
@@ -40,5 +45,12 @@ class RPHistoryController {
         game.playerFour.pointsFor -= game.teamTwoScore
         game.playerThree.pointsAgainst -= game.teamOneScore
         game.playerFour.pointsAgainst -= game.teamOneScore
+        
+        saveSession()
+    }
+    
+    func saveSession() {
+        
+        
     }
 }

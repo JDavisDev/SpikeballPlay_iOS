@@ -17,6 +17,8 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     var sortingData = [String]()
     var controller = RPStatisticsController()
     
+    var rpController = RPSessionsView.userSession.rpController!
+    
     override func viewDidLoad() {
         statsTable.delegate = self
         statsTable.dataSource = self
@@ -27,7 +29,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        controller.sort(sortMethod: sortButton.currentTitle!)
+        controller.sort(sortMethod: sortButton.currentTitle!, controller: rpController)
         initStats()
         statsTable.reloadData()
     }
@@ -45,7 +47,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     // wipe them away and start fresh to stay up to date.
     func initStats() {
         stats.removeAll()
-        for player in RPController.playersList {
+        for player in rpController.playersList! {
             stats.append(Statistics(name: player.name, wins: player.wins, losses: player.losses, pointsFor: player.pointsFor,
                                     pointsAgainst: player.pointsAgainst, pointsDifferential: player.pointsFor - player.pointsAgainst))
         }
