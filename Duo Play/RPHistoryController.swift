@@ -7,17 +7,15 @@
 //
 
 import Foundation
+import CoreData
 
 class RPHistoryController {
-    
-    public var session: RandomPlaySession
-    
-    init(session: RandomPlaySession) {
-        self.session = session
-    }
-    func deleteHistoryMatch(game: RandomGame, session: [RandomPlaySession]) {
+        
+    func deleteHistoryMatch(game: RandomGame) {
         deleteFromPlayerStatistics(game: game)
-        self.session.rpController?.gameList = (self.session.rpController?.gameList?.filter { $0 !== game })!
+        let session = RPSessionsView.getCurrentSession()
+        let rpController = session.value(forKeyPath: "rpController") as! RPController
+        rpController.gameList = (rpController.gameList?.filter { $0 !== game })!
     }
     
     // remove stats from players if a match is deleted

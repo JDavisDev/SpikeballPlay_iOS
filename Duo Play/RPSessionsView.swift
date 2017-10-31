@@ -11,14 +11,16 @@ import CoreData
 
 class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    static var userSession = RandomPlaySession()
     @IBOutlet weak var newSessionButton: UIButton!
     @IBOutlet weak var sessionTableView: UITableView!
-    var sessionList = [NSManagedObject]()
+    public static var sessionUuid: String = "";
+    var sessionList: [Session] = []
     
     override func viewDidLoad() {
+       // deleteAllData()
         sessionTableView.delegate = self
         sessionTableView.dataSource = self
+    
 
         super.viewDidLoad()
     }
@@ -26,7 +28,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateSessionList()
-        //deleteAllData(entity: "Session")
     }
     
     // Send tapped Session to new view
@@ -34,12 +35,9 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         let backItem = UIBarButtonItem()
         backItem.title = "Sessions"
         navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
-        
-        // send session
-        let indexPath = sessionTableView.indexPathForSelectedRow
-        let session = sessionList[(indexPath?.row)!]
-        RPSessionsView.userSession = session as! RandomPlaySession
     }
+    
+    
     
     // MARK: - Table View methods
     
@@ -50,10 +48,29 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "sessionButtonCell")
         let button = cell?.contentView.subviews[0] as! UIButton
-        
-        button.setTitle(sessionList[indexPath.row].value(forKey: "name") as? String, //RPManager.rpManager.sessionList[indexPath.row].value(forKey: "name") as? String,
+        button.setTitle(sessionList[indexPath.row].value(forKeyPath: "name") as? String,
                         for: .normal)
+        
+        button.addTarget(self,
+                         action: #selector(sessionButton_Clicked),
+                         for: .touchUpInside
+        )
+        
         return cell!
+    }
+    
+    @IBAction func sessionButton_Clicked(sender: UIButton) {
+        let name = sender.currentTitle
+        var uuid = ""
+        if sessionList.count > 0 {
+            for sessionName in sessionList {
+                if name == sessionName.name {
+                    RPSessionsView.setCurrentSessionId(uuid: sessionName.uuid!)
+                }
+            }
+        }
+        
+        performSegue(withIdentifier: "sessionSelectedSegue", sender: self)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -71,16 +88,11 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
             _ = alert.textFields![0] as UITextField
             let newName = alert.textFields![0].text!
-            let session = NSEntityDescription.insertNewObject(forEntityName: "Session", into: AppDelegate.getContext())
-            session.setValue(newName, forKey: "name")
-            var code = NSCoder()
-            session.setValue(RPController(coder: code), forKey: "rpController")
-            self.appDelegate?.saveContext()
+            self.saveSession(name: newName)
             
             // add this session to a list
             self.updateSessionList()
             self.sessionTableView.reloadData()
-            RPSessionsView.userSession = self.sessionList[0] as! RandomPlaySession
         }
         
         let actionCancel = UIAlertAction(title: "Cancel", style: .cancel) { (alertAction) in
@@ -91,6 +103,125 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         alert.addAction(actionCancel)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    // SAVE SESSION
+    func saveSession(name: String) {
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        
+        // 1
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        // 2
+        let entity =
+            NSEntityDescription.entity(forEntityName: "Session",
+                                       in: managedContext)!
+        
+        let session = NSEntityDescription.insertNewObject(forEntityName: "Session", into: managedContext) as! Session
+        
+//        let session = NSManagedObject(entity: entity,
+//                                     insertInto: managedContext)
+
+        
+        // 3
+        session.setValue(name, forKeyPath: "name")
+        session.name = name
+        
+        let uuid = UUID().uuidString
+        session.setValue(uuid, forKeyPath: "uuid")
+        session.uuid = uuid
+        RPSessionsView.setCurrentSessionId(uuid: uuid)
+        
+        let controller = RPController(playersList: [RandomPlayer](), gameList: [RandomGame]())
+        session.rpController = controller
+        session.setValue(controller, forKeyPath: "rpController")
+        
+        // 4
+        do {
+            try managedContext.save()
+            sessionList.append(session)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+    
+    public static func getCurrentSessionId() -> String {
+        return RPSessionsView.sessionUuid
+    }
+    
+    public static func setCurrentSessionId(uuid: String) {
+        RPSessionsView.sessionUuid = uuid
+    }
+    
+    public static func getCurrentSession() -> Session {
+        let id = getCurrentSessionId()
+        
+        //1
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return Session()
+        }
+        
+        let managedContext =
+            appDelegate.persistentContainer.viewContext
+        
+        //2
+        let fetchRequest =
+            NSFetchRequest<NSManagedObject>(entityName: "Session")
+        
+        // filter
+        fetchRequest.predicate = NSPredicate(format: "uuid == %@", id)
+        
+        //3
+        do {
+            let list = try managedContext.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) as! [NSManagedObject]
+            if list.count > 0 {
+                return list.first as! Session
+            }
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    
+        // create default session with right values
+
+        
+        // 2
+        let entity =
+            NSEntityDescription.entity(forEntityName: "Session",
+                                       in: managedContext)!
+        
+        let session = NSEntityDescription.insertNewObject(forEntityName: "Session", into: managedContext) as! Session
+        
+        //        let session = NSManagedObject(entity: entity,
+        //                                     insertInto: managedContext)
+        
+        
+        // 3
+        session.setValue("default", forKeyPath: "name")
+        session.name = "default"
+        
+        let uuid = UUID().uuidString
+        session.setValue(uuid, forKeyPath: "uuid")
+        session.uuid = uuid
+        RPSessionsView.setCurrentSessionId(uuid: uuid)
+        
+        let controller = RPController(playersList: [RandomPlayer](), gameList: [RandomGame]())
+        session.rpController = controller
+        session.setValue(controller, forKeyPath: "rpController")
+        
+        // 4
+        do {
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        
+        return session
     }
     
     // Fetch from core data and update our local list
@@ -110,20 +241,22 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //3
         do {
-            sessionList = try managedContext.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) as! [NSManagedObject]
+            sessionList = try managedContext.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) as! [Session]
                 for item in sessionList {
                     for key in item.entity.attributesByName.keys {
-                        let value: Any? = item.value(forKey: key)
-                        print("\(key) = \(value)")
+                        let value: Any? = item.value(forKeyPath: key)
+                        print("\(key) = \(String(describing: value))")
                     }
             }
+            
+           // var sessionT = sessionList[0].
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
     }
     
     // DELETE ALL SESSIONS
-    func deleteAllData(entity: String) {
+    func deleteAllData() {
         //1
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
@@ -139,7 +272,7 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //3
         do {
-            sessionList = try managedContext.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) as! [NSManagedObject]
+            sessionList = try managedContext.fetch(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) as! [Session]
             for item in sessionList {
                 managedContext.delete(item)
             }

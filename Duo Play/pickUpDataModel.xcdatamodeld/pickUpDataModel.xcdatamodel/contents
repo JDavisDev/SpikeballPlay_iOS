@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Session" representedClassName="RandomPlaySession" syncable="YES" codeGenerationType="class">
-        <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="dateModified" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
-        <attribute name="rpController" optional="YES" attributeType="Transformable" customClassName="RPController" syncable="YES"/>
-    </entity>
-    <entity name="TournamentEntity" representedClassName="TournamentEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13241" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Session" representedClassName="Session" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String" minValueString="1" syncable="YES"/>
+        <attribute name="rpController" attributeType="Transformable" valueTransformerName="" customClassName="RPController" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Session" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="TournamentEntity" positionX="-63" positionY="-9" width="128" height="60"/>
+        <element name="Session" positionX="-198" positionY="209" width="144" height="88"/>
     </elements>
 </model>

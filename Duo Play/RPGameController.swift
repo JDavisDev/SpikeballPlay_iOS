@@ -10,12 +10,10 @@ import Foundation
 
 class RPGameController {
     
-    var session: RandomPlaySession
     var rpController: RPController
     
-    init(session: RandomPlaySession) {
-        self.session = session
-        self.rpController = session.rpController!
+    init(rpController: RPController) {
+        self.rpController = rpController
     }
     
     //MARK: Submit Match

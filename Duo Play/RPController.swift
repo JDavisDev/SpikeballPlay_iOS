@@ -7,18 +7,19 @@
 //
 
 import Foundation
-
+import CoreData
 
 class RPController : NSObject, NSCoding {
     
-    public var playersList: [RandomPlayer]?
-    public var gameList: [RandomGame]?
+ public var playersList: [RandomPlayer]?
+ public var gameList: [RandomGame]?
     
     init(playersList: [RandomPlayer], gameList: [RandomGame]) {
         self.playersList = playersList
         self.gameList = gameList
         super.init()
     }
+    
     func encode(with aCoder: NSCoder) {
         guard let playersList = playersList else {
             return
@@ -33,11 +34,15 @@ class RPController : NSObject, NSCoding {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        playersList = [RandomPlayer]()
-        gameList = [RandomGame]()
+        guard let playerList = aDecoder.decodeObject(forKey: "playersList") as? [RandomPlayer],
+            let gameList = aDecoder.decodeObject(forKey: "gameList") as? [RandomGame] else {
+                return nil
+        }
         
-        super.init()
+        self.playersList = playerList
+        self.gameList = gameList
     }
+    
     
     public func addPlayer(player: RandomPlayer) {
         playersList?.append(player)

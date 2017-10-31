@@ -12,10 +12,4 @@ import CoreData
 // this class will hold sessions data and be the highest level
 final class RPManager {
     static let rpManager = RPManager()
-    
-    var sessionList = [NSManagedObject]()
-    
-    private init() {
-        
-    }
 }
