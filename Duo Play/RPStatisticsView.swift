@@ -16,6 +16,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     @IBOutlet weak var statsTable: UITableView!
     var sortingData = [String]()
     var controller = RPStatisticsController()
+    let session = RPSessionsView.getCurrentSession()
     
     override func viewDidLoad() {
         statsTable.delegate = self
@@ -26,15 +27,10 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let rpController = getRPController()
         super.viewDidAppear(animated)
-        controller.sort(sortMethod: sortButton.currentTitle!, controller: rpController)
+        controller.sort(sortMethod: sortButton.currentTitle!)
         initStats()
         statsTable.reloadData()
-    }
-    
-    func getRPController() -> RPController {
-        return RPSessionsView.getCurrentSession().rpController ?? RPController(playersList: [RandomPlayer](), gameList: [RandomGame]())
     }
     
     func initSortingData() {
@@ -50,8 +46,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     // wipe them away and start fresh to stay up to date.
     func initStats() {
         stats.removeAll()
-        let rpController = getRPController()
-        for player in rpController.playersList! {
+        for player in session.playersList {
             stats.append(Statistics(name: player.name, wins: player.wins, losses: player.losses, pointsFor: player.pointsFor,
                                     pointsAgainst: player.pointsAgainst, pointsDifferential: player.pointsFor - player.pointsAgainst))
         }
@@ -80,7 +75,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     }
     
     @IBAction func sortButtonClicked(_ sender: UIButton) {
-        let actionSheet = UIAlertController(title: "Sort By", message: "", preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "Click To Sort", message: "", preferredStyle: .actionSheet)
         for method in sortingData {
             let action = UIAlertAction(title: "\(method)", style: .default) { (action: UIAlertAction) in
                 self.sortButton.setTitle(method, for: .normal)

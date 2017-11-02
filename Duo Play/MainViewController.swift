@@ -8,6 +8,7 @@
 
 import UIKit
 import MessageUI
+import RealmSwift
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
@@ -18,6 +19,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
         // Do any additional setup after loading the view, typically from a nib.
         
         initButtonStyles()

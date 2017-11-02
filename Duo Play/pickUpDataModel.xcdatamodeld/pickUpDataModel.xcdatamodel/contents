@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13241" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Session" representedClassName="Session" syncable="YES" codeGenerationType="class">
-        <attribute name="name" attributeType="String" minValueString="1" syncable="YES"/>
-        <attribute name="rpController" attributeType="Transformable" valueTransformerName="" customClassName="RPController" syncable="YES"/>
-        <attribute name="uuid" attributeType="String" syncable="YES"/>
-    </entity>
-    <elements>
-        <element name="Session" positionX="-198" positionY="209" width="144" height="88"/>
-    </elements>
+    <elements/>
 </model>

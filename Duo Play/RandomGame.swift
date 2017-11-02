@@ -7,27 +7,15 @@
 //
 
 import Foundation
+import RealmSwift
+import Realm
 
-public class RandomGame {
+public class RandomGame : Object {
     
-    var playerOne: RandomPlayer
-    var playerTwo: RandomPlayer
-    var playerThree: RandomPlayer
-    var playerFour: RandomPlayer
-    var teamOneScore: Int
-    var teamTwoScore: Int
-    
-    init(playerOne: RandomPlayer,
-        playerTwo: RandomPlayer,
-        playerThree: RandomPlayer,
-        playerFour: RandomPlayer,
-        teamOneScore: Int,
-        teamTwoScore: Int) {
-        self.playerOne = playerOne
-        self.playerTwo = playerTwo
-        self.playerThree = playerThree
-        self.playerFour = playerFour
-        self.teamOneScore = teamOneScore
-        self.teamTwoScore = teamTwoScore
-    }
+    @objc dynamic var playerOne: RandomPlayer?
+    @objc dynamic var playerTwo: RandomPlayer?
+    @objc dynamic var playerThree: RandomPlayer?
+    @objc dynamic var playerFour: RandomPlayer?
+    @objc dynamic var teamOneScore: Int =  0
+    @objc dynamic var teamTwoScore: Int = 0
 }

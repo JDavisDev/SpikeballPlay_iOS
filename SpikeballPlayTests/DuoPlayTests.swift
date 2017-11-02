@@ -9,7 +9,7 @@
 import XCTest
 @testable import SpikeballPlay
 
-class SpikeballPlayTests: XCTestCase {
+class DuoPlayTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

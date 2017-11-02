@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import CoreData
+import RealmSwift
 
 class RPPlayersView : UIViewController, UITextFieldDelegate {
     
@@ -16,13 +16,9 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     @IBOutlet weak var playerTextFieldStack: UIStackView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newPlayerTextField: UITextField!
-    
-    func getRPController() -> RPController {
-        let session = RPSessionsView.getCurrentSession()
-        let controller = session.rpController
-    
-        return controller!
-    }
+    var rpController = RPController()
+    var session = RPSessionsView.getCurrentSession()
+    let realm = try! Realm()
     
     // TODO - Check our passed session for data! load RP controller or something
     override func viewDidLoad() {
@@ -34,36 +30,30 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         super.viewDidAppear(true)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        save()
-        super.viewWillDisappear(true)
-        
-    }
-    
-    func save() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.saveContext()
-    }
-    
     func updatePlayerTextFields() {
-        let rpController = getRPController()
         // clear values first
         for i in self.playerTextFieldStack.subviews {
             i.removeFromSuperview()
         }
         
-        if rpController.playersList?.count == 0 {
+        if session == nil || session.playersList == nil || session.playersList.count <= 0 {
             return
         }
         
         // re add views
-        for i in 0...(rpController.playersList?.count)! - 1 {
+        for i in 0...(session.playersList.count) - 1 {
             let button = UIButton()
-            button.setTitle(" " + (rpController.playersList![i].name), for: .normal)
+            button.setTitle(" " + (session.playersList[i].name), for: .normal)
             button.frame = CGRect(x: 0, y: 55 * i + 1, width: 335, height: 50)
             button.tag = i + 1
             button.contentHorizontalAlignment = .center
-            button.backgroundColor = UIColor.darkGray
+            
+            if session.playersList[i].isSuspended {
+                button.backgroundColor = UIColor.black
+            } else {
+                button.backgroundColor = UIColor.darkGray
+            }
+            
             button.setTitleColor(UIColor.white, for: .normal)
             button.addTarget(self, action: #selector(RPPlayersView.playerButtonClicked(_:)), for: .touchUpInside)
             // see if player for this index already exists
@@ -75,18 +65,23 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     }
     
     // Player item tapped for deletion
-    func playerButtonClicked(_ sender: UIButton!) {
-        let rpController = getRPController()
-        let selectedPlayer = rpController.getPlayerByName(name: sender.currentTitle!)
+    @objc func playerButtonClicked(_ sender: UIButton!) {
         resignFirstResponder()
+        
+        let selectedPlayer = rpController.getPlayerByName(name: sender.currentTitle!)
+        
         let alert = UIAlertController(title: "Edit Player",
                                       message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
             _ = alert.textFields![0] as UITextField
-            let player = rpController.getPlayerByName(name: sender.currentTitle!)
+            let player = self.rpController.getPlayerByName(name: sender.currentTitle!)
             let newName = alert.textFields![0].text!
-            player.name = newName
+            
+            try! self.realm.write {
+                player.name = newName
+            }
+            
             self.updatePlayerTextFields()
         }
         
@@ -97,16 +92,23 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         
         alert.addAction(action)
         
-        alert.addAction(UIAlertAction(title: "Suspend", style: .default, handler: { (action: UIAlertAction!) in
-            // suspend player so their stats remain but they won't be included in games!
-            rpController.getPlayerByName(name: (sender.titleLabel?.text)!).isSuspended = true
-            self.updatePlayerTextFields()
-        }))
+//        alert.addAction(UIAlertAction(title: "Suspend", style: .default, handler: { (action: UIAlertAction!) in
+//            // suspend player so their stats remain but they won't be included in games!
+//            try! self.realm.write {
+//                let player = self.rpController.getPlayerByName(name: (sender.titleLabel?.text)!)
+//                player.isSuspended = true
+//            }
+//
+//            self.updatePlayerTextFields()
+//        }))
 
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
-        //    self.session?.getController().deletePlayer(playerName: (sender.titleLabel?.text)!)
+            let player = self.rpController.getPlayerByName(name: (sender.titleLabel?.text)!)
+            try! self.realm.write {
+                self.realm.delete(player)
+            }
             self.updatePlayerTextFields()
         }))
         
@@ -129,11 +131,16 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     // CHECK FOR DUPLICATES
     // Add Player Button Clicked
     @IBAction func addPlayerButtonClicked(_ sender: UIButton) {
-        let rpController = getRPController()
         // if text field is empty, use the player index as their name
-        let name = (newPlayerTextField.text?.isEmpty)! ? String((rpController.playersList?.count)! + 1) : newPlayerTextField.text
-        let player = RandomPlayer(id: (rpController.playersList?.count)! + 1,
-                                  name: name!)
+        let name = (newPlayerTextField.text?.isEmpty)! ? String((session.playersList.count) + 1) : newPlayerTextField.text
+        let player = RandomPlayer()
+        player.id = (session.playersList.count) + 1
+        player.name = name!
+        
+        try! realm.write {
+            realm.add(player)
+        }
+        
         rpController.addPlayer(player: player)
         newPlayerTextField.text = ""
         updatePlayerTextFields()
@@ -142,13 +149,14 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     // in case of deletions and weird additions
     // make sure we have linear, updated ids
     func updatePlayerIds() {
-        let rpController = getRPController()
         var id = 1
-        for player in (rpController.playersList)! {
-            player.id = id
-            id += 1
+        
+        try! realm.write {
+            for player in (session.playersList) {
+                player.id = id
+                id += 1
+            }
         }
         
-        save()
     }
 }

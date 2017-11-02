@@ -54,7 +54,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         self.teamsTableView.addGestureRecognizer(longPressRecognizer)
     }
     
-    func onLongPress() {
+    @objc func onLongPress() {
             teamsTableView.setEditing(true, animated: true)
     }
     

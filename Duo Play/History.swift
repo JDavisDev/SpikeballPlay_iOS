@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import RealmSwift
 
-struct History {
-    let playerOne: String
-    let playerTwo: String
-    let playerThree: String
-    let playerFour: String
-    let scoreOne: String
-    let scoreTwo: String
+class History : Object {
+    @objc dynamic var playerOne: String = ""
+    @objc dynamic var playerTwo: String = ""
+    @objc dynamic var playerThree: String = ""
+    @objc dynamic var playerFour: String = ""
+    @objc dynamic var scoreOne: String = ""
+    @objc dynamic var scoreTwo: String = ""
 }

@@ -8,42 +8,51 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 
 class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var historyTableView: UITableView!
-    var historyList = [History]()
     var controller = RPHistoryController()
-    var gameList = [RandomGame]()
+    var gameList = List<RandomGame>()
+    var session = RPSessionsView.getCurrentSession()
+    let realm = try! Realm()
     
     override func viewDidLoad() {
         historyTableView.delegate = self
         historyTableView.dataSource = self
-        let rpController = getRPController()
-        gameList = (rpController.gameList)!
+        gameList = (session.gameList)
         super.viewDidLoad()
-    }
-
-    func getRPController() -> RPController {
-        return RPSessionsView.getCurrentSession().rpController ?? RPController(playersList: [RandomPlayer](), gameList: [RandomGame]())
     }
     
     func updateHistoryList() {
-        historyList.removeAll()
-        for game in gameList {
-            historyList.append(History(playerOne: game.playerOne.name, playerTwo: game.playerTwo.name, playerThree: game.playerThree.name, playerFour: game.playerFour.name, scoreOne: String(game.teamOneScore), scoreTwo: String(game.teamTwoScore)))
+        try! realm.write {
+            session.historyList.removeAll()
+            
+            for game in gameList {
+                if game.playerOne != nil && game.playerTwo != nil && game.playerThree != nil && game.playerFour != nil {
+                    let history = History()
+                    history.playerOne = (game.playerOne?.name)!
+                    history.playerTwo = (game.playerTwo?.name)!
+                    history.playerThree = (game.playerThree?.name)!
+                    history.playerFour = (game.playerFour?.name)!
+                    history.scoreOne = String(game.teamOneScore)
+                    history.scoreTwo = String(game.teamTwoScore)
+                
+                    session.historyList.append(history)
+                }
+            }
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let rpController = getRPController()
-        gameList = (rpController.gameList)!
+        gameList = (session.gameList)
         updateHistoryList()
         historyTableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return historyList.count
+        return session.historyList.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -52,7 +61,7 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: HistoryCell.self)) as! HistoryCell
-        let statRow = historyList[indexPath.row]
+        let statRow = session.historyList[indexPath.row]
         cell.playerOne = statRow.playerOne
         cell.playerTwo = statRow.playerTwo
         cell.playerThree = statRow.playerThree

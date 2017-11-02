@@ -7,14 +7,12 @@
 //
 
 import Foundation
+import RealmSwift
 
 class RPGameController {
     
-    var rpController: RPController
-    
-    init(rpController: RPController) {
-        self.rpController = rpController
-    }
+    var rpController = RPController()
+    let realm = try! Realm()
     
     //MARK: Submit Match
     func submitMatch(playerOne: RandomPlayer,
@@ -25,9 +23,13 @@ class RPGameController {
                      teamTwoScore: Int) {
         
         // create game
-        let newGame = RandomGame(playerOne: playerOne, playerTwo: playerTwo,
-                                 playerThree: playerThree, playerFour: playerFour,
-                                 teamOneScore: teamOneScore, teamTwoScore: teamTwoScore)
+        let newGame = RandomGame()
+        newGame.playerOne = playerOne
+        newGame.playerTwo = playerTwo
+        newGame.playerThree = playerThree
+        newGame.playerFour = playerFour
+        newGame.teamOneScore = teamOneScore
+        newGame.teamTwoScore = teamTwoScore
         
         // store game in controller
         rpController.addGame(game: newGame)
@@ -38,36 +40,37 @@ class RPGameController {
     
     //MARK: Parse game wins and point stats
     func parseGameForStats(game: RandomGame) {
-        if game.teamOneScore > game.teamTwoScore {
-            // teamOne won
-            game.playerOne.wins += 1
-            game.playerTwo.wins += 1
+        try! realm.write {
+            if game.teamOneScore > game.teamTwoScore {
+                // teamOne won
+                game.playerOne?.wins += 1
+                game.playerTwo?.wins += 1
+                
+                game.playerThree?.losses += 1
+                game.playerFour?.losses += 1
+                
+                
+            } else {
+                // teamTwo won
+                game.playerOne?.losses += 1
+                game.playerTwo?.losses += 1
+                
+                game.playerThree?.wins += 1
+                game.playerFour?.wins += 1
+            }
             
-            game.playerThree.losses += 1
-            game.playerFour.losses += 1
+            // Doesn't matter who won, points remain the same.
+            game.playerThree?.pointsFor += game.teamTwoScore
+            game.playerFour?.pointsFor += game.teamTwoScore
             
-
-        } else {
-            // teamTwo won
-            game.playerOne.losses += 1
-            game.playerTwo.losses += 1
+            game.playerThree?.pointsAgainst += game.teamOneScore
+            game.playerFour?.pointsAgainst += game.teamOneScore
             
-            game.playerThree.wins += 1
-            game.playerFour.wins += 1
+            game.playerOne?.pointsFor += game.teamOneScore
+            game.playerTwo?.pointsFor += game.teamOneScore
+            
+            game.playerOne?.pointsAgainst += game.teamTwoScore
+            game.playerTwo?.pointsAgainst += game.teamTwoScore
         }
-        
-        // Doesn't matter who won, points remain the same.
-        game.playerThree.pointsFor += game.teamTwoScore
-        game.playerFour.pointsFor += game.teamTwoScore
-        
-        game.playerThree.pointsAgainst += game.teamOneScore
-        game.playerFour.pointsAgainst += game.teamOneScore
-        
-        game.playerOne.pointsFor += game.teamOneScore
-        game.playerTwo.pointsFor += game.teamOneScore
-        
-        game.playerOne.pointsAgainst += game.teamTwoScore
-        game.playerTwo.pointsAgainst += game.teamTwoScore
     }
-    
 }
