@@ -20,6 +20,7 @@
 		47232F541F494D9600EED453 /* RPSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47232F531F494D9600EED453 /* RPSessionsView.swift */; };
 		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
 		475FF2831FA96FEC0018BB63 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475FF2821FA96FEC0018BB63 /* Session.swift */; };
+		479157111FAD692800892145 /* RPDifficultyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479157101FAD692800892145 /* RPDifficultyController.swift */; };
 		47DE962A1F3E075400F944F0 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE96291F3E075400F944F0 /* Tournament.swift */; };
 		47DE962C1F3E075C00F944F0 /* Pool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE962B1F3E075C00F944F0 /* Pool.swift */; };
 		47DE962F1F3E07DD00F944F0 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DE962E1F3E07DD00F944F0 /* Team.swift */; };
@@ -95,6 +96,7 @@
 		47232F531F494D9600EED453 /* RPSessionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPSessionsView.swift; sourceTree = "<group>"; };
 		473689651F40240700C04FD4 /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Division.swift; sourceTree = "<group>"; };
 		475FF2821FA96FEC0018BB63 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		479157101FAD692800892145 /* RPDifficultyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPDifficultyController.swift; sourceTree = "<group>"; };
 		47DE96291F3E075400F944F0 /* Tournament.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
 		47DE962B1F3E075C00F944F0 /* Pool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pool.swift; sourceTree = "<group>"; };
 		47DE962E1F3E07DD00F944F0 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				47E932391F3508FA00145E28 /* RPStatisticsController.swift */,
 				47E9323B1F35090900145E28 /* RPHistoryController.swift */,
 				47E932411F356A0800145E28 /* RPRandomizingController.swift */,
+				479157101FAD692800892145 /* RPDifficultyController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 				47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */,
 				473689661F40240700C04FD4 /* Division.swift in Sources */,
 				47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */,
+				479157111FAD692800892145 /* RPDifficultyController.swift in Sources */,
 				47F9F8081F32D8D800C88DEA /* RandomPlayer.swift in Sources */,
 				47DE96351F3E2CB500F944F0 /* TournamentsHomeViewController.swift in Sources */,
 				47E932481F36C9D900145E28 /* Statistics.swift in Sources */,

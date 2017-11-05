@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Crashlytics
 
 public class RPNewGameView : UIViewController {
     
@@ -57,6 +58,10 @@ public class RPNewGameView : UIViewController {
     
     // View did Appear
     override public func viewDidAppear(_ animated: Bool) {
+        Answers.logContentView(withName: "New Game Page View",
+                               contentType: "New Game Page View",
+                               contentId: "2",
+                               customAttributes: [:])
         super.viewDidAppear(true)
         viewDidLoad()
     }

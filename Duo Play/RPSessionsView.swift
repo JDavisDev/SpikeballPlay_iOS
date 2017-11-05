@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Crashlytics
 import RealmSwift
 
 class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -95,6 +96,8 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 self.updateSessionList()
                 self.sessionTableView.reloadData()
+                Answers.logCustomEvent(withName: "Session Deleted",
+                                       customAttributes: [:])
             }
             
             alert.addAction(action)
@@ -214,9 +217,10 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         try! realm.write {
             realm.add(session)
+            sessionList.append(session)
+            Answers.logCustomEvent(withName: "Session Added",
+                                   customAttributes: [:])
         }
-
-        sessionList.append(session)
     }
     
     // fetch session list from db

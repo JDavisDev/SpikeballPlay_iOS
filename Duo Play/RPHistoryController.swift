@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import RealmSwift
+import Crashlytics
 
 class RPHistoryController {
     let session = RPSessionsView.getCurrentSession()
@@ -47,6 +48,9 @@ class RPHistoryController {
             
             realm.delete(game)
         }
+        
+        Answers.logCustomEvent(withName: "History Deleted",
+            customAttributes: [:])
     }
 }
 

@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class RPGameController {
-    
+    let difficultyController = RPDifficultyController()
     var rpController = RPController()
     let realm = try! Realm()
     
@@ -36,6 +36,7 @@ class RPGameController {
         
         // parse game for score accumulation
         parseGameForStats(game: newGame)
+        difficultyController.updateDifficulty()
     }
     
     //MARK: Parse game wins and point stats

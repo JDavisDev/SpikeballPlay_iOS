@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Crashlytics
 
 class RulesWebView : UIViewController{
     
@@ -16,7 +17,10 @@ class RulesWebView : UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        Answers.logContentView(withName: "Rules Page View",
+                               contentType: "Rules Page View",
+                               contentId: "5",
+                               customAttributes: [:])
         let requestURL = URL(string:url)
         let request = URLRequest(url: requestURL!)
         webView.loadRequest(request)

@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Crashlytics
 
 class RPController {
     let realm = try! Realm()
@@ -15,7 +16,10 @@ class RPController {
     
     public func addPlayer(player: RandomPlayer) {
         try! realm.write {
+            realm.add(player)
             session.playersList.append(player)
+            Answers.logCustomEvent(withName: "Player Added",
+                                   customAttributes: [:])
         }
     }
     
@@ -33,6 +37,10 @@ class RPController {
         try! realm.write {
             realm.add(game)
             session.gameList.append(game)
+            Answers.logCustomEvent(withName: "Game Submitted",
+                                           customAttributes: [
+                                            "Team One Score": game.teamOneScore,
+                                            "Team Two Score": game.teamTwoScore ])
         }
     }
     
@@ -44,6 +52,9 @@ class RPController {
         } else {
             session.playersList.removeAll()
         }
+        
+        Answers.logCustomEvent(withName: "Player Deleted",
+                               customAttributes: [:])
     }
     
     func isIndexUnique(index: Int) -> Bool {

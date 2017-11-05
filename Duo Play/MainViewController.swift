@@ -9,6 +9,7 @@
 import UIKit
 import MessageUI
 import RealmSwift
+import Crashlytics
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
@@ -74,6 +75,11 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
     // compose email to me!
     @IBAction func contactButtonClicked(_ sender: UIButton) {
+        Answers.logContentView(withName: "Contact Page View",
+                               contentType: "Contact Page View",
+                               contentId: "6",
+                               customAttributes: [:])
+        
         if !MFMailComposeViewController.canSendMail() {
             return
         }

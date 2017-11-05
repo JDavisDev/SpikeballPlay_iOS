@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class RPPlayersView : UIViewController, UITextFieldDelegate {
     
@@ -28,6 +29,11 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        
+        Answers.logContentView(withName: "Players Page View",
+                               contentType: "Players Page View",
+                               contentId: "3",
+                               customAttributes: [:])
     }
     
     func updatePlayerTextFields() {
@@ -44,9 +50,15 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         for i in 0...(session.playersList.count) - 1 {
             let button = UIButton()
             button.setTitle(" " + (session.playersList[i].name), for: .normal)
-            button.frame = CGRect(x: 0, y: 55 * i + 1, width: 335, height: 50)
+            button.setTitleColor(UIColor.yellow, for: UIControlState.normal)
+            button.setTitleColor(UIColor.white, for: UIControlState.highlighted)
+            button.frame = CGRect(x: 0, y: 65 * i + 1, width: Int(UIScreen.main.bounds.width - 30), height: 50)
+            
             button.tag = i + 1
             button.contentHorizontalAlignment = .center
+            button.layer.cornerRadius = 7
+            button.layer.borderColor = UIColor.yellow.cgColor
+            button.layer.borderWidth = 1
             
             if session.playersList[i].isSuspended {
                 button.backgroundColor = UIColor.black
@@ -54,7 +66,6 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
                 button.backgroundColor = UIColor.darkGray
             }
             
-            button.setTitleColor(UIColor.white, for: .normal)
             button.addTarget(self, action: #selector(RPPlayersView.playerButtonClicked(_:)), for: .touchUpInside)
             // see if player for this index already exists
             // so users can add players without clearing their stats
@@ -136,11 +147,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         let player = RandomPlayer()
         player.id = (session.playersList.count) + 1
         player.name = name!
-        
-        try! realm.write {
-            realm.add(player)
-        }
-        
+
         rpController.addPlayer(player: player)
         newPlayerTextField.text = ""
         updatePlayerTextFields()

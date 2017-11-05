@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Crashlytics
 
 class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -31,6 +32,11 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         controller.sort(sortMethod: sortButton.currentTitle!)
         initStats()
         statsTable.reloadData()
+        
+        Answers.logContentView(withName: "Statistics Page View",
+                                       contentType: "Statistics Page View",
+                                       contentId: "3",
+                                       customAttributes: [:])
     }
     
     func initSortingData() {

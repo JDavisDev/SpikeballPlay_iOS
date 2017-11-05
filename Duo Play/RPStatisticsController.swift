@@ -7,39 +7,40 @@
 //
 
 import Foundation
+import RealmSwift
 
 class RPStatisticsController {
     
     let session = RPSessionsView.getCurrentSession()
     
-    //varK: Sort statistics page
+    // Sort statistics page
     public func sort(sortMethod: String) {
 //        switch sortMethod {
 //            case "Wins":
 //                session.playersList = session.playersList.sorted(by: winsSorter)
+//                session.playersList.sorted(by: <#T##Sequence#>)
 //            break
 //            case "Losses":
-//                session.playersList = session.playersList?.sorted(by: lossSorter)
+//                session.playersList = session.playersList.sorted(by: lossSorter)
 //            break
 //            case "Points For":
-//                session.playersList = session.playersList?.sorted(by: pointsForSorter)
+//                session.playersList = session.playersList.sorted(by: pointsForSorter)
 //            break
 //            case "Points Against":
-//                session.playersList = session.playersList?.sorted(by: pointsAgainstSorter)
+//                session.playersList = session.playersList.sorted(by: pointsAgainstSorter)
 //            break
 //            case "Point Differential":
-//                session.playersList = session.playersList?.sorted(by: pointDifferentialSorter)
+//                session.playersList = session.playersList.sorted(by: pointDifferentialSorter)
 //            break
 //            case "Name":
-//                session.playersList = session.playersList?.sorted(by: nameSorter)
+//                session.playersList = session.playersList.sorted(by: nameSorter)
 //            break
 //            case "Rating":
-//                session.playersList = session.playersList?.sorted(by: ratingSorter)
+//                session.playersList = session.playersList.sorted(by: ratingSorter)
 //            break
 //            default:
-//                session.playersList = session.playersList?.sorted(by: nameSorter)
+//                session.playersList = session.playersList.sorted(by: nameSorter)
 //            break
-//
 //        }
     }
     

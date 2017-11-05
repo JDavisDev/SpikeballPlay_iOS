@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -24,6 +25,7 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
         gameList = (session.gameList)
         super.viewDidLoad()
     }
+
     
     func updateHistoryList() {
         try! realm.write {
@@ -49,6 +51,11 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
         gameList = (session.gameList)
         updateHistoryList()
         historyTableView.reloadData()
+        
+        Answers.logContentView(withName: "History Page View",
+                                       contentType: "History Page View",
+                                       contentId: "4",
+                                       customAttributes: [:])
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
