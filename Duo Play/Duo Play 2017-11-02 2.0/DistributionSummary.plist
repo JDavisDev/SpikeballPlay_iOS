@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Duo Play.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>bitcode</key>
+			<false/>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>F6D0339F3CA199CC3E2D97E960229600EB6FDF70</string>
+				<key>dateExpires</key>
+				<string>8/15/18</string>
+				<key>type</key>
+				<string>iOS Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+						<string>arm64</string>
+					</array>
+					<key>bitcode</key>
+					<false/>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>F6D0339F3CA199CC3E2D97E960229600EB6FDF70</string>
+						<key>dateExpires</key>
+						<string>8/15/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>Realm.framework</string>
+					<key>symbols</key>
+					<true/>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>XCMCLK6E4Y</string>
+						<key>name</key>
+						<string>Jordan Davis</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+						<string>arm64</string>
+					</array>
+					<key>bitcode</key>
+					<false/>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>F6D0339F3CA199CC3E2D97E960229600EB6FDF70</string>
+						<key>dateExpires</key>
+						<string>8/15/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>RealmSwift.framework</string>
+					<key>symbols</key>
+					<true/>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>XCMCLK6E4Y</string>
+						<key>name</key>
+						<string>Jordan Davis</string>
+					</dict>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>XCMCLK6E4Y.com.JordanDavis.DuoPlay</string>
+				<key>beta-reports-active</key>
+				<true/>
+				<key>com.apple.developer.team-identifier</key>
+				<string>XCMCLK6E4Y</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>XCMCLK6E4Y.com.JordanDavis.DuoPlay</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>Duo Play.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>41c5de28-c63b-4ea8-992a-e3d231b610f7</string>
+				<key>name</key>
+				<string>XC: *</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>XCMCLK6E4Y</string>
+				<key>name</key>
+				<string>Jordan Davis</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
