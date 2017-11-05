@@ -40,8 +40,9 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
                     history.playerFour = (game.playerFour?.name)!
                     history.scoreOne = String(game.teamOneScore)
                     history.scoreTwo = String(game.teamTwoScore)
-                
+                    
                     session.historyList.append(history)
+                    realm.add(history)
                 }
             }
         }
