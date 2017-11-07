@@ -549,7 +549,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="29" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="La6-r8-gwf">
                                                     <rect key="frame" x="0.0" y="38" width="0.0" height="24"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="hPQ-Iv-arB"/>
+                                                        <constraint firstAttribute="width" constant="30" id="hPQ-Iv-arB"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -630,11 +630,10 @@
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="ZfT-le-Dqc" firstAttribute="leading" secondItem="2Ng-w3-G1H" secondAttribute="leading" id="1AP-Pi-wM0"/>
                             <constraint firstItem="ZfT-le-Dqc" firstAttribute="top" secondItem="DTg-9N-CYu" secondAttribute="bottom" constant="20" id="COM-fO-uqA"/>
                             <constraint firstItem="ZfT-le-Dqc" firstAttribute="bottom" secondItem="nMf-kH-pQb" secondAttribute="top" id="D6K-ix-o9m"/>
-                            <constraint firstItem="ZfT-le-Dqc" firstAttribute="centerX" secondItem="2Ng-w3-G1H" secondAttribute="centerX" id="D7B-Tx-9i9"/>
-                            <constraint firstAttribute="trailing" secondItem="ZfT-le-Dqc" secondAttribute="trailing" id="Ozm-wS-LX7"/>
+                            <constraint firstItem="ZfT-le-Dqc" firstAttribute="width" secondItem="2Ng-w3-G1H" secondAttribute="width" id="OkM-OT-foC"/>
+                            <constraint firstItem="ZfT-le-Dqc" firstAttribute="leading" secondItem="2Ng-w3-G1H" secondAttribute="leading" id="fpG-DX-VTj"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="History" id="kxh-kK-Q1W"/>
