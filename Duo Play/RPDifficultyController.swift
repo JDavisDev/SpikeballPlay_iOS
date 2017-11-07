@@ -12,54 +12,69 @@ import RealmSwift
 class RPDifficultyController {
     
     let realm = try! Realm()
-    let session = RPSessionsView.getCurrentSession()
-    let playersList: List<RandomPlayer>
-    let gamesList: List<RandomGame>
-    let historyList: List<History>
+    let session: Session
+    var playersList: List<RandomPlayer>
+    var gamesList: List<RandomGame>
+    var historyList: List<History>
     
     init() {
-        self.playersList = session.playersList
-        self.gamesList = session.gameList
-        self.historyList = session.historyList
-    }
-    
-    func updateDifficulty() {
-        updateOpponentDifficulty()
-        updatePartnerDifficulty()
+        self.session = RPSessionsView.getCurrentSession()
+        self.playersList = List<RandomPlayer>()
+        self.gamesList = List<RandomGame>()
+        self.historyList = List<History>()
+        
+        try! realm.write {
+            self.playersList = session.playersList
+            self.gamesList = session.gameList
+            self.historyList = session.historyList
+        }
     }
     
     
  /*  If they play against a high scoring/high winning opponent, match difficulty goes up.
      If they play against a low scoring/winning opponent, match difficulty goes down */
-    func updateOpponentDifficulty() {
+    func updateDifficulty() {
         for player in self.playersList {
-            for game in gamesList {
+            // reset score first, so old values aren't appended on top of each other
+            try! realm.write {
+                player.matchDifficulty = 0
+            }
+            
+            for game in self.gamesList {
                 if isPlayerInGame(player: player, game: game) {
-                    let score = Float(getOpponentDifficulty(player: player, game: game))
-                    player.matchDifficulty += score
+                    let score = Float(getOpponentDifficulty(player: player, game: game) +
+                                      getPartnerDifficulty(player: player, game: game))
+                    
+                    try! realm.write {
+                        player.matchDifficulty += score
+                    }
                 }
             }
         }
     }
     
     func isPlayerInGame(player: RandomPlayer, game: RandomGame) -> Bool {
-        if game.playerOne == player ||
-            game.playerTwo == player ||
-            game.playerThree == player ||
-            game.playerFour == player {
+        if game.playerOne?.id == player.id ||
+            game.playerTwo?.id == player.id ||
+            game.playerThree?.id == player.id ||
+            game.playerFour?.id == player.id {
             return true
         }
         
         return false
     }
     
+    // MARK - Opponent Difficulty Calculations
+    
     func getOpponentDifficulty(player: RandomPlayer, game: RandomGame) -> Float {
         var returnScore = Float(0.0)
+        let playerGameCount = (player.wins) + (player.losses)
         
-        switch player {
+        // Find the current player's opposing team
+        switch player.id {
             // Team One
-        case game.playerOne!,
-             game.playerTwo!:
+        case (game.playerOne?.id)!,
+             (game.playerTwo?.id)!:
             
             let gameCount = (game.playerThree?.wins)! + (game.playerThree?.losses)! >
                 (game.playerFour?.wins)! + (game.playerFour?.losses)! ?
@@ -72,8 +87,8 @@ class RPDifficultyController {
             
             break
             // Team Two
-        case game.playerThree!,
-             game.playerFour!:
+        case game.playerThree!.id,
+             game.playerFour!.id:
             
             let gameCount = (game.playerOne?.wins)! + (game.playerOne?.losses)! >
                 (game.playerTwo?.wins)! + (game.playerTwo?.losses)! ?
@@ -89,13 +104,60 @@ class RPDifficultyController {
             return 0
         }
         
-        return returnScore
+        return returnScore / Float(playerGameCount)
     }
+    
+    // MARK - Partner Difficulty Calculations
     
    /* If they play WITH a high rated partner, match difficulty goes down.
       If they play WITH a low rated partner, match difficulty goes up. */
-    func updatePartnerDifficulty() {
+    func getPartnerDifficulty(player: RandomPlayer, game: RandomGame) -> Float {
+        var returnScore = Float(0.0)
+        let playerGameCount = (player.wins) + (player.losses)
         
+        // Find the current player's partner and accumulate their stats.
+        switch player.id {
+        // Player One
+        case (game.playerOne?.id)!:
+            
+            let gameCount = (game.playerTwo?.wins)! + (game.playerTwo?.losses)!
+            let winRatioPoints = (game.playerTwo?.wins)! - (game.playerTwo?.losses)!
+            let pointRatioPoints = (game.playerTwo?.pointsFor)! - (game.playerTwo?.pointsAgainst)!
+            returnScore = Float((winRatioPoints + pointRatioPoints) / gameCount)
+            
+            break
+        // Player Two
+        case (game.playerTwo?.id)!:
+            
+            let gameCount = (game.playerOne?.wins)! + (game.playerOne?.losses)!
+            let winRatioPoints = (game.playerOne?.wins)! - (game.playerOne?.losses)!
+            let pointRatioPoints = (game.playerOne?.pointsFor)! - (game.playerOne?.pointsAgainst)!
+            returnScore = Float((winRatioPoints + pointRatioPoints) / gameCount)
+            
+            break
+        // Player Three
+        case game.playerThree!.id:
+            
+            let gameCount = (game.playerFour?.wins)! + (game.playerFour?.losses)!
+            let winRatioPoints = (game.playerFour?.wins)! - (game.playerFour?.losses)!
+            let pointRatioPoints = (game.playerFour?.pointsFor)! - (game.playerFour?.pointsAgainst)!
+            returnScore = Float((winRatioPoints + pointRatioPoints) / gameCount)
+            
+            break
+            // Player Four
+        case game.playerFour!.id:
+            
+            let gameCount = (game.playerThree?.wins)! + (game.playerThree?.losses)!
+            let winRatioPoints = (game.playerThree?.wins)! - (game.playerThree?.losses)!
+            let pointRatioPoints = (game.playerThree?.pointsFor)! - (game.playerThree?.pointsAgainst)!
+            returnScore = Float((winRatioPoints + pointRatioPoints) / gameCount)
+            
+            break
+        default:
+            return 0
+        }
+        
+        return returnScore / Float(playerGameCount)
     }
 }
 
