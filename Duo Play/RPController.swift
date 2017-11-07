@@ -33,17 +33,6 @@ class RPController {
         return RandomPlayer()
     }
     
-    func addGame(game: RandomGame) {
-        try! realm.write {
-            realm.add(game)
-            session.gameList.append(game)
-            Answers.logCustomEvent(withName: "Game Submitted",
-                                           customAttributes: [
-                                            "Team One Score": game.teamOneScore,
-                                            "Team Two Score": game.teamTwoScore ])
-        }
-    }
-    
     // Deletes a player from list
     public func deletePlayer(playerName: String) {
         if session.playersList.count > 0 {

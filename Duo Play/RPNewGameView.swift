@@ -175,7 +175,7 @@ public class RPNewGameView : UIViewController {
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
                 // move on
                 let gameController = RPGameController()
-                gameController.submitMatch(playerOne: playerOne, playerTwo: playerTwo,
+                gameController.submitGame(playerOne: playerOne, playerTwo: playerTwo,
                                            playerThree: playerThree, playerFour: playerFour,
                                        teamOneScore: teamOneScore!,
                                        teamTwoScore: teamTwoScore!)
@@ -262,12 +262,14 @@ public class RPNewGameView : UIViewController {
         if((session.playersList.count) >= 4) {
             let playerArray = controller.getFourRandomPlayers()
             
-            playerOneButton.setTitle(session.playersList[playerArray[0]].name, for: .normal)
-            playerTwoButton.setTitle(session.playersList[playerArray[1]].name, for: .normal)
-            playerThreeButton.setTitle(session.playersList[playerArray[2]].name, for: .normal)
-            playerFourButton.setTitle(session.playersList[playerArray[3]].name, for: .normal)
+            if(playerArray.count == 4) {
+                playerOneButton.setTitle(playerArray[0].name, for: .normal)
+                playerTwoButton.setTitle(playerArray[1].name, for: .normal)
+                playerThreeButton.setTitle(playerArray[2].name, for: .normal)
+                playerFourButton.setTitle(playerArray[3].name, for: .normal)
             
-            updatePlayerNames()
+                updatePlayerNames()
+            }
         }
     }
     

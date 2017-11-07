@@ -20,4 +20,5 @@ public class RandomPlayer : Object {
     @objc dynamic public var rating: Float = 0
     @objc dynamic public var matchDifficulty: Float = 0.0
     @objc dynamic public var isSuspended: Bool = false
+    var gameList = List<RandomGame>()
 }

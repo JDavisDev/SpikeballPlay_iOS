@@ -18,6 +18,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newPlayerTextField: UITextField!
     var rpController = RPController()
+    var randomController = RPRandomizingController()
     var session = RPSessionsView.getCurrentSession()
     let realm = try! Realm()
     
@@ -147,7 +148,8 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         let player = RandomPlayer()
         player.id = (session.playersList.count) + 1
         player.name = name!
-
+        
+        randomController.resetValues()
         rpController.addPlayer(player: player)
         newPlayerTextField.text = ""
         updatePlayerTextFields()
