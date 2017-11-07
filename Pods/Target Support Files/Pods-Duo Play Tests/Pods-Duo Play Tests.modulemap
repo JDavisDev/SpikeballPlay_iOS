@@ -1,0 +1,6 @@
+framework module Pods_Duo_Play_Tests {
+  umbrella header "Pods-Duo Play Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -17,6 +17,7 @@ class StatisticCell : UITableViewCell {
     @IBOutlet weak var pointsForLabel: UILabel!
     @IBOutlet weak var pointsAgainstLabel: UILabel!
     @IBOutlet weak var pointsDifferentialLabel: UILabel!
+    @IBOutlet weak var matchDifficultyLabel: UILabel!
     
     
     override func awakeFromNib() {
@@ -63,6 +64,12 @@ class StatisticCell : UITableViewCell {
     var pointsDifferential: String? {
         didSet {
             pointsDifferentialLabel.text = pointsDifferential
+        }
+    }
+    
+    var matchDifficulty: String? {
+        didSet {
+            matchDifficultyLabel.text = matchDifficulty
         }
     }
 }

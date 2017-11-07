@@ -46,6 +46,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         sortingData.append("Points For")
         sortingData.append("Points Against")
         sortingData.append("Point Differential")
+        sortingData.append("Match Difficulty")
         sortingData.append("Rank")
     }
     
@@ -54,7 +55,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         stats.removeAll()
         for player in session.playersList {
             stats.append(Statistics(name: player.name, wins: player.wins, losses: player.losses, pointsFor: player.pointsFor,
-                                    pointsAgainst: player.pointsAgainst, pointsDifferential: player.pointsFor - player.pointsAgainst))
+                                    pointsAgainst: player.pointsAgainst, pointsDifferential: player.pointsFor - player.pointsAgainst, matchDifficulty: player.matchDifficulty))
         }
     }
     
@@ -72,6 +73,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         cell.pointsFor = String(statRow.pointsFor)
         cell.pointsAgainst = String(statRow.pointsAgainst)
         cell.pointsDifferential = String(statRow.pointsDifferential)
+        cell.matchDifficulty = String(statRow.matchDifficulty)
         
         return cell
     }
