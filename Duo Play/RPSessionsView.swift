@@ -91,9 +91,7 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
                                           message: "Are you sure?", preferredStyle: .alert)
             
             let action = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
-                try! self.realm.write {
-                    self.realm.delete(self.sessionList[indexPath.row])
-                }
+                self.deleteSession(session: self.sessionList[indexPath.row])
                 self.updateSessionList()
                 self.sessionTableView.reloadData()
                 Answers.logCustomEvent(withName: "Session Deleted",
@@ -156,6 +154,16 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         share.backgroundColor = UIColor.blue
         
         return [delete, rename]
+    }
+    
+    func deleteSession(session: Session) {
+        try! realm.write {
+            realm.delete(session.playersList)
+            realm.delete(session.gameList)
+            realm.delete(session.historyList)
+            // all history objects are not being deleted
+            realm.delete(session)
+        }
     }
     
     @IBAction func sessionButton_Clicked(sender: UIButton) {

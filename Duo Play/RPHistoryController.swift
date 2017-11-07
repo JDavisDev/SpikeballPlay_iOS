@@ -47,6 +47,7 @@ class RPHistoryController {
             game.playerFour?.pointsAgainst -= game.teamOneScore
             
             realm.delete(game)
+           
         }
         
         Answers.logCustomEvent(withName: "History Deleted",
