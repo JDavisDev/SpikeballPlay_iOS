@@ -12,7 +12,6 @@ import Crashlytics
 import RealmSwift
 
 class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     @IBOutlet weak var newSessionButton: UIButton!
     @IBOutlet weak var sessionTableView: UITableView!
     public static var sessionUuid: String = "";
@@ -23,7 +22,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
        // deleteAllData()
         sessionTableView.delegate = self
         sessionTableView.dataSource = self
-    
 
         super.viewDidLoad()
     }
@@ -33,12 +31,12 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         updateSessionList()
     }
     
-    // Send tapped Session to new view
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let backItem = UIBarButtonItem()
-        backItem.title = "Sessions"
-        navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
-    }
+//    // Send tapped Session to new view
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        let backItem = UIBarButtonItem()
+//        backItem.title = "Sessions"
+//        navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
+//    }
     
     static func setCurrentSessionId(uuid: String) {
         RPSessionsView.sessionUuid = uuid

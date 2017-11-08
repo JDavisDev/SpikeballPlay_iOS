@@ -73,7 +73,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         cell.pointsFor = String(statRow.pointsFor)
         cell.pointsAgainst = String(statRow.pointsAgainst)
         cell.pointsDifferential = String(statRow.pointsDifferential)
-        cell.matchDifficulty = String(statRow.matchDifficulty)
+        cell.matchDifficulty = String(format: "%.1f", statRow.matchDifficulty)
         
         return cell
     }

@@ -5,7 +5,6 @@
 //  Created by Jordan Davis on 8/4/17.
 //  Copyright © 2017 HoverSlam. All rights reserved.
 //
-
 import Foundation
 import RealmSwift
 
@@ -13,17 +12,17 @@ class RPRandomizingController {
     
     let session = RPSessionsView.getCurrentSession()
     let realm = try! Realm()
-    var sittingPlayersArray = [RandomPlayer]()
-    var backupSittersArray = [RandomPlayer]()
+    var sittingPlayersArray = [Int]()
+    var backupSittersArray = [Int]()
     
-    public func getFourRandomPlayers() -> [RandomPlayer] {
+    public func getFourRandomPlayers() -> [Int] {
         // return four integers for the positions
         // since I'm not using 0 as an id, I can send back player id
-        var returnArray = [RandomPlayer]()
-        backupSittersArray = [RandomPlayer]()
+        var returnArray = [Int]()
+        backupSittersArray = [Int]()
         
         // run until we get a unique game
-        while !isGameUnique(currentGamePlayers: returnArray) {
+        while !isGameUnique(current: returnArray) {
             returnArray.removeAll()
             
             // if the game was not unique, make sure we grab the sitters since we cleared them
@@ -33,13 +32,13 @@ class RPRandomizingController {
             while returnArray.count < 4 {
                 // no sitters, so grab 4 randoms
                 if sittingPlayersArray.count <= 0 {
-                    let randomPlayer = session.playersList[Int(arc4random_uniform(UInt32(session.playersList.count)))]
-                    if !returnArray.contains(randomPlayer) {
-                        returnArray.append(randomPlayer)
+                    let index = Int(arc4random_uniform(UInt32(session.playersList.count)))
+                    if !returnArray.contains(index) {
+                        returnArray.append(index)
                     }
                 } else {
                     // we have sitters, so grab them and randomize them
-                   // sittingPlayersArray = randomizeArray(array: sittingPlayersArray)
+                    sittingPlayersArray = randomizeArray(array: sittingPlayersArray)
                     backupSittersArray = sittingPlayersArray
                     
                     // this will add the sitters to our return Array
@@ -51,31 +50,34 @@ class RPRandomizingController {
         }
         
         for index in 0..<session.playersList.count {
-            if !returnArray.contains(session.playersList[index]) {
-                sittingPlayersArray.append(session.playersList[index])
+            if !returnArray.contains(index) {
+                sittingPlayersArray.append(index)
             }
         }
         
         return returnArray
     }
     
+    func resetValues() {
+        backupSittersArray.removeAll()
+        sittingPlayersArray.removeAll()
+    }
+    
     // check if the game has been reported yet
-    func isGameUnique(currentGamePlayers: [RandomPlayer]) -> Bool {
-        if currentGamePlayers.count < 4 { return false }
+    func isGameUnique(current: [Int]) -> Bool {
+        if current.count < 4 { return false }
         if !isUniqueGamesLeft() { return true } /// all unique games played, so return true to prevent infinite loop
         
-            for game in session.gameList {
-                // try to fail fast
-                if game.playerOne != nil && game.playerTwo != nil && game.playerThree != nil && game.playerFour != nil {
-                    if isTeamIdsEqual(current: currentGamePlayers, game: game) {
-                        if isMatchupsEqual(current: currentGamePlayers, game: game) {
-                            if isNewPartner(currentGamePlayers: currentGamePlayers, game: game) {
-                                return false
-                            }
-                        }
+        for game in session.gameList {
+            // try to fail fast
+            if game.playerOne != nil && game.playerTwo != nil && game.playerThree != nil && game.playerFour != nil {
+                if isTeamIdsEqual(current: current, game: game) {
+                    if isMatchupsEqual(current: current, game: game) {
+                        return false
                     }
                 }
             }
+        }
         
         return true
     }
@@ -106,38 +108,39 @@ class RPRandomizingController {
         var randomIntOne = Int(arc4random_uniform(UInt32(array.count)))
         
         return array
+        
     }
-
+    
     
     // check if team ids match, if they don't we know they are unique quicker
-    func isTeamIdsEqual(current: [RandomPlayer], game: RandomGame) -> Bool {
-        if (current[0].id + current[1].id  + 2   == (game.playerOne?.id )! + (game.playerTwo?.id )!) {
-            if (current[2].id  + current[3].id  + 2 == (game.playerThree?.id )! + (game.playerFour?.id )!) {
-                if (current[0].id  + current[1].id  + 2 == (game.playerThree?.id )! + (game.playerFour?.id )!) {
-                    if (current[2].id  + current[3].id  + 2 == (game.playerOne?.id )! + (game.playerTwo?.id )!) {
+    func isTeamIdsEqual(current: [Int], game: RandomGame) -> Bool {
+        if (current[0] + current[1] + 2   == (game.playerOne?.id)! + (game.playerTwo?.id)!) {
+            if (current[2] + current[3] + 2 == (game.playerThree?.id)! + (game.playerFour?.id)!) {
+                if (current[0] + current[1] + 2 == (game.playerThree?.id)! + (game.playerFour?.id)!) {
+                    if (current[2] + current[3] + 2 == (game.playerOne?.id)! + (game.playerTwo?.id)!) {
                         return true
                     }
                 }
             }
-       }
+        }
         
         return false
     }
     
     // check if these teams have played with each other and the match up is identical
-    func isMatchupsEqual(current: [RandomPlayer], game: RandomGame) -> Bool {
-        if (current[0].id + 1 == game.playerOne?.id && current[1].id + 1 == game.playerTwo?.id) ||
-            (current[0].id + 1 == game.playerTwo?.id && current[1].id + 1 == game.playerOne?.id) {
-            if (current[2].id + 1 == game.playerThree?.id && current[3].id + 1 == game.playerFour?.id) ||
-                (current[2].id + 1 == game.playerFour?.id && current[3].id + 1 == game.playerThree?.id) {
+    func isMatchupsEqual(current: [Int], game: RandomGame) -> Bool {
+        if (current[0] + 1 == game.playerOne?.id && current[1] + 1 == game.playerTwo?.id) ||
+            (current[0] + 1 == game.playerTwo?.id && current[1] + 1 == game.playerOne?.id) {
+            if (current[2] + 1 == game.playerThree?.id && current[3] + 1 == game.playerFour?.id) ||
+                (current[2] + 1 == game.playerFour?.id && current[3] + 1 == game.playerThree?.id) {
                 return true
             }
         }
-
-        if (current[2].id + 1 == game.playerOne?.id && current[3].id + 1 == game.playerTwo?.id) ||
-            (current[2].id + 1 == game.playerTwo?.id && current[3].id + 1 == game.playerOne?.id) {
-            if (current[0].id + 1 == game.playerThree?.id && current[1].id + 1 == game.playerFour?.id) ||
-                (current[0].id + 1 == game.playerFour?.id && current[1].id + 1 == game.playerThree?.id) {
+        
+        if (current[2] + 1 == game.playerOne?.id && current[3] + 1 == game.playerTwo?.id) ||
+            (current[2] + 1 == game.playerTwo?.id && current[3] + 1 == game.playerOne?.id) {
+            if (current[0] + 1 == game.playerThree?.id && current[1] + 1 == game.playerFour?.id) ||
+                (current[0] + 1 == game.playerFour?.id && current[1] + 1 == game.playerThree?.id) {
                 return true
             }
         }
@@ -145,17 +148,6 @@ class RPRandomizingController {
         return false
     }
     
-    // check if each player has a NEW partner relative to the last game they played
-    // currentPlayerIndices is the current game under test
-    // game is the current game to compare against to see if it disqualifies this set of players
-    func isNewPartner(currentGamePlayers: [RandomPlayer], game: RandomGame) -> Bool {
-        // player one
-        let lastGame = game.playerOne?.gameList[(game.playerOne?.gameList.index(of: game))! - 1]
-        
-        
-        return true
-    }
-
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
         if session.playersList.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&
@@ -173,6 +165,7 @@ class RPRandomizingController {
     }
     
     func isPlayerSelectedUnique(playerIndex: Int, nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Bool {
+        
         var name = ""
         try! realm.write {
             name = session.playersList[playerIndex].name
@@ -184,14 +177,9 @@ class RPRandomizingController {
             name == nameThree ||
             name == nameFour ||
             session.playersList[playerIndex].isSuspended {
-                return false
-            }
+            return false
+        }
         
         return true;
-    }
-    
-    public func resetValues() {
-        sittingPlayersArray.removeAll()
-        backupSittersArray.removeAll()
     }
 }

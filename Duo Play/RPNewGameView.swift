@@ -9,12 +9,16 @@
 import Foundation
 import UIKit
 import Crashlytics
+import RealmSwift
 
 public class RPNewGameView : UIViewController {
     
     let session = RPSessionsView.getCurrentSession()
     let rpController = RPController()
     let controller = RPRandomizingController()
+    let realm = try! Realm()
+    
+    @IBOutlet weak var netSegmentedControl: UISegmentedControl!
     
     // keep a reference to the names and update them
     // as user changes players
@@ -48,6 +52,7 @@ public class RPNewGameView : UIViewController {
     // View Did Load
     override public func viewDidLoad() {
         super.viewDidLoad()
+        initNetSegments()
         pickerDataSource.removeAll()
         for player in (session.playersList) {
             pickerDataSource.append(player)
@@ -64,6 +69,70 @@ public class RPNewGameView : UIViewController {
                                customAttributes: [:])
         super.viewDidAppear(true)
         viewDidLoad()
+    }
+    
+    // MARK: Net Change
+    @IBAction func netChanged(_ sender: UISegmentedControl) {
+        let netNumString = sender.titleForSegment(at: sender.selectedSegmentIndex)
+        loadNet(netNumString: netNumString!)
+    }
+    
+    func initNetSegments() {
+        netSegmentedControl.removeAllSegments()
+        
+        let netCount = session.playersList.count / 4
+        
+        if netCount >= 1 {
+            for net in 1...netCount {
+                netSegmentedControl.insertSegment(withTitle: String(net), at: net - 1, animated: true)
+                try! realm.write() {
+                    session.netList.removeAll()
+                    
+                    let netObject = Net()
+                    netObject.id = String(net)
+                    netObject.playersList.append(RandomPlayer())
+                    netObject.playersList.append(RandomPlayer())
+                    netObject.playersList.append(RandomPlayer())
+                    netObject.playersList.append(RandomPlayer())
+                    session.netList.append(netObject)
+                }
+                
+            }
+        } else {
+            netSegmentedControl.insertSegment(withTitle: "1", at: 0, animated: true)
+            
+            try! realm.write() {
+                let netObject = Net()
+                netObject.id = "1"
+                netObject.playersList.append(RandomPlayer())
+                netObject.playersList.append(RandomPlayer())
+                netObject.playersList.append(RandomPlayer())
+                netObject.playersList.append(RandomPlayer())
+                session.netList.append(netObject)
+            }
+        }
+        
+        netSegmentedControl.selectedSegmentIndex = 0
+    }
+    
+    func loadNet(netNumString: String) {
+        // get net from session
+        // populate values from net
+        try! realm.write {
+            let net = session.netList.filter("id = '" + netNumString + "'").first
+            
+            if (net != nil) && (net?.playersList.count)! >= 4 {
+                self.playerOneName = (net?.playersList[0].name)!
+                self.playerTwoName = (net?.playersList[1].name)!
+                self.playerThreeName = (net?.playersList[2].name)!
+                self.playerFourName = (net?.playersList[3].name)!
+                updatePlayerButtons()
+            }
+            
+            
+//            self.teamOneScoreSlider.setValue(Float((net?.scoreOne)!), animated: true)
+//            self.teamTwoScoreSlider.setValue(Float((net?.scoreTwo)!), animated: true)
+        }
     }
     
     func initPlayerButtonStyles() {
@@ -99,6 +168,14 @@ public class RPNewGameView : UIViewController {
                     default:
                         // nothing
                         break
+                }
+                
+                try! self.realm.write {
+                    let net = self.session.netList.filter("id = '" + String(self.netSegmentedControl.selectedSegmentIndex) + "'").first
+                    net?.playersList[0] = self.rpController.getPlayerByName(name: self.playerOneName)
+                    net?.playersList[1] = self.rpController.getPlayerByName(name: self.playerTwoName)
+                    net?.playersList[2] = self.rpController.getPlayerByName(name: self.playerThreeName)
+                    net?.playersList[3] = self.rpController.getPlayerByName(name: self.playerFourName)
                 }
             }
     
@@ -262,14 +339,12 @@ public class RPNewGameView : UIViewController {
         if((session.playersList.count) >= 4) {
             let playerArray = controller.getFourRandomPlayers()
             
-            if(playerArray.count == 4) {
-                playerOneButton.setTitle(playerArray[0].name, for: .normal)
-                playerTwoButton.setTitle(playerArray[1].name, for: .normal)
-                playerThreeButton.setTitle(playerArray[2].name, for: .normal)
-                playerFourButton.setTitle(playerArray[3].name, for: .normal)
+            playerOneButton.setTitle(session.playersList[playerArray[0]].name, for: .normal)
+            playerTwoButton.setTitle(session.playersList[playerArray[1]].name, for: .normal)
+            playerThreeButton.setTitle(session.playersList[playerArray[2]].name, for: .normal)
+            playerFourButton.setTitle(session.playersList[playerArray[3]].name, for: .normal)
             
-                updatePlayerNames()
-            }
+            updatePlayerNames()
         }
     }
     
@@ -279,6 +354,21 @@ public class RPNewGameView : UIViewController {
         playerThreeName = playerThreeButton.currentTitle!
         playerFourName = playerFourButton.currentTitle!
         
+        try! self.realm.write {
+            let net = self.session.netList.filter("id = '" + String(self.netSegmentedControl.selectedSegmentIndex) + "'").first
+            net?.playersList[0] = self.rpController.getPlayerByName(name: self.playerOneName)
+            net?.playersList[1] = self.rpController.getPlayerByName(name: self.playerTwoName)
+            net?.playersList[2] = self.rpController.getPlayerByName(name: self.playerThreeName)
+            net?.playersList[3] = self.rpController.getPlayerByName(name: self.playerFourName)
+        }
+        
         // can set resters here too so we have a dynamic list of those who sat out, no matter how we randomize
+    }
+    
+    func updatePlayerButtons() {
+        playerOneButton.setTitle(playerOneName, for: .normal)
+        playerTwoButton.setTitle(playerTwoName, for: .normal)
+        playerThreeButton.setTitle(playerThreeName, for: .normal)
+        playerFourButton.setTitle(playerFourName, for: .normal)
     }
 }
