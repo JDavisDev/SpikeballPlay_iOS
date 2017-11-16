@@ -7,20 +7,25 @@
 //
 
 import UIKit
+import RealmSwift
 
 class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     var teamsController = TeamsViewController()
-    var tableDataSource = [String]()
+    let poolsController = PoolsController()
+    let realm = try! Realm()
+    let tournament = TournamentController.getCurrentTournament()
+    var teamList = [Team]()
     @IBOutlet weak var teamNameTextField: UITextField!
     @IBOutlet weak var teamsTableView: UITableView!
     
     override func viewDidLoad() {
         title = "Teams"
+        
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
-        initTableDataSource()
+        updateTeamList()
         initGestureRecognizer()
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -35,17 +40,14 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         // Dispose of any resources that can be recreated.
     }
     
-    func initTableDataSource() {
-        // set up team list with pools in the array
-        for pool in PoolsViewController.poolsList {
-            tableDataSource.append(pool.name)
-            
-            for team in TeamsViewController.teamsList {
-                if pool === team.pool {
-                    tableDataSource.append(team.name)
-                }
-            }
+    func updateTeamList() {
+        teamList.removeAll()
+        
+        for team in tournament.teamList {
+            teamList.append(team)
         }
+        
+        teamsTableView.reloadData()
     }
     
     func initGestureRecognizer() {
@@ -55,7 +57,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
     
     @objc func onLongPress() {
-            teamsTableView.setEditing(true, animated: true)
+        teamsTableView.setEditing(true, animated: true)
     }
     
 
@@ -79,9 +81,19 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
             _ = alert.textFields![0] as UITextField
             let newName = alert.textFields![0].text!
-            self.teamsController.addTeam(name: newName)
+            let team = Team()
+            
+            try! self.realm.write() {
+                
+                team.name = newName
+                team.division = "Advanced"
+                team.id = 1
+                self.tournament.teamList.append(team)
+            }
+            
+            self.teamList.append(team)
+            self.teamsController.addTeam(team: team)
             self.teamsTableView.reloadData()
-            // update list
         }
         
         alert.addTextField { (textField) in
@@ -102,11 +114,11 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // fetches the number of teams in this pool
-        return PoolsViewController.poolsList[section].teams.count
+        return tournament.poolList[section].teamList.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return PoolsViewController.poolsList.count
+        return tournament.poolList.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -116,15 +128,15 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
-        header?.textLabel?.text = PoolsViewController.poolsList[section].name
+        header?.textLabel?.text = tournament.poolList[section].name
         return header
     }
     
     // Dragging teams around
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movedObject = TeamsViewController.teamsList[sourceIndexPath.row]
-        TeamsViewController.teamsList.remove(at: sourceIndexPath.row)
-        TeamsViewController.teamsList.insert(movedObject, at: destinationIndexPath.row)
+        let movedObject = tournament.teamList[sourceIndexPath.row]
+        tournament.teamList.remove(at: sourceIndexPath.row)
+        tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
         self.teamsTableView.reloadData()
         resetPoolTeams()
     }
@@ -132,12 +144,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     func resetPoolTeams() {
         // teams were moved around, reset which pool they belong to
         var poolIndex = 0
-        for index in 1...TeamsViewController.teamsList.count {
+        for index in 1...tournament.teamList.count {
             if index % 8 == 0 {
                 poolIndex += 1
             }
             
-            PoolsViewController.poolsList[poolIndex].addTeamToPool(team: TeamsViewController.teamsList[index - 1])
+            poolsController.addTeamToPool(pool: tournament.poolList[poolIndex], team: tournament.teamList[index - 1])
         }
     }
     
@@ -154,8 +166,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
         
-        cell!.textLabel?.text = TeamsViewController.teamsList[indexPath.row].name
-        cell?.detailTextLabel?.text = String(describing: TeamsViewController.teamsList[indexPath.row].division)
+        cell!.textLabel?.text = tournament.teamList[indexPath.row].name
+        cell?.detailTextLabel?.text = String(describing: tournament.teamList[indexPath.row].division)
         return cell!
     }
 

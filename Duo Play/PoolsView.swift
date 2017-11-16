@@ -11,7 +11,7 @@ import UIKit
 class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var poolsTableView: UITableView!
-
+    var tournament = TournamentController.getCurrentTournament()
     var poolsController = PoolsViewController()
     
     override func viewDidLoad() {
@@ -36,8 +36,8 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // this will handle pool cell click
         // send pool
         let indexPath = poolsTableView.indexPathForSelectedRow
-        let pool = PoolsViewController.poolsList[(indexPath?.row)!]
-        pool.matchupList = PoolPlayMatchGenerator(teamList: pool.teams).generatePoolPlayGames()
+        let pool = tournament.poolList[(indexPath?.row)!]
+        pool.matchupList = PoolPlayMatchGenerator().generatePoolPlayGames()
         let controller = segue.destination as? PoolDetailView
         controller?.pool = pool
     }
@@ -46,13 +46,13 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "poolCell")
-        cell!.textLabel?.text = PoolsViewController.poolsList[indexPath.row].name
-        cell?.detailTextLabel?.text = String(describing: PoolsViewController.poolsList[indexPath.row].division)
+        cell!.textLabel?.text = tournament.poolList[indexPath.row].name
+        cell?.detailTextLabel?.text = String(describing: tournament.poolList[indexPath.row].division)
         return cell!
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return PoolsViewController.poolsList.count
+        return tournament.poolList.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

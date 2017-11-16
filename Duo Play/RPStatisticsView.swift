@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Crashlytics
+import RealmSwift
 
 class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -18,6 +19,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     var sortingData = [String]()
     var controller = RPStatisticsController()
     let session = RPSessionsView.getCurrentSession()
+    let realm = try! Realm()
     
     override func viewDidLoad() {
         statsTable.delegate = self

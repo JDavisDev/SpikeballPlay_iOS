@@ -19,7 +19,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     let realm = try! Realm()
     
     override func viewDidLoad() {
-       // deleteAllData()
         sessionTableView.delegate = self
         sessionTableView.dataSource = self
 
@@ -50,6 +49,15 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         let realm = try! Realm()
         let results = realm.objects(Session.self).filter("uuid = '" + getCurrentSessionId() + "'").first
         return results!
+    }
+    
+    @IBAction func deleteAll_Clicked(_ sender: Any) {
+        // add dialog here
+        try! realm.write() {
+            realm.deleteAll()
+        }
+        
+        updateSessionList()
     }
     
     // MARK: - Table View methods
@@ -159,7 +167,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
             realm.delete(session.playersList)
             realm.delete(session.gameList)
             realm.delete(session.historyList)
-            // all history objects are not being deleted
             realm.delete(session)
         }
     }
@@ -236,5 +243,7 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         for session in results {
             sessionList.append(session)
         }
+        
+        sessionTableView.reloadData()
     }
 }

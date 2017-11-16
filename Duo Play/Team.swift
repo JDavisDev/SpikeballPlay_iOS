@@ -7,21 +7,13 @@
 //
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Team {
-    var seed = 1
-    var id = 1
-    var name: String
-    var pool: Pool
-    var division: Division
-    
-    init(name: String, pool: Pool) {
-        self.name = name
-        self.pool = pool
-        self.division = Division.Advanced
-    }
-    
-    func getPool() -> Pool {
-        return self.pool
-    }
+public class Team : Object {
+    @objc dynamic public var seed = 1
+    @objc dynamic public var id = 1
+    @objc dynamic public var name = ""
+    @objc dynamic var pool: Pool?
+    @objc dynamic public var division = ""
 }

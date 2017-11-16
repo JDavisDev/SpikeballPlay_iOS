@@ -9,78 +9,14 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.294125"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "113"
-            endingLineNumber = "113"
-            landmarkName = "isTeamIdsEqual(current:game:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.294186"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "isGameUnique(current:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.294231"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "isGameUnique(current:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.294271"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "isTeamIdsEqual(current:game:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296063"
+            timestampString = "531786300.267444"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "107"
             endingLineNumber = "107"
-            landmarkName = "getOpponentDifficulty(player:game:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -90,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296116"
+            timestampString = "531786300.267499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "79"
@@ -138,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296166"
+            timestampString = "531786300.267553"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "57"
             endingLineNumber = "57"
-            landmarkName = "isPlayerInGame(player:game:)"
+            landmarkName = "getOpponentDifficulty(player:game:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -154,61 +90,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296219"
+            timestampString = "531786300.267591"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "37"
             endingLineNumber = "37"
-            landmarkName = "updateDifficulty()"
+            landmarkName = "updateOpponentDifficulty()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPController.swift"
-            timestampString = "531556963.296299"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "addGame(game:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "DuoPlay.RPController.addGame(game: DuoPlay.RandomGame) -&gt; ()"
-                  moduleName = "Duo Play"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jdavis/JD_Projects/JDavisDev/Duo%20Play/Duo%20Play/RPController.swift"
-                  timestampString = "531470104.244656"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "33"
-                  endingLineNumber = "33"
-                  offsetFromSymbolStart = "27">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in DuoPlay.RPController.addGame(game: DuoPlay.RandomGame) -&gt; ()"
-                  moduleName = "Duo Play"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jdavis/JD_Projects/JDavisDev/Duo%20Play/Duo%20Play/RPController.swift"
-                  timestampString = "531470104.246271"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34"
-                  offsetFromSymbolStart = "21">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -218,12 +106,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296381"
+            timestampString = "531786300.267625"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "61"
             endingLineNumber = "61"
-            landmarkName = "isPlayerInGame(player:game:)"
+            landmarkName = "getOpponentDifficulty(player:game:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -234,44 +122,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296457"
+            timestampString = "531786300.267659"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "64"
             endingLineNumber = "64"
-            landmarkName = "isPlayerInGame(player:game:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPController.swift"
-            timestampString = "531556963.296515"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "addGame(game:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPController.swift"
-            timestampString = "531556963.296565"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
-            landmarkName = "addGame(game:)"
+            landmarkName = "getOpponentDifficulty(player:game:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -282,12 +138,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPGameController.swift"
-            timestampString = "531556963.296638"
+            timestampString = "532037860.306398"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "35"
             endingLineNumber = "35"
-            landmarkName = "submitMatch(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
+            landmarkName = "submitGame(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -298,12 +154,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPGameController.swift"
-            timestampString = "531556963.296707"
+            timestampString = "532037860.306454"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "26"
             endingLineNumber = "26"
-            landmarkName = "submitMatch(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
+            landmarkName = "submitGame(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -314,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.296792"
+            timestampString = "532383661.992981"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
             landmarkName = "addPlayerButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -330,7 +186,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPController.swift"
-            timestampString = "531556963.296841"
+            timestampString = "532383661.993105"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "21"
@@ -346,7 +202,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.296886"
+            timestampString = "531786300.267752"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "24"
@@ -362,12 +218,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPGameController.swift"
-            timestampString = "531556963.296933"
+            timestampString = "532037860.306604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "44"
             endingLineNumber = "44"
-            landmarkName = "parseGameForStats(game:)"
+            landmarkName = "submitGame(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -410,12 +266,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPGameController.swift"
-            timestampString = "531556963.296975"
+            timestampString = "532037860.306643"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "46"
             endingLineNumber = "46"
-            landmarkName = "parseGameForStats(game:)"
+            landmarkName = "submitGame(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -426,12 +282,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPGameController.swift"
-            timestampString = "531556963.297016"
+            timestampString = "532037860.306678"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "47"
             endingLineNumber = "47"
-            landmarkName = "parseGameForStats(game:)"
+            landmarkName = "submitGame(playerOne:playerTwo:playerThree:playerFour:teamOneScore:teamTwoScore:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -442,7 +298,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPController.swift"
-            timestampString = "531556963.297057"
+            timestampString = "532383661.993225"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "27"
@@ -458,12 +314,364 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPDifficultyController.swift"
-            timestampString = "531556963.2971"
+            timestampString = "531786300.267834"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "49"
             endingLineNumber = "49"
-            landmarkName = "updateDifficulty()"
+            landmarkName = "isPlayerInGame(player:game:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/AppDelegate.swift"
+            timestampString = "532383661.993288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/AppDelegate.swift"
+            timestampString = "532383661.993337"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/AppDelegate.swift"
+            timestampString = "532383661.993381"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/AppDelegate.swift"
+            timestampString = "532383661.993425"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPNewGameView.swift"
+            timestampString = "532383661.993472"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "loadNet(netNumString:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "DuoPlay.RPNewGameView.loadNet(netNumString: Swift.String) -&gt; ()"
+                  moduleName = "Duo Play"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jdavis/JD_Projects/JDavisDev/Duo%20Play/Duo%20Play/RPNewGameView.swift"
+                  timestampString = "531870523.455909"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "37">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in DuoPlay.RPNewGameView.loadNet(netNumString: Swift.String) -&gt; ()"
+                  moduleName = "Duo Play"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jdavis/JD_Projects/JDavisDev/Duo%20Play/Duo%20Play/RPNewGameView.swift"
+                  timestampString = "531870523.457711"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "130"
+                  endingLineNumber = "130"
+                  offsetFromSymbolStart = "42">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPNewGameView.swift"
+            timestampString = "532383661.99353"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "loadNet(netNumString:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPNewGameView.swift"
+            timestampString = "532383661.993584"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "netChanged(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPNewGameView.swift"
+            timestampString = "532383661.993638"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "selectPlayerButtonClicked(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__ObjC.UIAlertAction) -&gt; () in DuoPlay.RPNewGameView.selectPlayerButtonClicked(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "Duo Play"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jdavis/JD_Projects/JDavisDev/Duo%20Play/Duo%20Play/RPNewGameView.swift"
+                  timestampString = "531894613.248675"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "164"
+                  endingLineNumber = "164"
+                  offsetFromSymbolStart = "7543">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (__ObjC.UIAlertAction) -&gt; () in DuoPlay.RPNewGameView.selectPlayerButtonClicked(__ObjC.UIButton) -&gt; ()"
+                  moduleName = "Duo Play"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jdavis/JD_Projects/JDavisDev/Duo%20Play/Duo%20Play/RPNewGameView.swift"
+                  timestampString = "531894613.250576"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "165"
+                  endingLineNumber = "165"
+                  offsetFromSymbolStart = "25">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPNewGameView.swift"
+            timestampString = "532383661.993691"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "selectPlayerButtonClicked(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.995767"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "getPlayersAvailable()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.995813"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "getFourRandomPlayers()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.995857"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "getPlayersAvailable()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.995907"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "getFourRandomPlayers()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.995973"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "getPlayersAvailable()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.99602"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "getFourRandomPlayers()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPRandomizingController.swift"
+            timestampString = "532383661.996062"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "getFourRandomPlayers()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/RPNewGameView.swift"
+            timestampString = "532383661.996103"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "315"
+            endingLineNumber = "315"
+            landmarkName = "gameRandomize()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentsHomeView.swift"
+            timestampString = "532383661.99615"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "addTournamentButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -7,10 +7,9 @@
 //
 
 import Foundation
+import RealmSwift
 
-class Bracket {
-    
-    init() {
-
-    }
+class Bracket : Object {
+    @objc dynamic public var bracketURL = ""
+    @objc dynamic public var uuid = ""
 }

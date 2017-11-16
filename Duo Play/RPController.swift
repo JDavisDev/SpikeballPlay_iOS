@@ -33,6 +33,16 @@ class RPController {
         return RandomPlayer()
     }
     
+    func getPlayerById(id: Int) -> RandomPlayer {
+        for player in session.playersList {
+            if player.id == id {
+                return player
+            }
+        }
+        
+        return RandomPlayer()
+    }
+    
     // Deletes a player from list
     public func deletePlayer(playerName: String) {
         if session.playersList.count > 0 {

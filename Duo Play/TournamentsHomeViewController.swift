@@ -7,16 +7,9 @@
 //
 
 import Foundation
+import RealmSwift
 
 class TournamentsHomeViewController {
     
-    static var tournamentsList = [Tournament]()
     
-    // CHECK FOR DUPLICATES
-    
-    func addTournament(tournamentName: String) {
-        let tournament = Tournament(name: tournamentName)
-       // TournamentsManager.addTournament(tournament)
-        TournamentsHomeViewController.tournamentsList.append(tournament)
-    }
 }

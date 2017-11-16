@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import RealmSwift
 
-enum Division {
+enum Division : String {
     case Beginner
     case Intermediate
     case Advanced

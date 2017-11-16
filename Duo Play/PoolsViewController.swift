@@ -9,7 +9,6 @@
 import Foundation
 
 class PoolsViewController {
-    static var poolsList = [Pool]()
     
     
 }

@@ -7,28 +7,21 @@
 //
 
 import Foundation
-
+import RealmSwift
 class PoolPlayMatchGenerator {
-    var teamList: [Team]
-    var teamCount: Int
-    var numOfRounds: Int
-    var totalMatchesToPlay: Int
+    var teamList = [Team]()
+    var teamCount = 4
+    var numOfRounds = 0
+    var totalMatchesToPlay = 0
     
-    init(teamList: [Team]) {
-        self.teamCount = teamList.count
-        self.teamList = teamList
-        self.numOfRounds = teamCount % 2 == 0 ? teamCount - 1 : teamCount
-        self.totalMatchesToPlay = self.numOfRounds * teamCount
-    }
-    
-    func generatePoolPlayGames() -> [PoolPlayMatchup] {
-        var gameList = [PoolPlayMatchup]()
+    func generatePoolPlayGames() -> List<PoolPlayMatchup> {
+        var gameList = List<PoolPlayMatchup>()
         let gamesPerRound = teamCount % 2 == 0 ? teamCount / 2 : teamCount / 2 + 1
         
         //appendRoundOneGames(gameList: gameList)
         // ROUND ONE
         for i in 1...teamCount / 2 {
-            let game = PoolPlayMatchup(round: 1, teamOne: teamList[i - 1], teamTwo: teamList[teamCount - i])
+            let game = PoolPlayMatchup() //round: 1, teamOne: teamList[i - 1], teamTwo: teamList[teamCount - i])
             // if pass all checks, add game
             gameList.append(game)
         }
@@ -39,7 +32,7 @@ class PoolPlayMatchGenerator {
                     var opponent: Team
                     opponent = getNextOpponent(teamOne: teamList[i], gameList: gameList)
                     // get team params and make a game
-                    let game = PoolPlayMatchup(round: round, teamOne: teamList[i], teamTwo: opponent)
+                    let game = PoolPlayMatchup()
                 
                     // if pass all checks, add game
                     gameList.append(game)
@@ -51,13 +44,13 @@ class PoolPlayMatchGenerator {
         return gameList
     }
     
-    func getNextOpponent(teamOne: Team, gameList: [PoolPlayMatchup]) -> Team {
+    func getNextOpponent(teamOne: Team, gameList: List<PoolPlayMatchup>) -> Team {
         var lastOpponentId = teamCount - 1
         
         for game in gameList {
             if game.teamOne === teamOne {
-                if game.teamTwo.id < lastOpponentId {
-                    lastOpponentId = game.teamTwo.id
+                if (game.teamTwo?.id)! < lastOpponentId {
+                    lastOpponentId = (game.teamTwo?.id)!
                 }
             }
         }
@@ -82,7 +75,7 @@ class PoolPlayMatchGenerator {
         return nextOpponent
     }
     
-    func isMatchupDuplicate(teamOne: Team, teamTwo: Team, gameList: [PoolPlayMatchup]) -> Bool {
+    func isMatchupDuplicate(teamOne: Team, teamTwo: Team, gameList: List<PoolPlayMatchup>) -> Bool {
         for game in gameList {
             if (game.teamOne === teamOne && game.teamTwo === teamTwo) || (game.teamOne === teamTwo && game.teamTwo === teamOne) {
                 return true

@@ -17,6 +17,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
     @IBOutlet weak var newPlayerTextField: UITextField!
     @IBOutlet weak var playerButton: UIButton!
     var rpController = RPController()
+    let statsController = RPStatisticsController()
     var randomController = RPRandomizingController()
     var session = RPSessionsView.getCurrentSession()
     let realm = try! Realm()
@@ -33,11 +34,28 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
+        statsController.sort(sortMethod: "Name")
         Answers.logContentView(withName: "Players Page View",
                                contentType: "Players Page View",
                                contentId: "3",
                                customAttributes: [:])
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        let netCount = session.playersList.count / 4
+        let newNetNumber = session.netList.count + 1
+        if netCount >= 1 && newNetNumber < netCount {
+            for net in newNetNumber..<netCount {
+                try! realm.write() {
+                    let netObject = Net()
+                    netObject.id = String(net)
+                    realm.add(netObject)
+                    session.netList.append(netObject)
+                }
+            }
+        }
+        
+        super.viewDidDisappear(true)
     }
     
     
@@ -133,7 +151,6 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
         player.id = (session.playersList.count) + 1
         player.name = name!
         
-        randomController.resetValues()
         rpController.addPlayer(player: player)
         newPlayerTextField.text = ""
         self.playersTableView.reloadData()

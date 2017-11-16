@@ -9,58 +9,63 @@ import Foundation
 import RealmSwift
 
 class RPRandomizingController {
-    
+    /// **** UPDATE SITTERS BASED ON WHO IS ON A NET! **** \\\
     let session = RPSessionsView.getCurrentSession()
     let realm = try! Realm()
-    var sittingPlayersArray = [Int]()
     var backupSittersArray = [Int]()
+    // a list of player ids that are available and not on a net
+    public var playersAvailable = [Int]()
     
     public func getFourRandomPlayers() -> [Int] {
         // return four integers for the positions
         // since I'm not using 0 as an id, I can send back player id
         var returnArray = [Int]()
-        backupSittersArray = [Int]()
+        playersAvailable = getPlayersAvailable()
         
         // run until we get a unique game
-        while !isGameUnique(current: returnArray) {
-            returnArray.removeAll()
-            
-            // if the game was not unique, make sure we grab the sitters since we cleared them
-            returnArray = backupSittersArray
-            
-            // run this looop until return array is full
-            while returnArray.count < 4 {
-                // no sitters, so grab 4 randoms
-                if sittingPlayersArray.count <= 0 {
+        if playersAvailable.count >= 4 {
+            while !isGameUnique(current: returnArray) {
+                returnArray.removeAll()
+           
+                // run this looop until return array is full
+                while returnArray.count < 4 {
+                    // get a random index and check if that player is 'available' by not being on a net
                     let index = Int(arc4random_uniform(UInt32(session.playersList.count)))
-                    if !returnArray.contains(index) {
+                    if playersAvailable.contains(session.playersList[index].id) && !returnArray.contains(index) {
                         returnArray.append(index)
                     }
-                } else {
-                    // we have sitters, so grab them and randomize them
-                    sittingPlayersArray = randomizeArray(array: sittingPlayersArray)
-                    backupSittersArray = sittingPlayersArray
-                    
-                    // this will add the sitters to our return Array
-                    // when empty, it may grab randoms and add them, though it may duplicate some
-                    returnArray = sittingPlayersArray
-                    sittingPlayersArray.removeAll()
                 }
-            }
-        }
-        
-        for index in 0..<session.playersList.count {
-            if !returnArray.contains(index) {
-                sittingPlayersArray.append(index)
             }
         }
         
         return returnArray
     }
     
-    func resetValues() {
-        backupSittersArray.removeAll()
-        sittingPlayersArray.removeAll()
+    func getPlayersAvailable() -> [Int] {
+        var returnArray = [Int]()
+        
+        // the player to possible add. Checking ALL players in this session
+        for player in session.playersList {
+            var isAvailable = true
+            
+            // check each net in our session
+            for net in session.netList {
+                // check each player on each net
+                for netPlayer in net.playersList {
+                    // if player on each net matches a player on a net
+                    // set isAvailable to false
+                    if netPlayer.id == player.id {
+                        isAvailable = false
+                    }
+                }
+            }
+            
+            if isAvailable {
+                returnArray.append(player.id)
+            }
+        }
+        
+        return returnArray
     }
     
     // check if the game has been reported yet
