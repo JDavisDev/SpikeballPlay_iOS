@@ -14,6 +14,7 @@ import RealmSwift
 public class RPNewGameView : UIViewController {
     
     let session = RPSessionsView.getCurrentSession()
+    let statsController = RPStatisticsController()
     let rpController = RPController()
     let controller = RPRandomizingController()
     let realm = try! Realm()
@@ -57,8 +58,9 @@ public class RPNewGameView : UIViewController {
         for player in (session.playersList) {
             pickerDataSource.append(player)
         }
-        
+        initNetSegments()
         initPlayerButtonStyles()
+        statsController.sort(sortMethod: "ID")
     }
     
     // View did Appear
@@ -68,7 +70,6 @@ public class RPNewGameView : UIViewController {
                                contentId: "2",
                                customAttributes: [:])
         
-        initNetSegments()
         super.viewDidAppear(true)
         viewDidLoad()
     }
@@ -322,6 +323,24 @@ public class RPNewGameView : UIViewController {
                 playerFourButton.setTitle(session.playersList[playerArray[3]].name, for: .normal)
                 updatePlayerNames()
             }
+            
+            highlightServingTeam()
+        }
+    }
+    
+    func highlightServingTeam() {
+        var servingTeam = Int(arc4random_uniform(UInt32(2)))
+        
+        if servingTeam <= 0 {
+            playerOneButton.titleLabel?.textColor = UIColor.black
+            playerTwoButton.titleLabel?.textColor = UIColor.black
+            playerThreeButton.titleLabel?.textColor = UIColor.white
+            playerFourButton.titleLabel?.textColor = UIColor.white
+        } else {
+            playerOneButton.titleLabel?.textColor = UIColor.white
+            playerTwoButton.titleLabel?.textColor = UIColor.white
+            playerThreeButton.titleLabel?.textColor = UIColor.black
+            playerFourButton.titleLabel?.textColor = UIColor.black
         }
     }
     
@@ -333,7 +352,6 @@ public class RPNewGameView : UIViewController {
         
         saveNet()
         
-        // can set resters here too so we have a dynamic list of those who sat out, no matter how we randomize
     }
     
     func updatePlayerButtons() {
@@ -352,6 +370,11 @@ public class RPNewGameView : UIViewController {
                 net?.playersList[1] = self.rpController.getPlayerByName(name: self.playerTwoName)
                 net?.playersList[2] = self.rpController.getPlayerByName(name: self.playerThreeName)
                 net?.playersList[3] = self.rpController.getPlayerByName(name: self.playerFourName)
+            } else if (net != nil) {
+                net?.playersList.append(self.rpController.getPlayerByName(name: self.playerOneName))
+                net?.playersList.append(self.rpController.getPlayerByName(name: self.playerOneName))
+                net?.playersList.append(self.rpController.getPlayerByName(name: self.playerOneName))
+                net?.playersList.append(self.rpController.getPlayerByName(name: self.playerOneName))
             }
         }
     }

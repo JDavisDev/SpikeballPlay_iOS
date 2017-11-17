@@ -9,7 +9,6 @@ import Foundation
 import RealmSwift
 
 class RPRandomizingController {
-    /// **** UPDATE SITTERS BASED ON WHO IS ON A NET! **** \\\
     let session = RPSessionsView.getCurrentSession()
     let realm = try! Realm()
     var backupSittersArray = [Int]()
@@ -156,7 +155,11 @@ class RPRandomizingController {
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
         if session.playersList.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&
-            nameOne != "Select Player" && nameTwo != "Select Player" && nameThree != "Select Player" && nameFour != "Select Player"   {
+            nameOne != "Select Player" && nameTwo != "Select Player" && nameThree != "Select Player" && nameFour != "Select Player"  {
+            return -1
+        }
+        
+        if getPlayersAvailable().count <= 0 {
             return -1
         }
         
@@ -182,6 +185,10 @@ class RPRandomizingController {
             name == nameThree ||
             name == nameFour ||
             session.playersList[playerIndex].isSuspended {
+            return false
+        }
+        
+        if !getPlayersAvailable().contains(playerIndex + 1) {
             return false
         }
         

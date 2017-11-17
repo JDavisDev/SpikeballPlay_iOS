@@ -34,7 +34,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        statsController.sort(sortMethod: "Name")
+        statsController.sort(sortMethod: "ID")
         Answers.logContentView(withName: "Players Page View",
                                contentType: "Players Page View",
                                contentId: "3",
@@ -44,8 +44,8 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
     override func viewDidDisappear(_ animated: Bool) {
         let netCount = session.playersList.count / 4
         let newNetNumber = session.netList.count + 1
-        if netCount >= 1 && newNetNumber < netCount {
-            for net in newNetNumber..<netCount {
+        if netCount >= 1 && newNetNumber <= netCount {
+            for net in newNetNumber...netCount {
                 try! realm.write() {
                     let netObject = Net()
                     netObject.id = String(net)

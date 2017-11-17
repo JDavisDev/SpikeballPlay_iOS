@@ -45,7 +45,7 @@ class RPStatisticsController {
             case "Match Difficulty":
                 array.sort { $0.matchDifficulty > $1.matchDifficulty }
             default:
-                array.sort { $0.name < $1.name }
+                array.sort { $0.id < $1.id }
                 break
             }
             
@@ -53,5 +53,15 @@ class RPStatisticsController {
                 session.playersList.append(player)
             }
         }
+    }
+    
+    func getPlayerRating(player: RandomPlayer) -> Float {
+        var rating = Float(0.0)
+        
+        rating += Float(player.matchDifficulty) * 2
+        rating += Float(player.pointsFor - player.pointsAgainst) * 2.0
+        rating += Float(player.wins - player.losses) * 5
+        
+        return Float(rating)
     }
 }
