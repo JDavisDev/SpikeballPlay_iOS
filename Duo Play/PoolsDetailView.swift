@@ -7,37 +7,98 @@
 //
 
 import UIKit
+import RealmSwift
 
-class PoolsDetailView: UIViewController {
-
-    // FOR POOL MATCH DISPLAY
-    /* SHOW A BUTTON OF EACH TEAMS GAME. like a card of the matchup
-    Not based on rounds
-    When two teams are set to play each other and is the next available game for both teams, show the card.
-    Could be conflicting rounds, but will show EACH teams next game only when BOTH teams are available
- 
-    Could do something similar for brackets
- */
+class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    
+    @IBOutlet weak var matchupTableView: UITableView!
+    
+    let realm = try! Realm()
+    let generator = PoolPlayMatchGenerator()
+    
+    var pool = Pool()
+    var poolName = "Pool A"
+    var tournament = TournamentController.getCurrentTournament()
+    var matchupList = [PoolPlayMatchup]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        matchupTableView.delegate = self
+        matchupTableView.dataSource = self
+        pool = getCurrentPool()
+        updateMatchupList()
+        generateMatchupList()
+        // need to get current pool by passing in clicked ID or something
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func getCurrentPool() -> Pool {
+        let realm = try! Realm()
+        if let results = realm.objects(Pool.self).first {//filter("name = '" + poolName + "'").first {
+            return results
+        }
+        
+        var pool = Pool()
+        pool.name = "nil"
+        return pool
     }
-    */
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        updateMatchupList()
+    }
+    
+    func updateMatchupList() {
+        self.matchupList.removeAll()
+        
+        // fetch matches left then update list
+        try! realm.write() {
+            for matchup in pool.matchupList {
+                self.matchupList.append(matchup)
+            }
+        }
+    }
+    
+    func generateMatchupList() {
+        try! realm.write() {
+            pool.matchupList.removeAll()
+            pool.matchupList = generator.generatePoolPlayGames(pool: pool)
+        }
+        
+        updateMatchupList()
+        matchupTableView.reloadData()
+    }
+    
+    // MARK: - Pools Table View
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MatchupCell")
+        cell!.textLabel?.text = String((matchupList[indexPath.row].teamOne?.name)! + " vs. " + (matchupList[indexPath.row].teamTwo?.name)!)
+        return cell!
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return matchupList.count
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // make the cell act as a button to report
+        let selectedMatchup = self.matchupList[indexPath.row]
+        self.performSegue(withIdentifier: "MatchupDetailVC", sender: selectedMatchup)
+    }
+    
+    /// passing
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "MatchupDetailVC" {
+            if let nextVC = segue.destination as? PoolPlayMatchReporterView {
+                nextVC.selectedMatchup = sender as! PoolPlayMatchup
+            }
+        }
+    }
 
 }

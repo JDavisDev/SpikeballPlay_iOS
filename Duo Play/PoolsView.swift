@@ -37,8 +37,7 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // send pool
         let indexPath = poolsTableView.indexPathForSelectedRow
         let pool = tournament.poolList[(indexPath?.row)!]
-        pool.matchupList = PoolPlayMatchGenerator().generatePoolPlayGames()
-        let controller = segue.destination as? PoolDetailView
+        let controller = segue.destination as? PoolsDetailView
         controller?.pool = pool
     }
     

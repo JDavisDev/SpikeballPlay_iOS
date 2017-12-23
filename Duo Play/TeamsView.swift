@@ -17,6 +17,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     var teamList = [Team]()
+    
     @IBOutlet weak var teamNameTextField: UITextField!
     @IBOutlet weak var teamsTableView: UITableView!
     
@@ -84,14 +85,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             let team = Team()
             
             try! self.realm.write() {
-                
                 team.name = newName
                 team.division = "Advanced"
-                team.id = 1
+                team.id = self.tournament.teamList.count + 1
                 self.tournament.teamList.append(team)
             }
             
-            self.teamList.append(team)
             self.teamsController.addTeam(team: team)
             self.teamsTableView.reloadData()
         }

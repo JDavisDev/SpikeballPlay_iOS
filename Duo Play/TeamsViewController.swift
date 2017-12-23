@@ -13,7 +13,7 @@ class TeamsViewController {
     
     let realm = try! Realm()
     let tournamentController = TournamentController()
-    
+    var isNewPool = false
     let poolController = PoolsController()
     
     
@@ -23,9 +23,12 @@ class TeamsViewController {
         
         try! realm.write() {
             realm.add(team)
-            realm.add(newPool)
-            tournament.poolList.append(newPool)
             newPool.teamList.append(team)
+            
+            if isNewPool {
+                realm.add(newPool)
+                tournament.poolList.append(newPool)
+            }
         }
     }
     
@@ -33,13 +36,15 @@ class TeamsViewController {
         let tournament = TournamentController.getCurrentTournament()
         for pool in tournament.poolList {
             if pool.teamList.count < 8 {
+                isNewPool = false
                 return pool
             }
         }
         
         // no available pool, create one, append it, and return it
-        let poolCount = tournament.poolList.count
-        let name = String(format: "%c", poolCount + 65) as String
+        isNewPool = true
+        _ = tournament.poolList.count
+        let name = "Pool A" //String(format: "%c", poolCount + 65) as String
         let pool = Pool()
         pool.name = name
         pool.teamList = List<Team>()

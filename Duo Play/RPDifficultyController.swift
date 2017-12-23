@@ -70,6 +70,9 @@ class RPDifficultyController {
         var returnScore = Float(0.0)
         let playerGameCount = (player.wins) + (player.losses)
         
+        if game.playerOne == nil && game.playerTwo == nil && game.playerThree == nil && game.playerFour == nil {
+            return returnScore
+        }
         // Find the current player's opposing team
         switch player.id {
             // Team One

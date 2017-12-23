@@ -20,6 +20,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var tournamentTableView: UITableView!
         
     override func viewDidLoad() {
+        
+//        try! realm.write() {
+//            realm.deleteAll()
+//        }
         super.viewDidLoad()
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self

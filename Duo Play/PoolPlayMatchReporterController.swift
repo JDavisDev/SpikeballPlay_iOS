@@ -10,4 +10,8 @@ import Foundation
 
 class PoolPlayMatchReporterController {
     
+    func reportMatch() {
+        
+    }
+    
 }

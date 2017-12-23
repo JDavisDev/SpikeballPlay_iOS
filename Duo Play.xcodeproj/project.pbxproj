@@ -16,7 +16,6 @@
 		472104001F5D568400CA76C3 /* PoolPlayMatchup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103FF1F5D568400CA76C3 /* PoolPlayMatchup.swift */; };
 		472104041F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472104031F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift */; };
 		472104061F62939A00CA76C3 /* PoolPlayMatchReporterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472104051F62939A00CA76C3 /* PoolPlayMatchReporterController.swift */; };
-		472104081F6295CC00CA76C3 /* PoolDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472104071F6295CC00CA76C3 /* PoolDetailView.swift */; };
 		47232F541F494D9600EED453 /* RPSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47232F531F494D9600EED453 /* RPSessionsView.swift */; };
 		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
 		475FF2831FA96FEC0018BB63 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475FF2821FA96FEC0018BB63 /* Session.swift */; };
@@ -95,7 +94,6 @@
 		472103FF1F5D568400CA76C3 /* PoolPlayMatchup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchup.swift; sourceTree = "<group>"; };
 		472104031F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchReporterView.swift; sourceTree = "<group>"; };
 		472104051F62939A00CA76C3 /* PoolPlayMatchReporterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolPlayMatchReporterController.swift; sourceTree = "<group>"; };
-		472104071F6295CC00CA76C3 /* PoolDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoolDetailView.swift; sourceTree = "<group>"; };
 		47232F531F494D9600EED453 /* RPSessionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPSessionsView.swift; sourceTree = "<group>"; };
 		473689651F40240700C04FD4 /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Division.swift; sourceTree = "<group>"; };
 		475FF2821FA96FEC0018BB63 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -194,7 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				472104031F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift */,
-				472104071F6295CC00CA76C3 /* PoolDetailView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -655,7 +652,6 @@
 				47E9323A1F3508FA00145E28 /* RPStatisticsController.swift in Sources */,
 				47FA9E321FB3AA86008E7D74 /* Net.swift in Sources */,
 				475FF2831FA96FEC0018BB63 /* Session.swift in Sources */,
-				472104081F6295CC00CA76C3 /* PoolDetailView.swift in Sources */,
 				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
 				478388B21FBA5DF500D8052E /* PoolsController.swift in Sources */,
 				47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */,

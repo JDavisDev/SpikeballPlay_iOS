@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
-class PoolPlayMatchReporterView {
+class PoolPlayMatchReporterView : UIViewController {
+    var selectedMatchup = PoolPlayMatchup()
     
 }
