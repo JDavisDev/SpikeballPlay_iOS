@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class TeamsViewController {
-    
+    let playersPerPool = 8
     let realm = try! Realm()
     let tournamentController = TournamentController()
     var isNewPool = false
@@ -35,7 +35,7 @@ class TeamsViewController {
     func getAvailablePool() -> Pool {
         let tournament = TournamentController.getCurrentTournament()
         for pool in tournament.poolList {
-            if pool.teamList.count < 8 {
+            if pool.teamList.count < playersPerPool {
                 isNewPool = false
                 return pool
             }
@@ -43,8 +43,8 @@ class TeamsViewController {
         
         // no available pool, create one, append it, and return it
         isNewPool = true
-        _ = tournament.poolList.count
-        let name = "Pool A" //String(format: "%c", poolCount + 65) as String
+        let poolCount = tournament.poolList.count
+        let name = "Pool " + String(format: "%c", poolCount + 65) as String
         let pool = Pool()
         pool.name = name
         pool.teamList = List<Team>()

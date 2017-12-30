@@ -73,6 +73,7 @@ class RPDifficultyController {
         if game.playerOne == nil && game.playerTwo == nil && game.playerThree == nil && game.playerFour == nil {
             return returnScore
         }
+        
         // Find the current player's opposing team
         switch player.id {
             // Team One

@@ -10,65 +10,83 @@ import Foundation
 import RealmSwift
 
 class PoolPlayMatchGenerator {
+    let realm = try! Realm()
     var pool = Pool()
+    var currentRound = 0
     var teamList = List<Team>()
-    var teamCount = 4
+    var teamCount = 6
     var numOfRounds = 0
     var totalMatchesToPlay = 0
+    var teamOne = Team()
+    var teamTwo = Team()
     
-    func generatePoolPlayGames(pool: Pool) -> List<PoolPlayMatchup> {
-        let gameList = List<PoolPlayMatchup>()
+    func generatePoolPlayGames(pool: Pool) {
+        var gameList = List<PoolPlayMatchup>()
         self.pool = pool
         teamCount = pool.teamList.count
         teamList = pool.teamList
         numOfRounds = teamCount - 1
         let gamesPerRound = teamCount % 2 == 0 ? teamCount / 2 : teamCount / 2 + 1
         
-        //appendRoundOneGames(gameList: gameList)
         // ROUND ONE
         for i in 1...teamCount / 2 {
-            let game = PoolPlayMatchup() //round: 1, teamOne: teamList[i - 1], teamTwo: teamList[teamCount - i])
-            // if pass all checks, add game
+            try! realm.write {
+                let game = PoolPlayMatchup() //round: 1, teamOne: teamList[i - 1], teamTwo: teamList[teamCount - i])
+                // if pass all checks, add game
             
-            game.teamOne = teamList[i - 1]
-            game.teamTwo = teamList[teamCount - i]
+                game.teamOne = teamList[i - 1]
+                game.teamTwo = teamList[teamCount - i]
             
-            if !isMatchupDuplicate(teamOne: game.teamOne!, teamTwo: game.teamTwo!, gameList: gameList) {
-               gameList.append(game)
+                if !isMatchupDuplicate(teamOne: game.teamOne!, teamTwo: game.teamTwo!, gameList: gameList) {
+                    realm.add(game)
+                    pool.matchupList.append(game)
+                    gameList.append(game)
+                }
             }
         }
+        
+        currentRound += 1
         
         // Process rounds 2 - number of Rounds
         // WRITE THIS NEXT
         // THEN POOL PLAY MATCH REPORTING
         // OR Updating MATCH LIST AFTER GAMES ARE REPORTED
         if numOfRounds >= 2 {
-            while gameList.count < teamList.count - 1 {
+            while numOfRounds * gamesPerRound > gameList.count {
                 // set each game
                 for var i in 0..<gamesPerRound {
-                    // check each team and get their opponent
-                    let opponent = getNextOpponent(teamOne: teamList[i], gameList: gameList)
-                    let matchup = PoolPlayMatchup()
-                    matchup.teamOne = teamList[i]
-                    matchup.teamTwo = opponent
+                    try! realm.write {
+                        // check each team and get their opponent
+                        let opponent = getNextOpponent(teamOne: teamList[i], round: currentRound, gameList: gameList)
+                        let matchup = PoolPlayMatchup()
+                        matchup.teamOne = teamList[i]
+                        matchup.teamTwo = opponent
+                        matchup.round = currentRound
 
-                    if !isMatchupDuplicate(teamOne: matchup.teamOne!, teamTwo: matchup.teamTwo!, gameList: gameList) {
-                        gameList.append(matchup)
+                        if !isMatchupDuplicate(teamOne: matchup.teamOne!, teamTwo: matchup.teamTwo!, gameList: gameList) {
+                            realm.add(matchup)
+                            pool.matchupList.append(matchup)
+                            gameList.append(matchup)
+                        }
                     }
                 }
+                // added all games of that round, increment round
+                currentRound += 1
             }
         }
         
-        return gameList
+        try! realm.write {
+            realm.add(gameList)
+        }
     }
     
-    func getNextOpponent(teamOne: Team, gameList: List<PoolPlayMatchup>) -> Team {
+    func getNextOpponent(teamOne: Team, round: Int, gameList: List<PoolPlayMatchup>) -> Team {
         // get the match they played recently and use that as starting point
-    
         let lastOpponent = getLastOpponent(teamOne: teamOne, gameList: gameList)
         var nextOpponent = Team()
         // make sure this is greater than 0 or wraps
         var i = lastOpponent.id - 1
+        
         if i <= 0 {
             // decrement one to change opponent
             nextOpponent = teamList[teamCount - 1]
@@ -81,7 +99,7 @@ class PoolPlayMatchGenerator {
         
         while teamOne.id == i {
             i -= 1
-            if (i == 1) && teamCount - i >= 0 && teamCount - i < teamList.count {
+            if i == 1 && teamCount - i >= 0 && teamCount - i < teamList.count {
                 nextOpponent = teamList[teamCount - i]
             } else if i - 2 >= 0 &&  i - 2 < teamList.count{
                 nextOpponent = teamList[i - 2]
@@ -97,10 +115,10 @@ class PoolPlayMatchGenerator {
         
         // iterate through each match, updating the last opponent as we go
         for matchup in pool.matchupList {
-            if (matchup.teamOne?.isEqual(teamOne))! {
+            if (matchup.teamOne?.id == teamOne.id) {
                 // found a match teamOne played in
                 lastOpponent = matchup.teamTwo!
-            } else if (matchup.teamTwo?.isEqual(teamOne))! {
+            } else if (matchup.teamTwo?.id == teamOne.id) {
                 lastOpponent = matchup.teamOne!
             }
         }
@@ -110,15 +128,14 @@ class PoolPlayMatchGenerator {
     
     func isMatchupDuplicate(teamOne: Team, teamTwo: Team, gameList: List<PoolPlayMatchup>) -> Bool {
         for game in gameList {
-            if (game.teamOne == teamOne && game.teamTwo == teamTwo) || (game.teamOne == teamTwo && game.teamTwo == teamOne) {
+            if ((game.teamOne?.id == teamOne.id && game.teamTwo?.id == teamTwo.id) ||
+                (game.teamOne?.id == teamTwo.id && game.teamTwo?.id == teamOne.id)) {
                 return true
             }
         }
         
         return false
     }
-    
-    
     
     /* POOL SCHEDULE **
  

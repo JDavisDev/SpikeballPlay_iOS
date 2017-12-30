@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 class PoolPlayMatchReporterView : UIViewController {
+    // hopefully, the selected matchup gets stored here.
     var selectedMatchup = PoolPlayMatchup()
+    
+    
     
 }

@@ -33,6 +33,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidAppear(_ animated: Bool) {
         updateTournamentList()
         tournamentTableView.reloadData()
+        
         super.viewDidAppear(true)
     }
 
@@ -82,13 +83,15 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tournamentButtonCell")
         let button = cell?.contentView.subviews[0] as! UIButton
-        button.setTitle(tournamentList[indexPath.row].value(forKeyPath: "name") as? String,
+        if tournamentList.count > 0 {
+            button.setTitle(tournamentList[indexPath.row].value(forKeyPath: "name") as? String,
                         for: .normal)
         
-        button.addTarget(self,
+            button.addTarget(self,
                          action: #selector(tournamentButton_Clicked),
                          for: .touchUpInside
-        )
+            )
+        }
         
         return cell!
     }

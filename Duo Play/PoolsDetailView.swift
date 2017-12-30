@@ -11,7 +11,6 @@ import RealmSwift
 
 class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    
     @IBOutlet weak var matchupTableView: UITableView!
     
     let realm = try! Realm()
@@ -35,7 +34,7 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func getCurrentPool() -> Pool {
         let realm = try! Realm()
-        if let results = realm.objects(Pool.self).first {//filter("name = '" + poolName + "'").first {
+        if let results = realm.objects(Pool.self).filter("name = '" + poolName + "'").first {
             return results
         }
         
@@ -63,8 +62,11 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     func generateMatchupList() {
         try! realm.write() {
             pool.matchupList.removeAll()
-            pool.matchupList = generator.generatePoolPlayGames(pool: pool)
         }
+        
+        // this will generate and add matchups to pool object
+        // worked for 4 teams
+        generator.generatePoolPlayGames(pool: pool)
         
         updateMatchupList()
         matchupTableView.reloadData()
