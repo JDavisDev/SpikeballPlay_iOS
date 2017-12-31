@@ -102,5 +102,4 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
             }
         }
     }
-
 }

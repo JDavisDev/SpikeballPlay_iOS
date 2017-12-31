@@ -165,7 +165,9 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
         
-        cell!.textLabel?.text = tournament.teamList[indexPath.row].name
+        // hacky modifier.. 
+        let modifier = indexPath.section * teamList.count - 1 > 0 ? indexPath.section * teamList.count - 1 : 0
+        cell!.textLabel?.text = tournament.teamList[indexPath.row + modifier].name
         cell?.detailTextLabel?.text = String(describing: tournament.teamList[indexPath.row].division)
         return cell!
     }

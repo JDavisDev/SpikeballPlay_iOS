@@ -46,9 +46,14 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     static func getCurrentSession() -> Session {
-        let realm = try! Realm()
-        let results = realm.objects(Session.self).filter("uuid = '" + getCurrentSessionId() + "'").first
-        return results!
+        do {
+            let realm = try Realm()
+            let results = realm.objects(Session.self).filter("uuid = '" + getCurrentSessionId() + "'").first
+            return results!
+        } catch let error as NSError {
+            print("REALM ERROR: \(error)")
+            return Session()
+        }
     }
     
     @IBAction func deleteAll_Clicked(_ sender: Any) {
