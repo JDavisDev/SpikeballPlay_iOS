@@ -30,5 +30,9 @@ class SettingsView: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    @IBAction func startBracketButtonClicked(_ sender: UIButton) {
+        let bracketController = BracketController()
+        bracketController.startBracket()
+    }
+    
 }

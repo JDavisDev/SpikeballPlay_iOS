@@ -31,10 +31,8 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        controller.sort(sortMethod: sortButton.currentTitle!)
-        initStats()
-        statsTable.reloadData()
-        
+        updateStatsList()
+    
         Answers.logContentView(withName: "Statistics Page View",
                                        contentType: "Statistics Page View",
                                        contentId: "3",
@@ -89,7 +87,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         for method in sortingData {
             let action = UIAlertAction(title: "\(method)", style: .default) { (action: UIAlertAction) in
                 self.sortButton.setTitle(method, for: .normal)
-                self.viewDidAppear(true)
+                self.updateStatsList()
             }
             actionSheet.addAction(action)
         }
@@ -97,8 +95,15 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         let actionCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action: UIAlertAction) in
         // reset this selection to "Select Player One"
         }
+        
         actionSheet.addAction(actionCancel)
         present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func updateStatsList() {
+        controller.sort(sortMethod: sortButton.currentTitle!)
+        initStats()
+        statsTable.reloadData()
     }
 
 }

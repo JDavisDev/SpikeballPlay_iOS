@@ -16,4 +16,5 @@ class Tournament : Object {
     var bracket = Bracket()
     var poolList = List<Pool>()
     var teamList = List<Team>()
+    var matchupList = List<BracketMatchup>()
 }

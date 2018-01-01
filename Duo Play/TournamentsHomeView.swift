@@ -11,7 +11,6 @@ import RealmSwift
 
 class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    let tournamentsHomeController = TournamentsHomeViewController()
     let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()

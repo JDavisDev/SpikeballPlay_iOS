@@ -27,9 +27,13 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         matchupTableView.delegate = self
         matchupTableView.dataSource = self
         pool = getCurrentPool()
-        updateMatchupList()
         generateMatchupList()
         // need to get current pool by passing in clicked ID or something
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        updateMatchupList()
     }
     
     func getCurrentPool() -> Pool {
@@ -43,40 +47,38 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         return pool
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        updateMatchupList()
-    }
-    
     func updateMatchupList() {
         self.matchupList.removeAll()
         
         // fetch matches left then update list
         try! realm.write() {
             for matchup in pool.matchupList {
-                self.matchupList.append(matchup)
+                if !matchup.isReported {
+                    self.matchupList.append(matchup)
+                }
             }
         }
+        
+        matchupTableView.reloadData()
     }
     
     func generateMatchupList() {
-        try! realm.write() {
-            pool.matchupList.removeAll()
+        if pool.matchupList.count == 0 {
+            // this will generate and add matchups to pool object
+            generator.generatePoolPlayGames(pool: pool)
         }
         
-        // this will generate and add matchups to pool object
-        // worked for 4 teams
-        generator.generatePoolPlayGames(pool: pool)
-        
         updateMatchupList()
-        matchupTableView.reloadData()
     }
     
     // MARK: - Pools Table View
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MatchupCell")
-        cell!.textLabel?.text = String((matchupList[indexPath.row].teamOne?.name)! + " vs. " + (matchupList[indexPath.row].teamTwo?.name)!)
+        if !matchupList[indexPath.row].isReported {
+            cell!.textLabel?.text = String((matchupList[indexPath.row].teamOne?.name)! + " vs. " + (matchupList[indexPath.row].teamTwo?.name)!)
+        }
+        
         return cell!
     }
 

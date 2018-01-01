@@ -12,7 +12,6 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var poolsTableView: UITableView!
     var tournament = TournamentController.getCurrentTournament()
-    var poolsController = PoolsViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
