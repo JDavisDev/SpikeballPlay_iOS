@@ -61,7 +61,9 @@ class BracketController {
             
                 game.teamOne = teamList[i - 1]
                 game.teamTwo = teamList[teamList.count - i]
-            
+                game.division = "Advanced"
+                game.round = 1
+                
                 realm.add(game)
                 tournament.matchupList.append(game)
             }
