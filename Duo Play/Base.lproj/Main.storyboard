@@ -1758,7 +1758,7 @@
         <!--Matchups-->
         <scene sceneID="uLP-82-FNd">
             <objects>
-                <viewController id="D2T-rh-igs" sceneMemberID="viewController">
+                <viewController id="D2T-rh-igs" customClass="MatchupsViewController" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ble-I7-SvQ"/>
                         <viewControllerLayoutGuide type="bottom" id="pV5-OK-Vah"/>
@@ -1790,6 +1790,9 @@
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Matchups" id="LzU-Qn-Fey"/>
+                    <connections>
+                        <outlet property="matchupsTableView" destination="yFz-DU-DIN" id="CJ0-dd-nHL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y78-cq-TaQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1894,7 +1897,7 @@
         <!--Report Bracket Match-->
         <scene sceneID="RZy-E0-4az">
             <objects>
-                <viewController title="Report Bracket Match" id="1cT-kW-IQp" sceneMemberID="viewController">
+                <viewController title="Report Bracket Match" id="1cT-kW-IQp" customClass="BracketReporterViewController" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="31t-6E-Y8m"/>
                         <viewControllerLayoutGuide type="bottom" id="LwH-Uf-1eJ"/>

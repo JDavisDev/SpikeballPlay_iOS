@@ -12,8 +12,8 @@ import RealmSwift
 class BracketMatchup : Object {
     @objc dynamic var teamOne: Team?
     @objc dynamic var teamTwo: Team?
-    @objc dynamic var teamOneScores = [Int]()
-    @objc dynamic var teamTwoScores = [Int]()
+    var teamOneScores = List<Int>()
+    var teamTwoScores = List<Int>()
     @objc dynamic public var round = 1
     @objc dynamic public var division = ""
     @objc dynamic public var isReported = false

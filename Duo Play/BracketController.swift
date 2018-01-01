@@ -13,12 +13,10 @@ class BracketController {
     let realm = try! Realm()
     let tournament: Tournament
     let poolList: List<Pool>
-    let teamList: List<Team>
     
     init() {
         tournament = TournamentController.getCurrentTournament()
         poolList = tournament.poolList
-        teamList = tournament.teamList
     }
     
     func startBracket() {
@@ -27,8 +25,7 @@ class BracketController {
     
     func seedTeams() {
         try! realm.write {
-            var array = Array(teamList)
-            teamList.removeAll()
+            var array = Array(tournament.teamList)
             tournament.teamList.removeAll()
             
             // seed the teams here based on wins, then point diff, then name
@@ -47,7 +44,6 @@ class BracketController {
             // we've sorted/seeded, not re add
             for team in array {
                 tournament.teamList.append(team)
-                teamList.append(team)
             }
         }
         
@@ -55,17 +51,19 @@ class BracketController {
     }
     
     func createMatchups() {
-        for i in 1...teamList.count / 2 {
-            try! realm.write {
-                let game = BracketMatchup()
+        if tournament.matchupList.count == 0 {
+            for i in 1...tournament.teamList.count / 2 {
+                try! realm.write {
+                    let game = BracketMatchup()
             
-                game.teamOne = teamList[i - 1]
-                game.teamTwo = teamList[teamList.count - i]
-                game.division = "Advanced"
-                game.round = 1
+                    game.teamOne = tournament.teamList[i - 1]
+                    game.teamTwo = tournament.teamList[tournament.teamList.count - i]
+                    game.division = "Advanced"
+                    game.round = 1
                 
-                realm.add(game)
-                tournament.matchupList.append(game)
+                    realm.add(game)
+                    tournament.matchupList.append(game)
+                }
             }
         }
     }
