@@ -17,5 +17,4 @@ class BracketMatchup : Object {
     @objc dynamic public var round = 1
     @objc dynamic public var division = ""
     @objc dynamic public var isReported = false
-    @objc dynamic public var isEliminated = false
 }

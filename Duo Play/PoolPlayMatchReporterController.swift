@@ -15,8 +15,8 @@ public class PoolPlayMatchReporterController {
     func reportMatch(selectedMatchup: PoolPlayMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
         // save the match!
         try! realm.write {
-            selectedMatchup.teamOne?.gameList.append(selectedMatchup)
-            selectedMatchup.teamTwo?.gameList.append(selectedMatchup)
+            selectedMatchup.teamOne?.poolPlayGameList.append(selectedMatchup)
+            selectedMatchup.teamTwo?.poolPlayGameList.append(selectedMatchup)
             
             var teamOneWins = 0
             for score in teamOneScores {

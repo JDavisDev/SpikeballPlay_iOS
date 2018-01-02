@@ -58,7 +58,9 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.matchupList.removeAll()
         
         for matchup in tournament.matchupList {
-            self.matchupList.append(matchup)
+            if !matchup.isReported {
+                self.matchupList.append(matchup)
+            }
         }
         
         matchupsTableView.reloadData()
@@ -72,23 +74,24 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchupCell")
-        let matchup = self.matchupList[indexPath.row]
-        cell!.textLabel?.text = (String(describing: matchup.teamOne?.name)) + "  vs.  " + (String(describing: matchup.teamTwo?.name))
+        let matchup = matchupList[indexPath.row]
+        if !matchup.isReported {
+            cell!.textLabel?.text = (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
+        }
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // let pool = PoolsViewController.poolsList[indexPath.row]
-        performSegue(withIdentifier: "bracketReporterSegue", sender: self)
+        let selectedMatchup = matchupList[indexPath.row]
+        performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // this will handle pool cell click
-        // send pool
-        let indexPath = matchupsTableView.indexPathForSelectedRow
-        let matchup = tournament.matchupList[(indexPath?.row)!]
-        let controller = segue.destination as? BracketReporterViewController
-        controller?.matchup = matchup
+        if segue.identifier == "bracketReporterSegue" {
+            if let nextVC = segue.destination as? BracketReporterViewController {
+                nextVC.selectedMatchup = sender as! BracketMatchup
+            }
+        }
     }
 
 }

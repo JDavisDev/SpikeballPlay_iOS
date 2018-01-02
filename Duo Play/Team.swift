@@ -13,6 +13,7 @@ import Realm
 public class Team : Object {
     @objc dynamic public var seed = 1
     @objc dynamic public var id = 1
+    @objc dynamic public var bracketRound = 1
     @objc dynamic public var name = ""
     @objc dynamic var pool: Pool?
     @objc dynamic public var wins = 0
@@ -20,6 +21,7 @@ public class Team : Object {
     @objc dynamic public var pointsFor: Int = 0
     @objc dynamic public var pointsAgainst: Int = 0
     @objc dynamic public var division = ""
+    @objc dynamic public var isEliminated = false
     
-    var gameList = List<PoolPlayMatchup>()
+    var poolPlayGameList = List<PoolPlayMatchup>()
 }

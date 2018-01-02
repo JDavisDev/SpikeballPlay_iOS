@@ -13,7 +13,7 @@ import RealmSwift
 class PoolPlayMatchReporterView : UIViewController {
     let realm = try! Realm()
     
-    // hopefully, the selected matchup gets stored here.
+    // the selected matchup gets stored here.
     var selectedMatchup = PoolPlayMatchup()
     
     @IBOutlet weak var teamTwoNameLabel: UILabel!

@@ -75,7 +75,7 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MatchupCell")
-        if !matchupList[indexPath.row].isReported {
+        if !matchupList[indexPath.row].isReported  {
             cell!.textLabel?.text = String((matchupList[indexPath.row].teamOne?.name)! + " vs. " + (matchupList[indexPath.row].teamTwo?.name)!)
         }
         
@@ -103,5 +103,22 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
                 nextVC.selectedMatchup = sender as! PoolPlayMatchup
             }
         }
+    }
+    
+    func isMatchupAvailable(matchup: PoolPlayMatchup) -> Bool {
+        // only show first match of each team
+        var counter = 0
+        for game in matchupList {
+            if !game.isReported && (game.teamOne!.name == matchup.teamOne!.name || game.teamTwo!.name == matchup.teamTwo!.name ||
+                game.teamTwo!.name == matchup.teamOne!.name || game.teamOne!.name == matchup.teamTwo?.name) {
+                counter += 1
+            }
+            
+            if counter >= 2 {
+                return false
+            }
+        }
+        
+        return true
     }
 }
