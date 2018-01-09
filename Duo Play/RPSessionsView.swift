@@ -12,7 +12,6 @@ import Crashlytics
 import RealmSwift
 
 class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     @IBOutlet weak var newSessionButton: UIButton!
     @IBOutlet weak var sessionTableView: UITableView!
     public static var sessionUuid: String = "";
@@ -20,10 +19,8 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     let realm = try! Realm()
     
     override func viewDidLoad() {
-       // deleteAllData()
         sessionTableView.delegate = self
         sessionTableView.dataSource = self
-    
 
         super.viewDidLoad()
     }
@@ -33,12 +30,12 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         updateSessionList()
     }
     
-    // Send tapped Session to new view
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let backItem = UIBarButtonItem()
-        backItem.title = "Sessions"
-        navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
-    }
+//    // Send tapped Session to new view
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        let backItem = UIBarButtonItem()
+//        backItem.title = "Sessions"
+//        navigationItem.backBarButtonItem = backItem // This will show in the next view controller being pushed
+//    }
     
     static func setCurrentSessionId(uuid: String) {
         RPSessionsView.sessionUuid = uuid
@@ -49,9 +46,23 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     static func getCurrentSession() -> Session {
-        let realm = try! Realm()
-        let results = realm.objects(Session.self).filter("uuid = '" + getCurrentSessionId() + "'").first
-        return results!
+        do {
+            let realm = try Realm()
+            let results = realm.objects(Session.self).filter("uuid = '" + getCurrentSessionId() + "'").first
+            return results!
+        } catch let error as NSError {
+            print("REALM ERROR: \(error)")
+            return Session()
+        }
+    }
+    
+    @IBAction func deleteAll_Clicked(_ sender: Any) {
+        // add dialog here
+        try! realm.write() {
+            realm.deleteAll()
+        }
+        
+        updateSessionList()
     }
     
     // MARK: - Table View methods
@@ -161,7 +172,6 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
             realm.delete(session.playersList)
             realm.delete(session.gameList)
             realm.delete(session.historyList)
-            // all history objects are not being deleted
             realm.delete(session)
         }
     }
@@ -238,5 +248,7 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         for session in results {
             sessionList.append(session)
         }
+        
+        sessionTableView.reloadData()
     }
 }

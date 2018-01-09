@@ -7,21 +7,12 @@
 //
 
 import Foundation
+import RealmSwift
 
-class Pool {
-    var name: String
-    var teams = [Team]()
-    var division: Division
-    var isPowerPool = false
-    public var matchupList = [PoolPlayMatchup]()
-    
-    init(name: String) {
-        self.name = "Pool \(name)"
-        self.division = Division.Advanced
-    }
-    
-    func addTeamToPool(team: Team) {
-        team.id = self.teams.count + 1
-        self.teams.append(team)
-    }
+public class Pool : Object {
+    @objc dynamic public var name = ""
+    var teamList = List<Team>()
+    @objc dynamic var division = ""
+    @objc dynamic var isPowerPool = false
+    var matchupList = List<PoolPlayMatchup>()
 }

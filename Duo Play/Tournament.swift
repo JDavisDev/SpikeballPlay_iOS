@@ -7,14 +7,14 @@
 //
 
 import Foundation
+import RealmSwift
 
-class Tournament {
+class Tournament : Object {
+    @objc dynamic public var uuid = ""
+    @objc dynamic public var name = ""
     
-    var name: String
-    // list of pools
-    // bracket
-    // team list?
-    init(name: String) {
-        self.name = name
-    }
+    var bracket = Bracket()
+    var poolList = List<Pool>()
+    var teamList = List<Team>()
+    var matchupList = List<BracketMatchup>()
 }

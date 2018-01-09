@@ -937,88 +937,8 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.295039"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "getFourRandomPlayers()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.295087"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "isGameUnique(currentGamePlayers:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531786300.268525"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "RPRandomizingController"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.295166"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
-            landmarkName = "isGameUnique(currentGamePlayers:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPRandomizingController.swift"
-            timestampString = "531556963.295204"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
-            landmarkName = "isUniqueGamesLeft()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Duo Play/RPStatisticsView.swift"
-            timestampString = "531556963.295244"
+            timestampString = "536550183.880445"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "67"
@@ -1033,28 +953,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.418332"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "generatePoolPlayGames()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolsView.swift"
-            timestampString = "531114385.082313"
+            timestampString = "536550183.880635"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1066,12 +970,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.418761"
+            timestampString = "537163434.355565"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "generatePoolPlayGames()"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
+            landmarkName = "getTeamOne(id:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1081,76 +985,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.419042"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "getNextOpponent(teamOne:gameList:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.41931"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "generatePoolPlayGames()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.419573"
+            filePath = "Duo Play/PoolsView.swift"
+            timestampString = "536550183.880975"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "40"
             endingLineNumber = "40"
-            landmarkName = "generatePoolPlayGames()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolsView.swift"
-            timestampString = "531114385.082422"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "prepare(for:sender:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolsView.swift"
-            timestampString = "531114385.082465"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
             landmarkName = "prepare(for:sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1162,11 +1002,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolDetailView.swift"
-            timestampString = "528077700.243893"
+            timestampString = "532383661.995003"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1178,11 +1018,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolDetailView.swift"
-            timestampString = "528077700.243967"
+            timestampString = "532383661.995039"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1194,60 +1034,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.419877"
+            timestampString = "537163434.355667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "isMatchupDuplicate(teamOne:teamTwo:gameList:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.420138"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "getNextOpponent(teamOne:gameList:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.420398"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "getNextOpponent(teamOne:gameList:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "528076031.420652"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "getNextOpponent(teamOne:gameList:)"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "isNextOpponentCorrect(teamOne:nextOpponent:round:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1258,11 +1050,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295475"
+            timestampString = "536970233.645081"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "addPlayerButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1274,11 +1066,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPNewGameView.swift"
-            timestampString = "531556963.295538"
+            timestampString = "537168218.03562"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "297"
+            endingLineNumber = "297"
             landmarkName = "submitButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1290,11 +1082,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPNewGameView.swift"
-            timestampString = "531556963.295584"
+            timestampString = "537168218.03566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
             landmarkName = "submitButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1305,12 +1097,12 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duo Play/TeamsView.swift"
-            timestampString = "531328421.075031"
+            filePath = "Duo Play/RPPlayersView.swift"
+            timestampString = "536970233.645195"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1322,12 +1114,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295647"
+            timestampString = "536970233.645229"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "updatePlayerTextFields()"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1338,27 +1130,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295694"
+            timestampString = "536970233.645264"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "updatePlayerTextFields()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.29574"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "RPPlayersView"
             landmarkType = "3">
          </BreakpointContent>
@@ -1370,11 +1146,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295784"
+            timestampString = "536970233.6452971"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "RPPlayersView"
             landmarkType = "3">
          </BreakpointContent>
@@ -1386,12 +1162,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295829"
+            timestampString = "536970233.645331"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "updatePlayerTextFields()"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1402,27 +1178,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295874"
+            timestampString = "536970233.645366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "updatePlayerTextFields()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/RPPlayersView.swift"
-            timestampString = "531556963.295918"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1434,11 +1194,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPSessionsView.swift"
-            timestampString = "531556963.29597"
+            timestampString = "536378597.148788"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
             landmarkName = "sessionButton_Clicked(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1450,12 +1210,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/RPSessionsView.swift"
-            timestampString = "531556963.296016"
+            timestampString = "536378597.148963"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
-            landmarkName = "sessionButton_Clicked(sender:)"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "deleteSession(session:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

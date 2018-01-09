@@ -13,6 +13,7 @@ class Session : Object {
     @objc dynamic var uuid = ""
     @objc dynamic var name = "test"
     var playersList = List<RandomPlayer>()
+    var netList = List<Net>()
     var gameList = List<RandomGame>()
     var historyList = List<History>()
     

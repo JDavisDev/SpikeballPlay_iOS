@@ -7,21 +7,21 @@
 //
 
 import Foundation
+import RealmSwift
+import Realm
 
-class Team {
-    var seed = 1
-    var id = 1
-    var name: String
-    var pool: Pool
-    var division: Division
+public class Team : Object {
+    @objc dynamic public var seed = 1
+    @objc dynamic public var id = 1
+    @objc dynamic public var bracketRound = 1
+    @objc dynamic public var name = ""
+    @objc dynamic var pool: Pool?
+    @objc dynamic public var wins = 0
+    @objc dynamic public var losses = 0
+    @objc dynamic public var pointsFor: Int = 0
+    @objc dynamic public var pointsAgainst: Int = 0
+    @objc dynamic public var division = ""
+    @objc dynamic public var isEliminated = false
     
-    init(name: String, pool: Pool) {
-        self.name = name
-        self.pool = pool
-        self.division = Division.Advanced
-    }
-    
-    func getPool() -> Pool {
-        return self.pool
-    }
+    var poolPlayGameList = List<PoolPlayMatchup>()
 }

@@ -83,7 +83,7 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
         // delete match on tap
         // prompt for deletion with dialog!
         // delete all button?
-        let alert = UIAlertController(title: "Delete Match", message: "Delete this match?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Edit Match", message: "Delete this match?", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
             // delete!
@@ -91,6 +91,17 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
             // update history list
             self.viewDidAppear(true)
         }))
+        
+//        alert.addAction(UIAlertAction(title: "Edit", style: .default, handler: { (action: UIAlertAction!) in
+//            // edit
+//            // this works, it doesn't delete the previous game, but moves user to game view with current values.
+//            // need a manual score page or something.. too fickle.
+//
+//            // move them to game view with players populated
+//            self.performSegue(withIdentifier: "editGameSegue", sender: self.gameList[indexPath.row])
+//            // update history list
+//            self.viewDidAppear(true)
+//        }))
         
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
             // cancel
@@ -100,5 +111,13 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
         }))
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editGameSegue" {
+            if let nextVC = segue.destination as? RPNewGameView {
+                nextVC.gameToEdit = sender as! RandomGame
+            }
+        }
     }
 }

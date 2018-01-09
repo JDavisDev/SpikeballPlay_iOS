@@ -13,6 +13,7 @@ import Crashlytics
 
 class RPHistoryController {
     let session = RPSessionsView.getCurrentSession()
+    let gameController = RPGameController()
     let realm = try! Realm()
     
     func deleteHistoryMatch(game: RandomGame) {
@@ -52,6 +53,15 @@ class RPHistoryController {
         
         Answers.logCustomEvent(withName: "History Deleted",
             customAttributes: [:])
+    }
+    
+    func editPlayerStatistics(game: RandomGame) {
+        // delete the game in stats, then add it back with new values
+        deleteHistoryMatch(game: game)
+        // move them to game view with players populated
+        
+        Answers.logCustomEvent(withName: "History Edited",
+                               customAttributes: [:])
     }
 }
 

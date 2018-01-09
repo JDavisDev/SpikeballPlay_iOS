@@ -10,63 +10,62 @@ import Foundation
 import RealmSwift
 
 class RPStatisticsController {
-    
+    let realm = try! Realm()
     let session = RPSessionsView.getCurrentSession()
     
     // Sort statistics page
     public func sort(sortMethod: String) {
-//        switch sortMethod {
-//            case "Wins":
-//                session.playersList = session.playersList.sorted(by: winsSorter)
-//                session.playersList.sorted(by: <#T##Sequence#>)
-//            break
-//            case "Losses":
-//                session.playersList = session.playersList.sorted(by: lossSorter)
-//            break
-//            case "Points For":
-//                session.playersList = session.playersList.sorted(by: pointsForSorter)
-//            break
-//            case "Points Against":
-//                session.playersList = session.playersList.sorted(by: pointsAgainstSorter)
-//            break
-//            case "Point Differential":
-//                session.playersList = session.playersList.sorted(by: pointDifferentialSorter)
-//            break
-//            case "Name":
-//                session.playersList = session.playersList.sorted(by: nameSorter)
-//            break
-//            case "Rating":
-//                session.playersList = session.playersList.sorted(by: ratingSorter)
-//            break
-//            default:
-//                session.playersList = session.playersList.sorted(by: nameSorter)
-//            break
-//        }
+        
+        try! realm.write {
+            var array = Array(session.playersList)
+            session.playersList.removeAll()
+            
+            switch sortMethod {
+            case "Wins":
+                array.sort { $0.wins > $1.wins }
+                break
+            case "Losses":
+                array.sort { $0.losses > $1.losses }
+                break
+            case "Points For":
+                array.sort { $0.pointsFor > $1.pointsFor }
+                break
+            case "Points Against":
+                array.sort { $0.pointsAgainst > $1.pointsAgainst }
+                break
+            case "Point Differential":
+                array.sort { $0.pointsFor - $0.pointsAgainst > $1.pointsFor - $1.pointsAgainst }
+                break
+            case "Name":
+                array.sort { $0.name < $1.name }
+                break
+            case "Rating":
+                array.sort { $0.rating > $1.rating }
+                break
+            case "Match Difficulty":
+                array.sort { $0.matchDifficulty > $1.matchDifficulty }
+            default:
+                array.sort { $0.id < $1.id }
+                break
+            }
+            
+            for player in array {
+                session.playersList.append(player)
+            }
+        }
     }
     
-    func winsSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.wins > that.wins
-    }
-    
-    func lossSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.losses > that.losses
-    }
-    func pointsForSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.pointsFor > that.pointsFor
-    }
-    func pointsAgainstSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.pointsAgainst > that.pointsAgainst
-    }
-    
-    func pointDifferentialSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.pointsFor - this.pointsAgainst > that.pointsFor - that.pointsAgainst
-    }
-    
-    func ratingSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.rating > that.rating
-    }
-    
-    func nameSorter(this:RandomPlayer, that:RandomPlayer) -> Bool {
-        return this.name < that.name
+    /*
+ For each win, add your opponent's rating plus 400,
+ For each loss, add your opponent's rating minus 400,
+ And divide this sum by the number of played games. */
+    func getPlayerRating(player: RandomPlayer) -> Float {
+        var rating = Float(0.0)
+        
+        rating += Float(player.matchDifficulty) * 2
+        rating += Float(player.pointsFor - player.pointsAgainst) * 2.0
+        rating += Float(player.wins - player.losses) * 5
+        
+        return Float(rating)
     }
 }

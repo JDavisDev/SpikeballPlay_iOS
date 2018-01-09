@@ -7,29 +7,51 @@
 //
 
 import Foundation
+import RealmSwift
 
 class TeamsViewController {
-    static var teamsList = [Team]()
+    let playersPerPool = 8
+    let realm = try! Realm()
+    let tournamentController = TournamentController()
+    var isNewPool = false
+    let poolController = PoolsController()
     
-    func addTeam(name: String) {
-        let pool = getAvailablePool()
-        let team = Team(name: name, pool: pool)
-        TeamsViewController.teamsList.append(team)
-        pool.addTeamToPool(team: team)
+    
+    func addTeam(team: Team) {
+        let tournament = TournamentController.getCurrentTournament()
+        let newPool = getAvailablePool()
+        
+        try! realm.write() {
+            realm.add(team)
+            newPool.teamList.append(team)
+            
+            if isNewPool {
+                realm.add(newPool)
+                tournament.poolList.append(newPool)
+            }
+        }
     }
     
     func getAvailablePool() -> Pool {
-        for pool in PoolsViewController.poolsList {
-            if pool.teams.count < 8 {
+        let tournament = TournamentController.getCurrentTournament()
+        for pool in tournament.poolList {
+            if pool.teamList.count < playersPerPool {
+                isNewPool = false
                 return pool
             }
         }
         
         // no available pool, create one, append it, and return it
-        let poolCount = PoolsViewController.poolsList.count
-        let name = String(format: "%c", poolCount + 65) as String
-        let pool = Pool(name: name)
-        PoolsViewController.poolsList.append(pool)
+        isNewPool = true
+        let poolCount = tournament.poolList.count
+        let name = "Pool " + String(format: "%c", poolCount + 65) as String
+        let pool = Pool()
+        pool.name = name
+        pool.teamList = List<Team>()
+        pool.division = "Advanced"
+        pool.isPowerPool = false
+        pool.matchupList = List<PoolPlayMatchup>()
+        
         return pool
     }
     

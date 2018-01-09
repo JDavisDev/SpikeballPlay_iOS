@@ -7,16 +7,12 @@
 //
 
 import Foundation
+import RealmSwift
 
-class PoolPlayMatchup {
-    var teamOne: Team
-    var teamTwo: Team
-    var round: Int
-    public var isReported = false
-    
-    init(round: Int, teamOne: Team, teamTwo: Team) {
-        self.round = round
-        self.teamOne = teamOne
-        self.teamTwo = teamTwo
-    }
+public class PoolPlayMatchup : Object {
+    @objc dynamic var teamOne: Team?
+    @objc dynamic var teamTwo: Team?
+    @objc dynamic public var round = 1
+    @objc dynamic public var division = ""
+    @objc dynamic public var isReported = false
 }

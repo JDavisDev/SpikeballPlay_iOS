@@ -21,7 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = UIColor.darkGray
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
-        Fabric.with([Crashlytics.self])
+        
+        #if !DEBUG
+            Fabric.with([Crashlytics.self])
+        #endif
         return true
     }
 

@@ -11,72 +11,75 @@ import UIKit
 import RealmSwift
 import Crashlytics
 
-class RPPlayersView : UIViewController, UITextFieldDelegate {
+class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     var numOfPlayersSelected: Int = 0
-    @IBOutlet weak var playerTextFieldStack: UIStackView!
-    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var newPlayerTextField: UITextField!
+    @IBOutlet weak var playerButton: UIButton!
     var rpController = RPController()
+    let statsController = RPStatisticsController()
     var randomController = RPRandomizingController()
     var session = RPSessionsView.getCurrentSession()
     let realm = try! Realm()
     
+    @IBOutlet weak var playersTableView: UITableView!
     // TODO - Check our passed session for data! load RP controller or something
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePlayerTextFields()
+
+        playersTableView.delegate = self
+        playersTableView.dataSource = self
+        self.playersTableView.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
+        statsController.sort(sortMethod: "ID")
         Answers.logContentView(withName: "Players Page View",
                                contentType: "Players Page View",
                                contentId: "3",
                                customAttributes: [:])
     }
     
-    func updatePlayerTextFields() {
-        // clear values first
-        for i in self.playerTextFieldStack.subviews {
-            i.removeFromSuperview()
-        }
-        
-        if session == nil || session.playersList == nil || session.playersList.count <= 0 {
-            return
-        }
-        
-        // re add views
-        for i in 0...(session.playersList.count) - 1 {
-            let button = UIButton()
-            button.setTitle(" " + (session.playersList[i].name), for: .normal)
-            button.setTitleColor(UIColor.yellow, for: UIControlState.normal)
-            button.setTitleColor(UIColor.white, for: UIControlState.highlighted)
-            button.frame = CGRect(x: 0, y: 65 * i + 1, width: Int(UIScreen.main.bounds.width - 30), height: 50)
-            
-            button.tag = i + 1
-            button.contentHorizontalAlignment = .center
-            button.layer.cornerRadius = 7
-            button.layer.borderColor = UIColor.yellow.cgColor
-            button.layer.borderWidth = 1
-            
-            if session.playersList[i].isSuspended {
-                button.backgroundColor = UIColor.black
-            } else {
-                button.backgroundColor = UIColor.darkGray
+    override func viewDidDisappear(_ animated: Bool) {
+        let netCount = session.playersList.count / 4
+        let newNetNumber = session.netList.count + 1
+        if netCount >= 1 && newNetNumber <= netCount {
+            for net in newNetNumber...netCount {
+                try! realm.write() {
+                    let netObject = Net()
+                    netObject.id = String(net)
+                    realm.add(netObject)
+                    session.netList.append(netObject)
+                }
             }
-            
-            button.addTarget(self, action: #selector(RPPlayersView.playerButtonClicked(_:)), for: .touchUpInside)
-            // see if player for this index already exists
-            // so users can add players without clearing their stats
-            playerTextFieldStack.addSubview(button)
         }
         
-        updatePlayerIds()
+        super.viewDidDisappear(true)
     }
     
-    // Player item tapped for deletion
+    
+    // MARK: - Table View methods
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return session.playersList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "playerButtonCell")
+        let button = cell?.contentView.subviews[0] as! UIButton
+        button.setTitle(session.playersList[indexPath.row].value(forKeyPath: "name") as? String,
+                        for: .normal)
+        
+        button.addTarget(self,
+                         action: #selector(playerButtonClicked),
+                         for: .touchUpInside
+        )
+        
+        return cell!
+    }
+    
+    // Player item tapped for editing
     @objc func playerButtonClicked(_ sender: UIButton!) {
         resignFirstResponder()
         
@@ -93,8 +96,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
             try! self.realm.write {
                 player.name = newName
             }
-            
-            self.updatePlayerTextFields()
+            self.playersTableView.reloadData()
         }
         
         alert.addTextField { (textField) in
@@ -121,12 +123,12 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
             try! self.realm.write {
                 self.realm.delete(player)
             }
-            self.updatePlayerTextFields()
+            self.playersTableView.reloadData()
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
             // cancel
-            self.updatePlayerTextFields()
+            self.playersTableView.reloadData()
             return
         }))
         
@@ -149,10 +151,9 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
         player.id = (session.playersList.count) + 1
         player.name = name!
         
-        randomController.resetValues()
         rpController.addPlayer(player: player)
         newPlayerTextField.text = ""
-        updatePlayerTextFields()
+        self.playersTableView.reloadData()
     }
     
     // in case of deletions and weird additions
@@ -166,6 +167,5 @@ class RPPlayersView : UIViewController, UITextFieldDelegate {
                 id += 1
             }
         }
-        
     }
 }
