@@ -35,6 +35,8 @@ class BracketController {
          129-256 players/teams: 8 rounds */
         
         switch tournament.teamList.count {
+        case 3...4:
+            return 2;
         case 5...8:
             return 3
         case 9...16:
@@ -50,6 +52,13 @@ class BracketController {
         default:
             return 3
         }
+    }
+    
+    // Get games needed to play this round
+    // NOT how many we have so far.
+    func getRoundGameCount(round: Int) -> Int {
+        let teamCount = tournament.teamList.count
+        return (teamCount / getRoundCount()) / round
     }
     
     func getByeCount() -> Int {

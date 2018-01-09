@@ -12,7 +12,7 @@ import Crashlytics
 import RealmSwift
 
 public class RPNewGameView : UIViewController {
-    
+    var gameToEdit = RandomGame()
     let session = RPSessionsView.getCurrentSession()
     let statsController = RPStatisticsController()
     let rpController = RPController()
@@ -39,6 +39,12 @@ public class RPNewGameView : UIViewController {
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var randomizeAllButton: UIButton!
     
+    // Player Randomize buttons
+    @IBOutlet weak var playerOneRandomizeButton: UIButton!
+    @IBOutlet weak var playerTwoRandomizeButton: UIButton!
+    @IBOutlet weak var playerThreeRandomizeButton: UIButton!
+    @IBOutlet weak var playerFourRandomizeButton: UIButton!
+    
     // Labels
     @IBOutlet weak var teamOneScoreLabel: UILabel!
     @IBOutlet weak var teamTwoScoreLabel: UILabel!
@@ -61,6 +67,10 @@ public class RPNewGameView : UIViewController {
         initNetSegments()
         initPlayerButtonStyles()
         statsController.sort(sortMethod: "ID")
+        
+        if gameToEdit.playerOne != nil && gameToEdit.playerOne?.name != nil {
+            fillEditedGame()
+        }
     }
     
     // View did Appear
@@ -72,6 +82,14 @@ public class RPNewGameView : UIViewController {
         
         super.viewDidAppear(true)
         viewDidLoad()
+    }
+    
+    func fillEditedGame() {
+        playerOneButton.setTitle(gameToEdit.playerOne?.name, for: .normal)
+        playerTwoButton.setTitle(gameToEdit.playerTwo?.name, for: .normal)
+        playerFourButton.setTitle(gameToEdit.playerFour?.name, for: .normal)
+        playerThreeButton.setTitle(gameToEdit.playerThree?.name, for: .normal)
+        updatePlayerNames()
     }
     
     // MARK: Net Change
@@ -122,6 +140,46 @@ public class RPNewGameView : UIViewController {
         playerButtonList.append(playerTwoButton)
         playerButtonList.append(playerThreeButton)
         playerButtonList.append(playerFourButton)
+        
+        playerOneButton.layer.cornerRadius = 7
+        playerOneButton.layer.borderColor = UIColor.yellow.cgColor
+        playerOneButton.layer.borderWidth = 1
+        
+        playerTwoButton.layer.cornerRadius = 7
+        playerTwoButton.layer.borderColor = UIColor.yellow.cgColor
+        playerTwoButton.layer.borderWidth = 1
+        
+        playerThreeButton.layer.cornerRadius = 7
+        playerThreeButton.layer.borderColor = UIColor.yellow.cgColor
+        playerThreeButton.layer.borderWidth = 1
+        
+        playerFourButton.layer.cornerRadius = 7
+        playerFourButton.layer.borderColor = UIColor.yellow.cgColor
+        playerFourButton.layer.borderWidth = 1
+        
+        playerOneRandomizeButton.layer.cornerRadius = 7
+        playerOneRandomizeButton.layer.borderColor = UIColor.white.cgColor
+        playerOneRandomizeButton.layer.borderWidth = 1
+        
+        playerTwoRandomizeButton.layer.cornerRadius = 7
+        playerTwoRandomizeButton.layer.borderColor = UIColor.white.cgColor
+        playerTwoRandomizeButton.layer.borderWidth = 1
+        
+        playerThreeRandomizeButton.layer.cornerRadius = 7
+        playerThreeRandomizeButton.layer.borderColor = UIColor.white.cgColor
+        playerThreeRandomizeButton.layer.borderWidth = 1
+        
+        playerFourRandomizeButton.layer.cornerRadius = 7
+        playerFourRandomizeButton.layer.borderColor = UIColor.white.cgColor
+        playerFourRandomizeButton.layer.borderWidth = 1
+        
+//        randomizeAllButton.layer.cornerRadius = 7
+//        randomizeAllButton.layer.borderColor = UIColor.white.cgColor
+//        randomizeAllButton.layer.borderWidth = 1
+//
+//        submitButton.layer.cornerRadius = 7
+//        submitButton.layer.borderColor = UIColor.white.cgColor
+//        submitButton.layer.borderWidth = 1
     }
 
     //MARK:  Player Selection Buttons
@@ -220,7 +278,7 @@ public class RPNewGameView : UIViewController {
             let playerThree = rpController.getPlayerByName(name: playerThreeName)
             let playerFour = rpController.getPlayerByName(name: playerFourName)
         
-//            // confirm game
+            // confirm game
             let alert = UIAlertController(title: "Submit Game",
                                           message: "\(playerOne.name)/\(playerTwo.name) : \(teamOneScore!) \n VS. \n\(playerThree.name)/\(playerFour.name) : \(teamTwoScore!)  ",
                                         preferredStyle: .alert)
@@ -323,8 +381,6 @@ public class RPNewGameView : UIViewController {
                 playerFourButton.setTitle(session.playersList[playerArray[3]].name, for: .normal)
                 updatePlayerNames()
             }
-            
-            highlightServingTeam()
         }
     }
     
@@ -349,7 +405,7 @@ public class RPNewGameView : UIViewController {
         playerTwoName = playerTwoButton.currentTitle!
         playerThreeName = playerThreeButton.currentTitle!
         playerFourName = playerFourButton.currentTitle!
-        
+    
         saveNet()
         
     }

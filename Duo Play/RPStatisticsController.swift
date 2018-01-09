@@ -55,6 +55,10 @@ class RPStatisticsController {
         }
     }
     
+    /*
+ For each win, add your opponent's rating plus 400,
+ For each loss, add your opponent's rating minus 400,
+ And divide this sum by the number of played games. */
     func getPlayerRating(player: RandomPlayer) -> Float {
         var rating = Float(0.0)
         

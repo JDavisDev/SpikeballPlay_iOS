@@ -7,6 +7,7 @@
 //
 import Foundation
 import RealmSwift
+import Crashlytics
 
 class RPRandomizingController {
     let session = RPSessionsView.getCurrentSession()
@@ -14,12 +15,17 @@ class RPRandomizingController {
     var backupSittersArray = [Int]()
     // a list of player ids that are available and not on a net
     public var playersAvailable = [Int]()
+    var matchupMatrix : [[Int]] = Array(repeating: Array(repeating: 0, count: 2), count: 2)
     
     public func getFourRandomPlayers() -> [Int] {
         // return four integers for the positions
         // since I'm not using 0 as an id, I can send back player id
+        Answers.logCustomEvent(withName: "Randomize All Clicked",
+                               customAttributes: [:])
+        
         var returnArray = [Int]()
         playersAvailable = getPlayersAvailable()
+        var playersWithFewerGames = getPlayersWithFewestGames()
         
         // run until we get a unique game
         if playersAvailable.count >= 4 {
@@ -30,14 +36,45 @@ class RPRandomizingController {
                 while returnArray.count < 4 {
                     // get a random index and check if that player is 'available' by not being on a net
                     let index = Int(arc4random_uniform(UInt32(session.playersList.count)))
-                    if playersAvailable.contains(session.playersList[index].id) && !returnArray.contains(index) {
+                    let newPlayer = session.playersList[index]
+                    
+    
+                    if playersAvailable.contains(newPlayer.id) &&
+                            (playersWithFewerGames.count <= 0 || playersWithFewerGames.contains(newPlayer.id)) &&
+                            !returnArray.contains(index) {
                         returnArray.append(index)
+                        
+                        if(playersWithFewerGames.count > 0 && playersWithFewerGames.index(of: newPlayer.id) != nil) {
+                            playersWithFewerGames.remove(at: playersWithFewerGames.index(of: newPlayer.id)!)
+                        }
                     }
                 }
             }
         }
         
-        return returnArray
+        return randomizeArray(array: returnArray)
+    }
+    
+    func getPlayersWithFewestGames() -> [Int] {
+        var fewestGames: Int = 1000000
+        var returnPlayers = [Int]()
+        
+        
+         //this worked. lower game players were pulled up. just want to test more before this main RC.
+        for index in playersAvailable {
+            if session.playersList[index - 1].gameList.count < fewestGames {
+               fewestGames = session.playersList[index - 1].gameList.count
+            }
+        }
+
+        // run thru each player and see if they match the fewest games
+        for player in playersAvailable {
+            if session.playersList[player - 1].gameList.count == fewestGames {
+                returnPlayers.append(session.playersList[player - 1].id)
+            }
+        }
+        
+        return returnPlayers
     }
     
     func getPlayersAvailable() -> [Int] {
@@ -106,13 +143,31 @@ class RPRandomizingController {
         return o
     }
     
-    // mix up an array and return it
+    // rotate array around in a square a random amount of times to mix things up!
     func randomizeArray(array: [Int]) -> [Int] {
-        var temp: Int
-        var randomIntOne = Int(arc4random_uniform(UInt32(array.count)))
+        if array.count >= 4 {
+            matchupMatrix[0][0] = array[0]
+            matchupMatrix[0][1] = array[1]
+            matchupMatrix[1][0] = array[2]
+            matchupMatrix[1][1] = array[3]
+            var returnArray = array
+            let randomInt = Int(arc4random_uniform(UInt32(10)))
+            
+            for _ in 1...randomInt + 2 {
+                let temp = matchupMatrix[1][0]
+                matchupMatrix[1][0] = matchupMatrix[1][1]
+                matchupMatrix[1][1] = matchupMatrix[0][1]
+                matchupMatrix[0][1] = temp
+            }
+            
+            returnArray[0] = matchupMatrix[0][1]
+            returnArray[1] = matchupMatrix[1][1]
+            returnArray[2] = matchupMatrix[0][0]
+            returnArray[3] = matchupMatrix[1][0]
+            return returnArray
+        }
         
         return array
-        
     }
     
     
@@ -153,13 +208,15 @@ class RPRandomizingController {
     }
     
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
+        Answers.logCustomEvent(withName: "Randomize Player Clicked",
+                               customAttributes: [:])
         if session.playersList.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&
             nameOne != "Select Player" && nameTwo != "Select Player" && nameThree != "Select Player" && nameFour != "Select Player"  {
             return -1
         }
         
-        if getPlayersAvailable().count <= 0 {
+        if playersAvailable.count <= 0 {
             return -1
         }
         
