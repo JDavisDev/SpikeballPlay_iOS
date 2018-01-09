@@ -67,9 +67,9 @@ class StatisticCell : UITableViewCell {
         }
     }
     
-    var matchDifficulty: String? {
+    var rating: String? {
         didSet {
-            matchDifficultyLabel.text = matchDifficulty
+            matchDifficultyLabel.text = rating
         }
     }
 }
