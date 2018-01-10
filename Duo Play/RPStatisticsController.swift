@@ -42,8 +42,8 @@ class RPStatisticsController {
             case "Rating":
                 array.sort { $0.rating > $1.rating }
                 break
-            case "Match Difficulty":
-                array.sort { $0.matchDifficulty > $1.matchDifficulty }
+            case "Opponent Rating":
+                array.sort { $0.totalOpponentRating > $1.totalOpponentRating }
             default:
                 array.sort { $0.id < $1.id }
                 break
@@ -59,28 +59,33 @@ class RPStatisticsController {
      For each win, add your opponent's rating plus 400,
      For each loss, add your opponent's rating minus 400,
      And divide this sum by the number of played games. */
+    
     func calculateRatings() {
         try! realm.write {
+            // iterate thru all players and gather their opponent rating.
+            // THEN go back thru and assimilate their personal rating
+            // this will allow players to be updated without affecting other's ratings that round.
             for player in session.playersList {
-                var rating = Float(1000.0)
-                var gamesPlayed = Float(0.0)
+                var opponentRating = 0
                 
                 for game in session.gameList {
+                    let playerOne = game.playerOne
+                    let playerTwo = game.playerTwo
+                    let playerThree = game.playerThree
+                    let playerFour = game.playerFour
+                    
                     if isPlayerInGame(player: player, game: game) {
-                        let opponentRating = getOpponentRating(player: player, game: game)
-                        let didWin = didPlayerWinGame(player: player, game: game)
-                        gamesPlayed += 1
-                        
-                        if didWin /* win */ {
-                            rating += Float(opponentRating + 400)
-                        } else {
-                            /* loss */
-                            rating += opponentRating - 400
-                        }
+                        opponentRating += getOpponentRating(player: player, playerOne: playerOne!,
+                                                            playerTwo: playerTwo!, playerThree: playerThree!,
+                                                            playerFour: playerFour!)
                     }
                 }
                 
-                player.rating = rating / gamesPlayed
+                player.totalOpponentRating = opponentRating
+            }
+            
+            for player in session.playersList {
+                player.rating = (player.totalOpponentRating + (400 * (player.wins - player.losses))) / (player.wins + player.losses)
             }
         }
     }
@@ -96,44 +101,55 @@ class RPStatisticsController {
         return false
     }
     
-    func getOpponentRating(player: RandomPlayer, game: RandomGame) -> Float {
-        var returnScore = Float(1000.0)
-        
-        if game.playerOne == nil && game.playerTwo == nil && game.playerThree == nil && game.playerFour == nil {
-            return (returnScore)
-        }
+    func getOpponentRating(player: RandomPlayer, playerOne: RandomPlayer,
+                           playerTwo: RandomPlayer, playerThree: RandomPlayer,
+                           playerFour: RandomPlayer) -> Int {
+        var returnScore = (1000)
         
         // Find the current player's opposing team's rating
         switch player.id {
         // Team One
-        case (game.playerOne?.id)!,
-             (game.playerTwo?.id)!:
+        case playerOne.id,
+             playerTwo.id:
+            let threeRating = Int(playerThree.rating)
+            let fourRating = Int(playerFour.rating)
             
-            if (game.playerThree?.rating)! > (game.playerFour?.rating)! {
-                returnScore = (game.playerThree?.rating)! - (((game.playerThree?.rating)! - (game.playerFour?.rating)!) / 2)
-            } else if (game.playerFour?.rating)! > (game.playerThree?.rating)! {
-                returnScore = (game.playerFour?.rating)! - (((game.playerFour?.rating)! - (game.playerThree?.rating)!) / 2)
+            if threeRating > fourRating {
+                let midRating = ((threeRating - fourRating) / 2)
+                returnScore = (threeRating - midRating)
+            } else if fourRating > threeRating {
+                let midRating = Int((fourRating - threeRating) / 2)
+                returnScore = (fourRating - midRating)
             } else {
                 // ratings are same
-                returnScore = (game.playerThree?.rating)!
+                returnScore = (threeRating)
             }
             break
         // Team Two
-        case game.playerOne!.id,
-             game.playerFour!.id:
+        case playerThree.id,
+             playerFour.id:
             
-            if (game.playerOne?.rating)! > (game.playerTwo?.rating)! {
-                returnScore = (game.playerOne?.rating)! - (((game.playerOne?.rating)! - (game.playerTwo?.rating)!) / 2)
-            } else if (game.playerTwo?.rating)! > (game.playerOne?.rating)! {
-                returnScore = (game.playerTwo?.rating)! - (((game.playerTwo?.rating)! - (game.playerOne?.rating)!) / 2)
+            let oneRating = (playerOne.rating)
+            let twoRating = (playerTwo.rating)
+            
+            if oneRating > twoRating {
+                let midRating = ((oneRating - twoRating) / 2)
+                returnScore = (oneRating - midRating)
+            } else if twoRating > oneRating {
+                let midRating = ((twoRating - oneRating) / 2)
+                returnScore = (twoRating - midRating)
             } else {
                 // ratings are same
-                returnScore = (game.playerOne?.rating)!
+                returnScore = (oneRating)
             }
             
             break
         default:
-            return 1000.0
+            return 1000
+        }
+        
+        if returnScore <= 0 {
+            returnScore = 1000
         }
         
         return returnScore
@@ -153,7 +169,7 @@ class RPStatisticsController {
                 return false
             }
         // Team Two
-        case game.playerOne!.id,
+        case game.playerThree!.id,
              game.playerFour!.id:
             
             if game.teamOneScore > game.teamTwoScore {
