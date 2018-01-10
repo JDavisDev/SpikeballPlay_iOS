@@ -42,8 +42,8 @@ class RPStatisticsController {
             case "Rating":
                 array.sort { $0.rating > $1.rating }
                 break
-            case "Match Difficulty":
-                array.sort { $0.matchDifficulty > $1.matchDifficulty }
+            case "Opponent Rating":
+                array.sort { $0.totalOpponentRating > $1.totalOpponentRating }
             default:
                 array.sort { $0.id < $1.id }
                 break
@@ -55,17 +55,131 @@ class RPStatisticsController {
         }
     }
     
-    /*
- For each win, add your opponent's rating plus 400,
- For each loss, add your opponent's rating minus 400,
- And divide this sum by the number of played games. */
-    func getPlayerRating(player: RandomPlayer) -> Float {
-        var rating = Float(0.0)
-        
-        rating += Float(player.matchDifficulty) * 2
-        rating += Float(player.pointsFor - player.pointsAgainst) * 2.0
-        rating += Float(player.wins - player.losses) * 5
-        
-        return Float(rating)
+    /* ELO SYSTEM
+     For each win, add your opponent's rating plus 400,
+     For each loss, add your opponent's rating minus 400,
+     And divide this sum by the number of played games. */
+    
+    func calculateRatings() {
+        try! realm.write {
+            // iterate thru all players and gather their opponent rating.
+            // THEN go back thru and assimilate their personal rating
+            // this will allow players to be updated without affecting other's ratings that round.
+            for player in session.playersList {
+                var opponentRating = 0
+                
+                for game in session.gameList {
+                    let playerOne = game.playerOne
+                    let playerTwo = game.playerTwo
+                    let playerThree = game.playerThree
+                    let playerFour = game.playerFour
+                    
+                    if isPlayerInGame(player: player, game: game) {
+                        opponentRating += getOpponentRating(player: player, playerOne: playerOne!,
+                                                            playerTwo: playerTwo!, playerThree: playerThree!,
+                                                            playerFour: playerFour!)
+                    }
+                }
+                
+                player.totalOpponentRating = opponentRating
+            }
+            
+            for player in session.playersList {
+                player.rating = (player.totalOpponentRating + (400 * (player.wins - player.losses))) / (player.wins + player.losses)
+            }
+        }
     }
+    
+    func isPlayerInGame(player: RandomPlayer, game: RandomGame) -> Bool {
+        if game.playerOne?.id == player.id ||
+            game.playerTwo?.id == player.id ||
+            game.playerThree?.id == player.id ||
+            game.playerFour?.id == player.id {
+            return true
+        }
+        
+        return false
+    }
+    
+    func getOpponentRating(player: RandomPlayer, playerOne: RandomPlayer,
+                           playerTwo: RandomPlayer, playerThree: RandomPlayer,
+                           playerFour: RandomPlayer) -> Int {
+        var returnScore = (1000)
+        
+        // Find the current player's opposing team's rating
+        switch player.id {
+        // Team One
+        case playerOne.id,
+             playerTwo.id:
+            let threeRating = Int(playerThree.rating)
+            let fourRating = Int(playerFour.rating)
+            
+            if threeRating > fourRating {
+                let midRating = ((threeRating - fourRating) / 2)
+                returnScore = (threeRating - midRating)
+            } else if fourRating > threeRating {
+                let midRating = Int((fourRating - threeRating) / 2)
+                returnScore = (fourRating - midRating)
+            } else {
+                // ratings are same
+                returnScore = (threeRating)
+            }
+            break
+        // Team Two
+        case playerThree.id,
+             playerFour.id:
+            
+            let oneRating = (playerOne.rating)
+            let twoRating = (playerTwo.rating)
+            
+            if oneRating > twoRating {
+                let midRating = ((oneRating - twoRating) / 2)
+                returnScore = (oneRating - midRating)
+            } else if twoRating > oneRating {
+                let midRating = ((twoRating - oneRating) / 2)
+                returnScore = (twoRating - midRating)
+            } else {
+                // ratings are same
+                returnScore = (oneRating)
+            }
+            
+            break
+        default:
+            return 1000
+        }
+        
+        if returnScore <= 0 {
+            returnScore = 1000
+        }
+        
+        return returnScore
+    }
+    
+    // find out if the player won to see if we add 400 or subtract it.
+    func didPlayerWinGame(player: RandomPlayer, game: RandomGame) -> Bool {
+        
+        switch player.id {
+        // Team One
+        case (game.playerOne?.id)!,
+             (game.playerTwo?.id)!:
+            
+            if game.teamOneScore > game.teamTwoScore {
+                return true
+            } else {
+                return false
+            }
+        // Team Two
+        case game.playerThree!.id,
+             game.playerFour!.id:
+            
+            if game.teamOneScore > game.teamTwoScore {
+                return false
+            } else {
+                return true
+            }
+        default:
+            return false
+        }
+    }
+    
 }

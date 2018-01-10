@@ -45,7 +45,9 @@ class RPGameController {
         
         // parse game for score accumulation
         parseGameForStats(game: newGame)
-        difficultyController.updateDifficulty()
+        //difficultyController.updateDifficulty()
+        let statisticsController = RPStatisticsController()
+        statisticsController.calculateRatings()
     }
     
     func saveGame(game: RandomGame) {

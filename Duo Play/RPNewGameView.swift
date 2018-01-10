@@ -385,18 +385,18 @@ public class RPNewGameView : UIViewController {
     }
     
     func highlightServingTeam() {
-        var servingTeam = Int(arc4random_uniform(UInt32(2)))
+        let servingTeam = Int(arc4random_uniform(UInt32(2)))
         
         if servingTeam <= 0 {
-            playerOneButton.titleLabel?.textColor = UIColor.black
-            playerTwoButton.titleLabel?.textColor = UIColor.black
-            playerThreeButton.titleLabel?.textColor = UIColor.white
-            playerFourButton.titleLabel?.textColor = UIColor.white
+            playerOneButton.layer.backgroundColor = UIColor.black.cgColor
+            playerTwoButton.layer.backgroundColor = UIColor.black.cgColor
+            playerThreeButton.layer.backgroundColor = UIColor.clear.cgColor
+            playerFourButton.layer.backgroundColor = UIColor.clear.cgColor
         } else {
-            playerOneButton.titleLabel?.textColor = UIColor.white
-            playerTwoButton.titleLabel?.textColor = UIColor.white
-            playerThreeButton.titleLabel?.textColor = UIColor.black
-            playerFourButton.titleLabel?.textColor = UIColor.black
+            playerOneButton.layer.backgroundColor = UIColor.clear.cgColor
+            playerTwoButton.layer.backgroundColor = UIColor.clear.cgColor
+            playerThreeButton.layer.backgroundColor = UIColor.black.cgColor
+            playerFourButton.layer.backgroundColor = UIColor.black.cgColor
         }
     }
     
@@ -405,7 +405,7 @@ public class RPNewGameView : UIViewController {
         playerTwoName = playerTwoButton.currentTitle!
         playerThreeName = playerThreeButton.currentTitle!
         playerFourName = playerFourButton.currentTitle!
-    
+        highlightServingTeam()
         saveNet()
         
     }

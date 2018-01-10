@@ -62,7 +62,7 @@ class RPRandomizingController {
         
          //this worked. lower game players were pulled up. just want to test more before this main RC.
         for index in playersAvailable {
-            if session.playersList[index - 1].gameList.count < fewestGames {
+            if session != nil && session.playersList.count > 0 && session.playersList[index - 1].gameList.count < fewestGames {
                fewestGames = session.playersList[index - 1].gameList.count
             }
         }
