@@ -36,8 +36,10 @@ public class RPNewGameView : UIViewController {
     @IBOutlet weak var playerThreeButton: UIButton!
     @IBOutlet weak var playerFourButton: UIButton!
     var playerButtonList = [UIButton]()
+    
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var randomizeAllButton: UIButton!
+    @IBOutlet weak var evenTeamsSwitch: UISwitch!
     
     // Player Randomize buttons
     @IBOutlet weak var playerOneRandomizeButton: UIButton!
@@ -234,6 +236,11 @@ public class RPNewGameView : UIViewController {
         teamTwoScoreLabel.text = String(Int(round(sender.value) / 1 * 1))
     }
     
+    // MARK: Even Teams Switch toggle
+    
+    @IBAction func evenTeamsSwitchChanged(_ sender: Any) {
+        resetGameValues()
+    }
     
     //MARK: Submit logic
     @IBAction func submitButtonClicked(_ sender: UIButton) {
@@ -374,7 +381,22 @@ public class RPNewGameView : UIViewController {
         if((session.playersList.count) >= 4) {
             let playerArray = controller.getFourRandomPlayers()
             
-            if playerArray.count == 4 {
+            if evenTeamsSwitch.isOn && playerArray.count == 4 {
+                var realPlayerArray = [RandomPlayer]()
+                realPlayerArray.append(session.playersList[playerArray[0]])
+                realPlayerArray.append(session.playersList[playerArray[1]])
+                realPlayerArray.append(session.playersList[playerArray[2]])
+                realPlayerArray.append(session.playersList[playerArray[3]])
+                realPlayerArray = balanceTeams(playerArray: realPlayerArray)
+                
+                if realPlayerArray.count == 4 {
+                    playerOneButton.setTitle(realPlayerArray[0].name, for: .normal)
+                    playerTwoButton.setTitle(realPlayerArray[3].name, for: .normal)
+                    playerThreeButton.setTitle(realPlayerArray[1].name, for: .normal)
+                    playerFourButton.setTitle(realPlayerArray[2].name, for: .normal)
+                    updatePlayerNames()
+                }
+            } else if playerArray.count == 4 {
                 playerOneButton.setTitle(session.playersList[playerArray[0]].name, for: .normal)
                 playerTwoButton.setTitle(session.playersList[playerArray[1]].name, for: .normal)
                 playerThreeButton.setTitle(session.playersList[playerArray[2]].name, for: .normal)
@@ -382,6 +404,22 @@ public class RPNewGameView : UIViewController {
                 updatePlayerNames()
             }
         }
+    }
+    
+    func balanceTeams(playerArray: [RandomPlayer]) -> [RandomPlayer] {
+        var returnArray = [Int]()
+        
+        // high rating first, then lowest, then 2nd/3rd lowest.
+        var array = Array(playerArray)
+        array.sort {
+            if $0.rating == $1.rating {
+                return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
+            } else {
+                return $0.rating > $1.rating
+            }
+        }
+        
+        return array
     }
     
     func highlightServingTeam() {

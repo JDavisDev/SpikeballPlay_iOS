@@ -201,10 +201,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" distribution="fillEqually" spacing="28" translatesAutoresizingMaskIntoConstraints="NO" id="hiD-0T-JiU" userLabel="selectPlayerStack">
-                                <rect key="frame" x="3" y="74" width="375" height="64.5"/>
+                                <rect key="frame" x="0.0" y="87" width="375" height="64"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="c4d-gI-KVw">
-                                        <rect key="frame" x="0.0" y="0.0" width="173.5" height="64.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="173.5" height="64"/>
                                         <accessibility key="accessibilityConfiguration" identifier="PlayerOne"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Select Player"/>
@@ -213,7 +213,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="N9s-sJ-eqs">
-                                        <rect key="frame" x="201.5" y="0.0" width="173.5" height="64.5"/>
+                                        <rect key="frame" x="201.5" y="0.0" width="173.5" height="64"/>
                                         <accessibility key="accessibilityConfiguration" identifier="PlayerTwo"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <state key="normal" title="Select Player"/>
@@ -228,7 +228,7 @@
                                 </constraints>
                             </stackView>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="0.0" maxValue="21" translatesAutoresizingMaskIntoConstraints="NO" id="igL-t5-2Mx" userLabel="teamOneScoreSlider">
-                                <rect key="frame" x="27" y="227" width="329" height="31"/>
+                                <rect key="frame" x="24" y="211" width="329" height="31"/>
                                 <color key="minimumTrackTintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="thumbTintColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -251,7 +251,7 @@
                                 </connections>
                             </slider>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="bnI-ma-ciE" userLabel="teamOneRandomizeStack">
-                                <rect key="frame" x="3" y="175.5" width="375" height="33"/>
+                                <rect key="frame" x="0.0" y="160" width="375" height="33"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="zdo-wv-3Iq">
                                         <rect key="frame" x="0.0" y="0.0" width="162.5" height="33"/>
@@ -310,7 +310,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXx-Kb-C6d" userLabel="teamOneScoreLabel">
-                                <rect key="frame" x="177" y="154" width="29" height="31.5"/>
+                                <rect key="frame" x="174" y="138" width="29" height="31.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -377,19 +377,6 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <switch hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="SXN-Ay-iKD">
-                                <rect key="frame" x="216" y="264.5" width="51" height="31"/>
-                                <color key="onTintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </switch>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Even Teams" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4l-gK-ipK">
-                                <rect key="frame" x="71" y="264.5" width="115" height="31"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="115" id="9Ml-dI-64g"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" segmentControlStyle="bordered" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="dXD-Wc-lVm" userLabel="Net Segments">
                                 <rect key="frame" x="16" y="569" width="343" height="31"/>
                                 <color key="backgroundColor" red="0.40779560804367065" green="0.40787053108215332" blue="0.40779092907905579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -405,6 +392,22 @@
                                     <action selector="netChanged:" destination="cUz-jN-6yj" eventType="valueChanged" id="fIl-y7-waO"/>
                                 </connections>
                             </segmentedControl>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="SXN-Ay-iKD">
+                                <rect key="frame" x="210" y="249" width="51" height="31"/>
+                                <color key="onTintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="evenTeamsSwitchChanged:" destination="cUz-jN-6yj" eventType="valueChanged" id="4qK-v4-2j7"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Even Teams" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K4l-gK-ipK">
+                                <rect key="frame" x="65" y="249" width="115" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="115" id="9Ml-dI-64g"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -421,37 +424,37 @@
                             <constraint firstItem="s4N-hz-Uk5" firstAttribute="width" secondItem="sOJ-n9-21f" secondAttribute="width" id="Hte-kc-Q12"/>
                             <constraint firstItem="bnI-ma-ciE" firstAttribute="width" secondItem="sOJ-n9-21f" secondAttribute="width" id="LwX-dA-OeF"/>
                             <constraint firstItem="QAh-FI-1NC" firstAttribute="top" secondItem="aiV-8s-kfe" secondAttribute="bottom" constant="8" id="NVW-Rb-zGQ"/>
-                            <constraint firstItem="s4N-hz-Uk5" firstAttribute="top" secondItem="SXN-Ay-iKD" secondAttribute="bottom" constant="-13.5" id="NlT-6u-hbQ"/>
+                            <constraint firstItem="s4N-hz-Uk5" firstAttribute="top" secondItem="SXN-Ay-iKD" secondAttribute="bottom" constant="2" id="NlT-6u-hbQ"/>
                             <constraint firstItem="dXD-Wc-lVm" firstAttribute="top" secondItem="Hkg-05-kr5" secondAttribute="top" constant="-54" id="Pzf-pi-pAg"/>
                             <constraint firstItem="aiV-8s-kfe" firstAttribute="leading" secondItem="umr-NB-pVv" secondAttribute="leading" constant="-3" id="Q17-Gf-27X"/>
                             <constraint firstItem="dbq-qH-EP1" firstAttribute="top" secondItem="umr-NB-pVv" secondAttribute="bottom" constant="8" id="QO6-4p-QhA"/>
                             <constraint firstItem="hiD-0T-JiU" firstAttribute="leading" secondItem="bnI-ma-ciE" secondAttribute="leading" id="RdW-gT-Iz0"/>
                             <constraint firstAttribute="trailing" secondItem="dXD-Wc-lVm" secondAttribute="trailing" constant="16" id="TLC-sb-JLh"/>
                             <constraint firstItem="LCn-Fe-xAc" firstAttribute="width" secondItem="c4d-gI-KVw" secondAttribute="width" constant="6" id="Vtj-3h-Q8l"/>
-                            <constraint firstItem="bnI-ma-ciE" firstAttribute="top" secondItem="hiD-0T-JiU" secondAttribute="bottom" constant="37" id="WI8-uM-WbF"/>
+                            <constraint firstItem="bnI-ma-ciE" firstAttribute="top" secondItem="hiD-0T-JiU" secondAttribute="bottom" constant="9" id="WI8-uM-WbF"/>
                             <constraint firstItem="umr-NB-pVv" firstAttribute="top" secondItem="aiV-8s-kfe" secondAttribute="bottom" constant="41" id="Ypa-nd-B01"/>
-                            <constraint firstItem="bnI-ma-ciE" firstAttribute="centerX" secondItem="sOJ-n9-21f" secondAttribute="centerX" constant="3" id="ZDh-kq-7Uv"/>
+                            <constraint firstItem="bnI-ma-ciE" firstAttribute="centerX" secondItem="sOJ-n9-21f" secondAttribute="centerX" id="ZDh-kq-7Uv"/>
                             <constraint firstItem="aiV-8s-kfe" firstAttribute="top" relation="greaterThanOrEqual" secondItem="s4N-hz-Uk5" secondAttribute="bottom" constant="8" id="aCJ-Ux-42Q"/>
                             <constraint firstItem="SXN-Ay-iKD" firstAttribute="leading" secondItem="K4l-gK-ipK" secondAttribute="trailing" constant="30" id="aGx-bM-xpA"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="igL-t5-2Mx" secondAttribute="trailing" constant="5" id="cLV-Ar-s39"/>
-                            <constraint firstItem="igL-t5-2Mx" firstAttribute="centerX" secondItem="sOJ-n9-21f" secondAttribute="centerX" constant="4" id="dHD-pS-eSx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="igL-t5-2Mx" secondAttribute="trailing" constant="8" id="cLV-Ar-s39"/>
+                            <constraint firstItem="igL-t5-2Mx" firstAttribute="centerX" secondItem="sOJ-n9-21f" secondAttribute="centerX" constant="1" id="dHD-pS-eSx"/>
                             <constraint firstItem="SXN-Ay-iKD" firstAttribute="top" secondItem="igL-t5-2Mx" secondAttribute="bottom" constant="8" id="dgO-Is-XeZ"/>
                             <constraint firstItem="aiV-8s-kfe" firstAttribute="top" secondItem="s4N-hz-Uk5" secondAttribute="bottom" constant="8" id="hIY-YB-yRU"/>
                             <constraint firstItem="dXD-Wc-lVm" firstAttribute="top" relation="lessThanOrEqual" secondItem="rvz-7b-sc5" secondAttribute="bottom" constant="90" id="hom-hA-rlJ"/>
-                            <constraint firstItem="igL-t5-2Mx" firstAttribute="leading" secondItem="s4N-hz-Uk5" secondAttribute="leading" constant="29" id="k2m-0L-zcf"/>
+                            <constraint firstItem="igL-t5-2Mx" firstAttribute="leading" secondItem="s4N-hz-Uk5" secondAttribute="leading" constant="26" id="k2m-0L-zcf"/>
                             <constraint firstItem="igL-t5-2Mx" firstAttribute="top" secondItem="bnI-ma-ciE" secondAttribute="bottom" constant="18" id="lYf-Y5-pvf"/>
                             <constraint firstItem="rvz-7b-sc5" firstAttribute="width" secondItem="sOJ-n9-21f" secondAttribute="width" id="nQx-wn-Jva"/>
-                            <constraint firstItem="bXx-Kb-C6d" firstAttribute="top" secondItem="hiD-0T-JiU" secondAttribute="bottom" constant="15.5" id="nYR-Da-kqD"/>
+                            <constraint firstItem="bXx-Kb-C6d" firstAttribute="top" secondItem="hiD-0T-JiU" secondAttribute="bottom" constant="-13.5" id="nYR-Da-kqD"/>
                             <constraint firstItem="aiV-8s-kfe" firstAttribute="width" secondItem="sOJ-n9-21f" secondAttribute="width" id="oOX-V7-68Z"/>
-                            <constraint firstItem="K4l-gK-ipK" firstAttribute="leading" secondItem="sOJ-n9-21f" secondAttribute="leadingMargin" constant="55" id="ouD-HT-wYw"/>
+                            <constraint firstItem="K4l-gK-ipK" firstAttribute="leading" secondItem="sOJ-n9-21f" secondAttribute="leadingMargin" constant="49" id="ouD-HT-wYw"/>
                             <constraint firstItem="dbq-qH-EP1" firstAttribute="centerX" secondItem="QAh-FI-1NC" secondAttribute="centerX" constant="4" id="pZA-Ck-qCT"/>
-                            <constraint firstItem="igL-t5-2Mx" firstAttribute="leading" secondItem="sOJ-n9-21f" secondAttribute="leadingMargin" constant="13" id="sxz-aC-FQG"/>
+                            <constraint firstItem="igL-t5-2Mx" firstAttribute="leading" secondItem="sOJ-n9-21f" secondAttribute="leadingMargin" constant="10" id="sxz-aC-FQG"/>
                             <constraint firstItem="dbq-qH-EP1" firstAttribute="width" secondItem="sOJ-n9-21f" secondAttribute="width" constant="-50" id="uGa-tT-DKP"/>
-                            <constraint firstItem="bXx-Kb-C6d" firstAttribute="centerX" secondItem="sOJ-n9-21f" secondAttribute="centerX" constant="4" id="utj-7D-u7U"/>
-                            <constraint firstItem="s4N-hz-Uk5" firstAttribute="top" secondItem="K4l-gK-ipK" secondAttribute="bottom" constant="-13.5" id="wdk-2E-lIN"/>
+                            <constraint firstItem="bXx-Kb-C6d" firstAttribute="centerX" secondItem="sOJ-n9-21f" secondAttribute="centerX" constant="1" id="utj-7D-u7U"/>
+                            <constraint firstItem="s4N-hz-Uk5" firstAttribute="top" secondItem="K4l-gK-ipK" secondAttribute="bottom" constant="2" id="wdk-2E-lIN"/>
                             <constraint firstItem="dXD-Wc-lVm" firstAttribute="leading" secondItem="sOJ-n9-21f" secondAttribute="leading" constant="16" id="yHn-OA-L2L"/>
                             <constraint firstItem="K4l-gK-ipK" firstAttribute="top" secondItem="SXN-Ay-iKD" secondAttribute="top" id="yu7-Ue-64O"/>
-                            <constraint firstItem="hiD-0T-JiU" firstAttribute="top" secondItem="vUl-z4-ARl" secondAttribute="bottom" constant="10" id="z6V-mK-dRI"/>
+                            <constraint firstItem="hiD-0T-JiU" firstAttribute="top" secondItem="vUl-z4-ARl" secondAttribute="bottom" constant="23" id="z6V-mK-dRI"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Games" image="GamesBarItemImage" id="fcL-Ee-eUy">
@@ -459,6 +462,7 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="evenTeamsSwitch" destination="SXN-Ay-iKD" id="5pm-x9-kbG"/>
                         <outlet property="netSegmentedControl" destination="dXD-Wc-lVm" id="EdE-wb-DcO"/>
                         <outlet property="playerFourButton" destination="z0M-Uv-O74" id="4f3-fh-71q"/>
                         <outlet property="playerFourRandomizeButton" destination="ZJj-t3-fVu" id="Isc-5G-ocO"/>
