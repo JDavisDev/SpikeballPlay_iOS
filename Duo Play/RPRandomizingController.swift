@@ -90,13 +90,13 @@ class RPRandomizingController {
                 for netPlayer in net.playersList {
                     // if player on each net matches a player on a net
                     // set isAvailable to false
-                    if netPlayer.id == player.id {
+                    if player.isSuspended || netPlayer.id == player.id {
                         isAvailable = false
                     }
                 }
             }
             
-            if isAvailable {
+            if isAvailable && !player.isSuspended {
                 returnArray.append(player.id)
             }
         }
@@ -210,6 +210,8 @@ class RPRandomizingController {
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
         Answers.logCustomEvent(withName: "Randomize Player Clicked",
                                customAttributes: [:])
+        playersAvailable = getPlayersAvailable()
+        
         if session.playersList.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&
             nameOne != "Select Player" && nameTwo != "Select Player" && nameThree != "Select Player" && nameFour != "Select Player"  {
@@ -220,9 +222,13 @@ class RPRandomizingController {
             return -1
         }
         
-        var index = Int(arc4random_uniform(UInt32(session.playersList.count)))
-        while !isPlayerSelectedUnique(playerIndex: index, nameOne: nameOne, nameTwo: nameTwo, nameThree: nameThree,nameFour: nameFour) {
+        var index = -1
+        // don't have one yet, try again
+        if index == -1 {
             index = Int(arc4random_uniform(UInt32(session.playersList.count)))
+            while playersAvailable.count > 0 && !isPlayerSelectedUnique(playerIndex: index, nameOne: nameOne, nameTwo: nameTwo, nameThree:  nameThree,nameFour: nameFour) {
+                index = Int(arc4random_uniform(UInt32(session.playersList.count)))
+            }
         }
         
         return index
@@ -245,7 +251,7 @@ class RPRandomizingController {
             return false
         }
         
-        if !getPlayersAvailable().contains(playerIndex + 1) {
+        if !playersAvailable.contains(playerIndex + 1) {
             return false
         }
         

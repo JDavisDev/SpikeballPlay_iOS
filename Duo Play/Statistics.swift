@@ -15,5 +15,5 @@ struct Statistics {
     var pointsFor: Int
     var pointsAgainst: Int
     var pointsDifferential: Int
-    var matchDifficulty: Int
+    //var matchDifficulty: Int
 }

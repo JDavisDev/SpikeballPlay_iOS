@@ -56,6 +56,10 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func getSessionByName(name: String) -> Session {
+        return realm.objects(Session.self).filter("name = '\(name)'").first!
+    }
+    
     @IBAction func deleteAll_Clicked(_ sender: Any) {
         // add dialog here
         try! realm.write() {
@@ -76,95 +80,75 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         let button = cell?.contentView.subviews[0] as! UIButton
         button.setTitle(sessionList[indexPath.row].value(forKeyPath: "name") as? String,
                         for: .normal)
-        
         button.addTarget(self,
                          action: #selector(sessionButton_Clicked),
-                         for: .touchUpInside
-        )
+                         for: .touchUpInside)
+    
+        button.addGestureRecognizer(self.longPressGesture())
         
         return cell!
     }
     
+    func longPressGesture() -> UILongPressGestureRecognizer {
+        let lpg = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress))
+        lpg.minimumPressDuration = 0.5
+        return lpg
+    }
+    
+    @objc func longPress(_ sender: UILongPressGestureRecognizer) {
+        var selectedSession = Session()
+        
+        if let button = sender.view as? UIButton {
+            let name = button.currentTitle
+            selectedSession = getSessionByName(name: name!)
+        } else {
+            return
+        }
+        
+        //show dialog to rename or delete session
+        let alert = UIAlertController(title: "Edit Session",
+                                      message: "", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Session Name"
+            textField.text = selectedSession.name
+        }
+        
+        let renameAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+            _ = alert.textFields![0] as UITextField
+            let newName = alert.textFields![0].text!
+            try! self.realm.write {
+                let session = selectedSession
+                session.name = newName
+            }
+            
+            self.updateSessionList()
+            self.sessionTableView.reloadData()
+        }
+        alert.addAction(renameAction)
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
+            self.deleteSession(session: selectedSession)
+            self.updateSessionList()
+            self.sessionTableView.reloadData()
+            Answers.logCustomEvent(withName: "Session Deleted",
+                                   customAttributes: [:])
+        }
+        
+        alert.addAction(deleteAction)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+            // cancel
+            // update history list
+            self.viewDidAppear(true)
+            return
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
-    }
-    
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        // DELETE SLIDE ACTION
-        // delete dialog
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
-            // pop up dialog for deletion
-            let alert = UIAlertController(title: "Delete",
-                                          message: "Are you sure?", preferredStyle: .alert)
-            
-            let action = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
-                self.deleteSession(session: self.sessionList[indexPath.row])
-                self.updateSessionList()
-                self.sessionTableView.reloadData()
-                Answers.logCustomEvent(withName: "Session Deleted",
-                                       customAttributes: [:])
-            }
-            
-            alert.addAction(action)
-            
-            alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
-                // cancel
-                // update history list
-                self.viewDidAppear(true)
-                return
-            }))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        delete.backgroundColor = UIColor.red
-        
-        
-        // RENAME SLIDE ACTION
-        let rename = UITableViewRowAction(style: .normal, title: "Rename") { action, index in
-            //action dialog for new name
-            let alert = UIAlertController(title: "Rename Session",
-                                          message: "", preferredStyle: .alert)
-            
-            alert.addTextField { (textField) in
-                textField.placeholder = "Session Name"
-                textField.text = self.sessionList[indexPath.row].name
-            }
-            
-            let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
-                _ = alert.textFields![0] as UITextField
-                let newName = alert.textFields![0].text!
-                try! self.realm.write {
-                    let session = self.sessionList[indexPath.row]
-                    session.name = newName
-                }
-                
-                self.updateSessionList()
-                self.sessionTableView.reloadData()
-            }
-            alert.addAction(action)
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-                // cancel
-                // update history list
-                self.viewDidAppear(true)
-                return
-            }))
-            
-            self.present(alert, animated: true, completion: nil)
-        }
-        rename.backgroundColor = UIColor.darkGray
-        
-        let share = UITableViewRowAction(style: .normal, title: "Share") { action, index in
-            // Future...
-        }
-        
-        share.backgroundColor = UIColor.blue
-        
-        return [delete, rename]
     }
     
     func deleteSession(session: Session) {

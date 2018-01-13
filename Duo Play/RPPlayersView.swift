@@ -66,10 +66,16 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let player = session.playersList[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "playerButtonCell")
         let button = cell?.contentView.subviews[0] as! UIButton
-        button.setTitle(session.playersList[indexPath.row].value(forKeyPath: "name") as? String,
-                        for: .normal)
+        button.setTitle(player.name, for: .normal)
+        
+        if player.isSuspended {
+            button.setTitleColor(UIColor.lightGray, for: .normal)
+        } else {
+            button.setTitleColor(UIColor.yellow, for: .normal)
+        }
         
         button.addTarget(self,
                          action: #selector(playerButtonClicked),
@@ -106,15 +112,23 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
         
         alert.addAction(action)
         
-//        alert.addAction(UIAlertAction(title: "Suspend", style: .default, handler: { (action: UIAlertAction!) in
-//            // suspend player so their stats remain but they won't be included in games!
-//            try! self.realm.write {
-//                let player = self.rpController.getPlayerByName(name: (sender.titleLabel?.text)!)
-//                player.isSuspended = true
-//            }
-//
-//            self.updatePlayerTextFields()
-//        }))
+        try! realm.write {
+            
+        }
+        let title = selectedPlayer.isSuspended ? "Activate" : "Suspend"
+        alert.addAction(UIAlertAction(title: title, style: .default, handler: { (action: UIAlertAction!) in
+            // suspend player so their stats remain but they won't be included in games!
+            try! self.realm.write {
+                let player = self.rpController.getPlayerByName(name: (sender.titleLabel?.text)!)
+                if title == "Activate" {
+                    player.isSuspended = false
+                } else {
+                    player.isSuspended = true
+                }
+            }
+            
+            self.playersTableView.reloadData()
+        }))
 
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action: UIAlertAction!) in
@@ -150,6 +164,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
         let player = RandomPlayer()
         player.id = (session.playersList.count) + 1
         player.name = name!
+        player.rating = 1000
         
         rpController.addPlayer(player: player)
         newPlayerTextField.text = ""

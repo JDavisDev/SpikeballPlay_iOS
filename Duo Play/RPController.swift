@@ -59,6 +59,5 @@ class RPController {
     func isIndexUnique(index: Int) -> Bool {
         
         return true
-    }
-
+    } 
 }

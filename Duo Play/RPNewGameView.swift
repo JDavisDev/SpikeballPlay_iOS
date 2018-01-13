@@ -105,6 +105,9 @@ public class RPNewGameView : UIViewController {
         netSegmentedControl.isHidden = false
         let netCount = session.playersList.count / 4
         
+        if netCount <= 1 {
+            netSegmentedControl.isHidden = true
+        }
         for net in 0..<netCount {
             netSegmentedControl.insertSegment(withTitle: String(net + 1), at: net, animated: true)
         }
@@ -150,6 +153,7 @@ public class RPNewGameView : UIViewController {
         playerTwoButton.layer.cornerRadius = 7
         playerTwoButton.layer.borderColor = UIColor.yellow.cgColor
         playerTwoButton.layer.borderWidth = 1
+        playerTwoButton.layoutMargins.right = 50
         
         playerThreeButton.layer.cornerRadius = 7
         playerThreeButton.layer.borderColor = UIColor.yellow.cgColor
@@ -379,6 +383,8 @@ public class RPNewGameView : UIViewController {
     
     @IBAction func gameRandomize() {
         if((session.playersList.count) >= 4) {
+            // reset CURRENT net so they can regenerate a game
+            resetGameValues()
             let playerArray = controller.getFourRandomPlayers()
             
             if evenTeamsSwitch.isOn && playerArray.count == 4 {
@@ -407,15 +413,14 @@ public class RPNewGameView : UIViewController {
     }
     
     func balanceTeams(playerArray: [RandomPlayer]) -> [RandomPlayer] {
-        var returnArray = [Int]()
-        
-        // high rating first, then lowest, then 2nd/3rd lowest.
+    
+        // high rating first, then lowest, then 2nd/3rd lowest OF the game already created.
         var array = Array(playerArray)
         array.sort {
-            if $0.rating == $1.rating {
-                return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
+            if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
+                return $0.wins > $1.wins
             } else {
-                return $0.rating > $1.rating
+                return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
             }
         }
         
@@ -453,6 +458,7 @@ public class RPNewGameView : UIViewController {
         playerTwoButton.setTitle(playerTwoName, for: .normal)
         playerThreeButton.setTitle(playerThreeName, for: .normal)
         playerFourButton.setTitle(playerFourName, for: .normal)
+        
     }
     
     func saveNet() {
@@ -478,6 +484,11 @@ public class RPNewGameView : UIViewController {
         playerTwoButton.setTitle("Select Player", for: .normal)
         playerThreeButton.setTitle("Select Player", for: .normal)
         playerFourButton.setTitle("Select Player", for: .normal)
+        
+        playerThreeButton.layer.backgroundColor = UIColor.clear.cgColor
+        playerFourButton.layer.backgroundColor = UIColor.clear.cgColor
+        playerOneButton.layer.backgroundColor = UIColor.clear.cgColor
+        playerTwoButton.layer.backgroundColor = UIColor.clear.cgColor
         
         try! realm.write {
             let net = self.session.netList.filter("id = '" + String(self.netSegmentedControl.selectedSegmentIndex + 1) + "'").first
