@@ -144,6 +144,7 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
             return
         }))
         
+        alert.popoverPresentationController?.sourceView = self.view
         self.present(alert, animated: true, completion: nil)
     }
     

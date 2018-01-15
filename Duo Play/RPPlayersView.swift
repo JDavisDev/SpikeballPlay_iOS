@@ -146,7 +146,9 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
             return
         }))
         
-        present(alert, animated: true, completion: nil)
+        alert.popoverPresentationController?.sourceView = self.view
+        
+        self.present(alert, animated: true)
     }
     
     // on return press, keyboard hides

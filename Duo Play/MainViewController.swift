@@ -57,20 +57,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     // tournaments button clicked
     // current no button exists...
     @IBAction func tournamentButtonClicked(_ sender: UIButton) {
-        let tournamentsEnabled = true
         
-        if !tournamentsEnabled {
-            let alert = UIAlertController(title: "Coming Soon", message: "Sorry, this is not quite ready yet.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-                // cancel
-                return
-            }))
-        
-            present(alert, animated: true, completion: nil)
-        } else {
-//            let nextViewController = storyboard?.instantiateViewController(withIdentifier: "tournamentSplitView") as! UISplitViewController
-//            self.present(nextViewController, animated:true, completion:nil)
-        }
     }
     
     // compose email to me!
@@ -87,7 +74,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         mailVC.mailComposeDelegate = self
         mailVC.setToRecipients(["jdevfeedback@gmail.com"])
         
-        mailVC.setSubject("App Beta")
+        mailVC.setSubject("App Feedback")
         mailVC.setMessageBody("Dear Developer, I have a suggestion.", isHTML: false)
         
         present(mailVC, animated: true, completion: nil)

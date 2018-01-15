@@ -218,6 +218,7 @@ public class RPNewGameView : UIViewController {
                 self.saveNet()
             }
     
+            
             actionSheet.addAction(action)
         }
         
@@ -225,6 +226,7 @@ public class RPNewGameView : UIViewController {
             // reset this selection to "Select Player One"
         }
         actionSheet.addAction(actionCancel)
+        actionSheet.popoverPresentationController?.sourceView = self.view
         present(actionSheet, animated: true, completion: nil)
     }
 
