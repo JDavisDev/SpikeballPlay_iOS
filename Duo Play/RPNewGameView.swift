@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Crashlytics
 import RealmSwift
+import StoreKit
 
 public class RPNewGameView : UIViewController {
     var gameToEdit = RandomGame()
@@ -302,6 +303,14 @@ public class RPNewGameView : UIViewController {
                                            playerThree: playerThree, playerFour: playerFour,
                                        teamOneScore: teamOneScore!,
                                        teamTwoScore: teamTwoScore!)
+                
+                // Show review prompt if this is the second+ game submitted
+                if self.session.gameList.count > 1 {
+                    if #available(iOS 10.3, *) {
+                        SKStoreReviewController.requestReview()
+                    }
+                }
+                
                 self.resetGameValues()
             }))
         

@@ -10,6 +10,7 @@ import UIKit
 import MessageUI
 import RealmSwift
 import Crashlytics
+import StoreKit
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
@@ -17,6 +18,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var randomPlayButton: UIButton!
     @IBOutlet weak var rulesButton: UIButton!
     @IBOutlet weak var contactButton: UIButton!
+    @IBOutlet weak var rateButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,21 +34,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     }
     
     func initButtonStyles() {
-        tournamentButton.layer.cornerRadius = 7
+        tournamentButton.layer.cornerRadius = 20
         tournamentButton.layer.borderColor = UIColor.yellow.cgColor
         tournamentButton.layer.borderWidth = 1
         
-        randomPlayButton.layer.cornerRadius = 7
+        randomPlayButton.layer.cornerRadius = 20
         randomPlayButton.layer.borderColor = UIColor.yellow.cgColor
         randomPlayButton.layer.borderWidth = 1
         
-        rulesButton.layer.cornerRadius = 7
+        rulesButton.layer.cornerRadius = 20
         rulesButton.layer.borderColor = UIColor.yellow.cgColor
         rulesButton.layer.borderWidth = 1
         
-        contactButton.layer.cornerRadius = 7
+        contactButton.layer.cornerRadius = 20
         contactButton.layer.borderColor = UIColor.yellow.cgColor
         contactButton.layer.borderWidth = 1
+        
+        rateButton.layer.cornerRadius = 20
+        rateButton.layer.borderColor = UIColor.yellow.cgColor
+        rateButton.layer.borderWidth = 1
     }
 
     // pick up button clicked
@@ -58,6 +64,28 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
     // current no button exists...
     @IBAction func tournamentButtonClicked(_ sender: UIButton) {
         
+    }
+    
+    @IBAction func reviewAppClicked(_ sender: UIButton) {
+        Answers.logContentView(withName: "Review Page View",
+                               contentType: "Review Page View",
+                               contentId: "7",
+                               customAttributes: [:])
+        
+        if #available(iOS 10.3, *) {
+            SKStoreReviewController.requestReview()
+        } else {
+            // Fallback on earlier versions
+            let urlString = "https://itunes.apple.com/app/id1271793279"
+            
+            if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+        }
     }
     
     // compose email to me!

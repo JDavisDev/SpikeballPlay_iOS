@@ -22,6 +22,9 @@ class RPSessionsView: UIViewController, UITableViewDelegate, UITableViewDataSour
         sessionTableView.delegate = self
         sessionTableView.dataSource = self
 
+        newSessionButton.layer.cornerRadius = 20
+        newSessionButton.layer.borderColor = UIColor.white.cgColor
+        newSessionButton.layer.borderWidth = 1
         super.viewDidLoad()
     }
     
