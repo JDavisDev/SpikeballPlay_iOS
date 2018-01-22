@@ -25,7 +25,6 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         statsTable.delegate = self
         statsTable.dataSource = self
         initSortingData()
-        
         super.viewDidLoad()
     }
     
