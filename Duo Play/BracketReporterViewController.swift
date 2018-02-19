@@ -86,6 +86,7 @@ class BracketReporterViewController: UIViewController {
                 return
             }))
             
+            
             present(alert, animated: true, completion: nil)
         }
         

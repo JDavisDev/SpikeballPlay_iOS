@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Crashlytics
 import RealmSwift
+import StoreKit
 
 public class RPNewGameView : UIViewController {
     var gameToEdit = RandomGame()
@@ -36,8 +37,10 @@ public class RPNewGameView : UIViewController {
     @IBOutlet weak var playerThreeButton: UIButton!
     @IBOutlet weak var playerFourButton: UIButton!
     var playerButtonList = [UIButton]()
+    
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var randomizeAllButton: UIButton!
+    @IBOutlet weak var evenTeamsSwitch: UISwitch!
     
     // Player Randomize buttons
     @IBOutlet weak var playerOneRandomizeButton: UIButton!
@@ -103,6 +106,9 @@ public class RPNewGameView : UIViewController {
         netSegmentedControl.isHidden = false
         let netCount = session.playersList.count / 4
         
+        if netCount <= 1 {
+            netSegmentedControl.isHidden = true
+        }
         for net in 0..<netCount {
             netSegmentedControl.insertSegment(withTitle: String(net + 1), at: net, animated: true)
         }
@@ -141,37 +147,37 @@ public class RPNewGameView : UIViewController {
         playerButtonList.append(playerThreeButton)
         playerButtonList.append(playerFourButton)
         
-        playerOneButton.layer.cornerRadius = 7
+        playerOneButton.layer.cornerRadius = 20
         playerOneButton.layer.borderColor = UIColor.yellow.cgColor
         playerOneButton.layer.borderWidth = 1
         
-        playerTwoButton.layer.cornerRadius = 7
+        playerTwoButton.layer.cornerRadius = 20
         playerTwoButton.layer.borderColor = UIColor.yellow.cgColor
         playerTwoButton.layer.borderWidth = 1
         
-        playerThreeButton.layer.cornerRadius = 7
+        playerThreeButton.layer.cornerRadius = 20
         playerThreeButton.layer.borderColor = UIColor.yellow.cgColor
         playerThreeButton.layer.borderWidth = 1
         
-        playerFourButton.layer.cornerRadius = 7
+        playerFourButton.layer.cornerRadius = 20
         playerFourButton.layer.borderColor = UIColor.yellow.cgColor
         playerFourButton.layer.borderWidth = 1
-        
-        playerOneRandomizeButton.layer.cornerRadius = 7
-        playerOneRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerOneRandomizeButton.layer.borderWidth = 1
-        
-        playerTwoRandomizeButton.layer.cornerRadius = 7
-        playerTwoRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerTwoRandomizeButton.layer.borderWidth = 1
-        
-        playerThreeRandomizeButton.layer.cornerRadius = 7
-        playerThreeRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerThreeRandomizeButton.layer.borderWidth = 1
-        
-        playerFourRandomizeButton.layer.cornerRadius = 7
-        playerFourRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerFourRandomizeButton.layer.borderWidth = 1
+                
+//        playerOneRandomizeButton.layer.cornerRadius = 25
+//        playerOneRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerOneRandomizeButton.layer.borderWidth = 1
+//
+//        playerTwoRandomizeButton.layer.cornerRadius = 25
+//        playerTwoRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerTwoRandomizeButton.layer.borderWidth = 1
+//
+//        playerThreeRandomizeButton.layer.cornerRadius = 25
+//        playerThreeRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerThreeRandomizeButton.layer.borderWidth = 1
+//
+//        playerFourRandomizeButton.layer.cornerRadius = 25
+//        playerFourRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerFourRandomizeButton.layer.borderWidth = 1
         
 //        randomizeAllButton.layer.cornerRadius = 7
 //        randomizeAllButton.layer.borderColor = UIColor.white.cgColor
@@ -213,6 +219,7 @@ public class RPNewGameView : UIViewController {
                 self.saveNet()
             }
     
+            
             actionSheet.addAction(action)
         }
         
@@ -220,6 +227,7 @@ public class RPNewGameView : UIViewController {
             // reset this selection to "Select Player One"
         }
         actionSheet.addAction(actionCancel)
+        actionSheet.popoverPresentationController?.sourceView = self.view
         present(actionSheet, animated: true, completion: nil)
     }
 
@@ -234,6 +242,11 @@ public class RPNewGameView : UIViewController {
         teamTwoScoreLabel.text = String(Int(round(sender.value) / 1 * 1))
     }
     
+    // MARK: Even Teams Switch toggle
+    
+    @IBAction func evenTeamsSwitchChanged(_ sender: Any) {
+        resetGameValues()
+    }
     
     //MARK: Submit logic
     @IBAction func submitButtonClicked(_ sender: UIButton) {
@@ -290,6 +303,16 @@ public class RPNewGameView : UIViewController {
                                            playerThree: playerThree, playerFour: playerFour,
                                        teamOneScore: teamOneScore!,
                                        teamTwoScore: teamTwoScore!)
+                
+                // Show review prompt if this is the second+ game submitted
+                #if !DEBUG
+                if self.session.gameList.count > 1 {
+                    if #available(iOS 10.3, *) {
+                        SKStoreReviewController.requestReview()
+                    }
+                }
+                #endif
+                
                 self.resetGameValues()
             }))
         
@@ -372,9 +395,26 @@ public class RPNewGameView : UIViewController {
     
     @IBAction func gameRandomize() {
         if((session.playersList.count) >= 4) {
+            // reset CURRENT net so they can regenerate a game
+            resetGameValues()
             let playerArray = controller.getFourRandomPlayers()
             
-            if playerArray.count == 4 {
+            if evenTeamsSwitch.isOn && playerArray.count == 4 {
+                var realPlayerArray = [RandomPlayer]()
+                realPlayerArray.append(session.playersList[playerArray[0]])
+                realPlayerArray.append(session.playersList[playerArray[1]])
+                realPlayerArray.append(session.playersList[playerArray[2]])
+                realPlayerArray.append(session.playersList[playerArray[3]])
+                realPlayerArray = balanceTeams(playerArray: realPlayerArray)
+                
+                if realPlayerArray.count == 4 {
+                    playerOneButton.setTitle(realPlayerArray[0].name, for: .normal)
+                    playerTwoButton.setTitle(realPlayerArray[3].name, for: .normal)
+                    playerThreeButton.setTitle(realPlayerArray[1].name, for: .normal)
+                    playerFourButton.setTitle(realPlayerArray[2].name, for: .normal)
+                    updatePlayerNames()
+                }
+            } else if playerArray.count == 4 {
                 playerOneButton.setTitle(session.playersList[playerArray[0]].name, for: .normal)
                 playerTwoButton.setTitle(session.playersList[playerArray[1]].name, for: .normal)
                 playerThreeButton.setTitle(session.playersList[playerArray[2]].name, for: .normal)
@@ -384,19 +424,34 @@ public class RPNewGameView : UIViewController {
         }
     }
     
+    func balanceTeams(playerArray: [RandomPlayer]) -> [RandomPlayer] {
+    
+        // high rating first, then lowest, then 2nd/3rd lowest OF the game already created.
+        var array = Array(playerArray)
+        array.sort {
+            if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
+                return $0.wins > $1.wins
+            } else {
+                return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
+            }
+        }
+        
+        return array
+    }
+    
     func highlightServingTeam() {
-        var servingTeam = Int(arc4random_uniform(UInt32(2)))
+        let servingTeam = Int(arc4random_uniform(UInt32(2)))
         
         if servingTeam <= 0 {
-            playerOneButton.titleLabel?.textColor = UIColor.black
-            playerTwoButton.titleLabel?.textColor = UIColor.black
-            playerThreeButton.titleLabel?.textColor = UIColor.white
-            playerFourButton.titleLabel?.textColor = UIColor.white
+            playerOneButton.layer.backgroundColor = UIColor.black.cgColor
+            playerTwoButton.layer.backgroundColor = UIColor.black.cgColor
+            playerThreeButton.layer.backgroundColor = UIColor.clear.cgColor
+            playerFourButton.layer.backgroundColor = UIColor.clear.cgColor
         } else {
-            playerOneButton.titleLabel?.textColor = UIColor.white
-            playerTwoButton.titleLabel?.textColor = UIColor.white
-            playerThreeButton.titleLabel?.textColor = UIColor.black
-            playerFourButton.titleLabel?.textColor = UIColor.black
+            playerOneButton.layer.backgroundColor = UIColor.clear.cgColor
+            playerTwoButton.layer.backgroundColor = UIColor.clear.cgColor
+            playerThreeButton.layer.backgroundColor = UIColor.black.cgColor
+            playerFourButton.layer.backgroundColor = UIColor.black.cgColor
         }
     }
     
@@ -405,7 +460,7 @@ public class RPNewGameView : UIViewController {
         playerTwoName = playerTwoButton.currentTitle!
         playerThreeName = playerThreeButton.currentTitle!
         playerFourName = playerFourButton.currentTitle!
-    
+        highlightServingTeam()
         saveNet()
         
     }
@@ -415,6 +470,7 @@ public class RPNewGameView : UIViewController {
         playerTwoButton.setTitle(playerTwoName, for: .normal)
         playerThreeButton.setTitle(playerThreeName, for: .normal)
         playerFourButton.setTitle(playerFourName, for: .normal)
+        
     }
     
     func saveNet() {
@@ -440,6 +496,11 @@ public class RPNewGameView : UIViewController {
         playerTwoButton.setTitle("Select Player", for: .normal)
         playerThreeButton.setTitle("Select Player", for: .normal)
         playerFourButton.setTitle("Select Player", for: .normal)
+        
+        playerThreeButton.layer.backgroundColor = UIColor.clear.cgColor
+        playerFourButton.layer.backgroundColor = UIColor.clear.cgColor
+        playerOneButton.layer.backgroundColor = UIColor.clear.cgColor
+        playerTwoButton.layer.backgroundColor = UIColor.clear.cgColor
         
         try! realm.write {
             let net = self.session.netList.filter("id = '" + String(self.netSegmentedControl.selectedSegmentIndex + 1) + "'").first

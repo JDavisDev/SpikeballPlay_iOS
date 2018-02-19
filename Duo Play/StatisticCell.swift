@@ -66,10 +66,10 @@ class StatisticCell : UITableViewCell {
             pointsDifferentialLabel.text = pointsDifferential
         }
     }
-    
-    var matchDifficulty: String? {
-        didSet {
-            matchDifficultyLabel.text = matchDifficulty
-        }
-    }
+//    
+//    var rating: String? {
+//        didSet {
+//            matchDifficultyLabel.text = rating
+//        }
+//    }
 }

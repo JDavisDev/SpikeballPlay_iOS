@@ -25,7 +25,6 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         statsTable.delegate = self
         statsTable.dataSource = self
         initSortingData()
-        
         super.viewDidLoad()
     }
     
@@ -42,12 +41,9 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
     func initSortingData() {
         sortingData.append("Wins")
         sortingData.append("Losses")
-        sortingData.append("Name")
         sortingData.append("Points For")
         sortingData.append("Points Against")
         sortingData.append("Point Differential")
-        sortingData.append("Match Difficulty")
-        sortingData.append("Rank")
     }
     
     // wipe them away and start fresh to stay up to date.
@@ -55,7 +51,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         stats.removeAll()
         for player in session.playersList {
             stats.append(Statistics(name: player.name, wins: player.wins, losses: player.losses, pointsFor: player.pointsFor,
-                                    pointsAgainst: player.pointsAgainst, pointsDifferential: player.pointsFor - player.pointsAgainst, matchDifficulty: player.matchDifficulty))
+                                    pointsAgainst: player.pointsAgainst, pointsDifferential: player.pointsFor - player.pointsAgainst))//, matchDifficulty: <#Int#>))
         }
     }
     
@@ -73,7 +69,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         cell.pointsFor = String(statRow.pointsFor)
         cell.pointsAgainst = String(statRow.pointsAgainst)
         cell.pointsDifferential = String(statRow.pointsDifferential)
-        cell.matchDifficulty = String(format: "%.1f", statRow.matchDifficulty)
+       // cell.rating = String(statRow.matchDifficulty)
         
         return cell
     }
@@ -97,6 +93,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         }
         
         actionSheet.addAction(actionCancel)
+        actionSheet.popoverPresentationController?.sourceView = self.view
         present(actionSheet, animated: true, completion: nil)
     }
     

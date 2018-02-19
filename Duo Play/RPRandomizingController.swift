@@ -59,17 +59,16 @@ class RPRandomizingController {
         var fewestGames: Int = 1000000
         var returnPlayers = [Int]()
         
-        
-         //this worked. lower game players were pulled up. just want to test more before this main RC.
         for index in playersAvailable {
-            if session.playersList[index - 1].gameList.count < fewestGames {
+            if session.playersList.count > 0 && session.playersList.count >= index - 1 &&
+                session.playersList[index - 1].gameList.count < fewestGames {
                fewestGames = session.playersList[index - 1].gameList.count
             }
         }
 
         // run thru each player and see if they match the fewest games
         for player in playersAvailable {
-            if session.playersList[player - 1].gameList.count == fewestGames {
+            if session.playersList[player - 1].gameList.count <= fewestGames {
                 returnPlayers.append(session.playersList[player - 1].id)
             }
         }
@@ -90,13 +89,13 @@ class RPRandomizingController {
                 for netPlayer in net.playersList {
                     // if player on each net matches a player on a net
                     // set isAvailable to false
-                    if netPlayer.id == player.id {
+                    if player.isSuspended || netPlayer.id == player.id {
                         isAvailable = false
                     }
                 }
             }
             
-            if isAvailable {
+            if isAvailable && !player.isSuspended {
                 returnArray.append(player.id)
             }
         }
@@ -145,25 +144,33 @@ class RPRandomizingController {
     
     // rotate array around in a square a random amount of times to mix things up!
     func randomizeArray(array: [Int]) -> [Int] {
+        var returnArray = [Int]()
+        matchupMatrix = Array(repeating: Array(repeating: 0, count: 2), count: 2)
+        
         if array.count >= 4 {
-            matchupMatrix[0][0] = array[0]
-            matchupMatrix[0][1] = array[1]
-            matchupMatrix[1][0] = array[2]
-            matchupMatrix[1][1] = array[3]
-            var returnArray = array
-            let randomInt = Int(arc4random_uniform(UInt32(10)))
+            // returnArray is empty so this will run once, then check to see if that random game is unique.
+            // if we get to this point, some combo will be unique.
+            while !isGameUnique(current: returnArray) {
+                matchupMatrix[0][0] = array[0]
+                matchupMatrix[0][1] = array[1]
+                matchupMatrix[1][0] = array[2]
+                matchupMatrix[1][1] = array[3]
+                returnArray = array
+                let randomInt = Int(arc4random_uniform(UInt32(11)))
             
-            for _ in 1...randomInt + 2 {
-                let temp = matchupMatrix[1][0]
-                matchupMatrix[1][0] = matchupMatrix[1][1]
-                matchupMatrix[1][1] = matchupMatrix[0][1]
-                matchupMatrix[0][1] = temp
+                for _ in 1...randomInt + 2 {
+                    let temp = matchupMatrix[1][0]
+                    matchupMatrix[1][0] = matchupMatrix[1][1]
+                    matchupMatrix[1][1] = matchupMatrix[0][1]
+                    matchupMatrix[0][1] = temp
+                }
+            
+                returnArray[0] = matchupMatrix[0][1]
+                returnArray[1] = matchupMatrix[1][1]
+                returnArray[2] = matchupMatrix[0][0]
+                returnArray[3] = matchupMatrix[1][0]
             }
             
-            returnArray[0] = matchupMatrix[0][1]
-            returnArray[1] = matchupMatrix[1][1]
-            returnArray[2] = matchupMatrix[0][0]
-            returnArray[3] = matchupMatrix[1][0]
             return returnArray
         }
         
@@ -172,14 +179,18 @@ class RPRandomizingController {
     
     
     // check if team ids match, if they don't we know they are unique quicker
+    // current is the array of player indices from 0 - session.playerCount
+    // adding two because we need to add one to each index to get id.
     func isTeamIdsEqual(current: [Int], game: RandomGame) -> Bool {
         if (current[0] + current[1] + 2   == (game.playerOne?.id)! + (game.playerTwo?.id)!) {
             if (current[2] + current[3] + 2 == (game.playerThree?.id)! + (game.playerFour?.id)!) {
-                if (current[0] + current[1] + 2 == (game.playerThree?.id)! + (game.playerFour?.id)!) {
-                    if (current[2] + current[3] + 2 == (game.playerOne?.id)! + (game.playerTwo?.id)!) {
-                        return true
-                    }
-                }
+                return true
+            }
+        }
+        
+        if (current[0] + current[1] + 2 == (game.playerThree?.id)! + (game.playerFour?.id)!) {
+            if (current[2] + current[3] + 2 == (game.playerOne?.id)! + (game.playerTwo?.id)!) {
+                return true
             }
         }
         
@@ -210,6 +221,8 @@ class RPRandomizingController {
     func getRandomPlayerIndex(nameOne: String, nameTwo: String, nameThree: String, nameFour: String) -> Int {
         Answers.logCustomEvent(withName: "Randomize Player Clicked",
                                customAttributes: [:])
+        playersAvailable = getPlayersAvailable()
+        
         if session.playersList.count == 4 &&
             !nameOne.isEmpty && !nameTwo.isEmpty && !nameThree.isEmpty && !nameFour.isEmpty &&
             nameOne != "Select Player" && nameTwo != "Select Player" && nameThree != "Select Player" && nameFour != "Select Player"  {
@@ -220,9 +233,13 @@ class RPRandomizingController {
             return -1
         }
         
-        var index = Int(arc4random_uniform(UInt32(session.playersList.count)))
-        while !isPlayerSelectedUnique(playerIndex: index, nameOne: nameOne, nameTwo: nameTwo, nameThree: nameThree,nameFour: nameFour) {
+        var index = -1
+        // don't have one yet, try again
+        if index == -1 {
             index = Int(arc4random_uniform(UInt32(session.playersList.count)))
+            while playersAvailable.count > 0 && !isPlayerSelectedUnique(playerIndex: index, nameOne: nameOne, nameTwo: nameTwo, nameThree:  nameThree,nameFour: nameFour) {
+                index = Int(arc4random_uniform(UInt32(session.playersList.count)))
+            }
         }
         
         return index
@@ -245,7 +262,7 @@ class RPRandomizingController {
             return false
         }
         
-        if !getPlayersAvailable().contains(playerIndex + 1) {
+        if !playersAvailable.contains(playerIndex + 1) {
             return false
         }
         

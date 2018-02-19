@@ -7,7 +7,9 @@ target 'Duo Play' do
 
   # Pods for Duo Play
   pod ‘RealmSwift’
-
+  pod 'Crashlytics', '~> 3.9'
+  pod 'Firebase/Core'
+  
   target 'Duo Play Tests' do
     inherit! :search_paths
     platform:ios, ’10.3’
