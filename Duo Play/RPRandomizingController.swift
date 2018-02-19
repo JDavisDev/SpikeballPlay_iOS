@@ -59,8 +59,8 @@ class RPRandomizingController {
         var fewestGames: Int = 1000000
         var returnPlayers = [Int]()
         
-        for index in playersAvailable { // crash is line below
-            if session.playersList.count > 0 && session.playersList.count < index - 1 &&
+        for index in playersAvailable {
+            if session.playersList.count > 0 && session.playersList.count >= index - 1 &&
                 session.playersList[index - 1].gameList.count < fewestGames {
                fewestGames = session.playersList[index - 1].gameList.count
             }
@@ -68,7 +68,7 @@ class RPRandomizingController {
 
         // run thru each player and see if they match the fewest games
         for player in playersAvailable {
-            if session.playersList[player - 1].gameList.count == fewestGames {
+            if session.playersList[player - 1].gameList.count <= fewestGames {
                 returnPlayers.append(session.playersList[player - 1].id)
             }
         }
@@ -145,6 +145,7 @@ class RPRandomizingController {
     // rotate array around in a square a random amount of times to mix things up!
     func randomizeArray(array: [Int]) -> [Int] {
         var returnArray = [Int]()
+        matchupMatrix = Array(repeating: Array(repeating: 0, count: 2), count: 2)
         
         if array.count >= 4 {
             // returnArray is empty so this will run once, then check to see if that random game is unique.

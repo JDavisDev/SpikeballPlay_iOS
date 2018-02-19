@@ -305,11 +305,13 @@ public class RPNewGameView : UIViewController {
                                        teamTwoScore: teamTwoScore!)
                 
                 // Show review prompt if this is the second+ game submitted
+                #if !DEBUG
                 if self.session.gameList.count > 1 {
                     if #available(iOS 10.3, *) {
                         SKStoreReviewController.requestReview()
                     }
                 }
+                #endif
                 
                 self.resetGameValues()
             }))
