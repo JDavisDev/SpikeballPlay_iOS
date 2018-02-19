@@ -15,6 +15,7 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
     
     var numOfPlayersSelected: Int = 0
     @IBOutlet weak var newPlayerTextField: UITextField!
+    @IBOutlet weak var newPlayerButton: UIButton!
     @IBOutlet weak var playerButton: UIButton!
     var rpController = RPController()
     let statsController = RPStatisticsController()
@@ -29,6 +30,11 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
 
         playersTableView.delegate = self
         playersTableView.dataSource = self
+        
+        newPlayerButton.layer.cornerRadius = 20
+        newPlayerButton.layer.borderColor = UIColor.white.cgColor
+        newPlayerButton.layer.borderWidth = 1
+        
         self.playersTableView.reloadData()
     }
     
@@ -56,6 +62,12 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
         }
         
         super.viewDidDisappear(true)
+    }
+    
+    // hide keyboard on tap outside
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+        resignFirstResponder()
     }
     
     
@@ -146,7 +158,9 @@ class RPPlayersView : UIViewController, UITextFieldDelegate, UITableViewDelegate
             return
         }))
         
-        present(alert, animated: true, completion: nil)
+        alert.popoverPresentationController?.sourceView = self.view
+        
+        self.present(alert, animated: true)
     }
     
     // on return press, keyboard hides

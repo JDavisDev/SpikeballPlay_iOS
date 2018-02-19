@@ -25,7 +25,6 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         statsTable.delegate = self
         statsTable.dataSource = self
         initSortingData()
-        
         super.viewDidLoad()
     }
     
@@ -45,9 +44,6 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         sortingData.append("Points For")
         sortingData.append("Points Against")
         sortingData.append("Point Differential")
-        
-//        sortingData.append("Rating")
-//        sortingData.append("Opponent Rating")
     }
     
     // wipe them away and start fresh to stay up to date.
@@ -97,6 +93,7 @@ class RPStatisticsView : UIViewController, UITableViewDataSource, UITableViewDel
         }
         
         actionSheet.addAction(actionCancel)
+        actionSheet.popoverPresentationController?.sourceView = self.view
         present(actionSheet, animated: true, completion: nil)
     }
     

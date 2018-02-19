@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Crashlytics
 import RealmSwift
+import StoreKit
 
 public class RPNewGameView : UIViewController {
     var gameToEdit = RandomGame()
@@ -146,38 +147,37 @@ public class RPNewGameView : UIViewController {
         playerButtonList.append(playerThreeButton)
         playerButtonList.append(playerFourButton)
         
-        playerOneButton.layer.cornerRadius = 7
+        playerOneButton.layer.cornerRadius = 20
         playerOneButton.layer.borderColor = UIColor.yellow.cgColor
         playerOneButton.layer.borderWidth = 1
         
-        playerTwoButton.layer.cornerRadius = 7
+        playerTwoButton.layer.cornerRadius = 20
         playerTwoButton.layer.borderColor = UIColor.yellow.cgColor
         playerTwoButton.layer.borderWidth = 1
-        playerTwoButton.layoutMargins.right = 50
         
-        playerThreeButton.layer.cornerRadius = 7
+        playerThreeButton.layer.cornerRadius = 20
         playerThreeButton.layer.borderColor = UIColor.yellow.cgColor
         playerThreeButton.layer.borderWidth = 1
         
-        playerFourButton.layer.cornerRadius = 7
+        playerFourButton.layer.cornerRadius = 20
         playerFourButton.layer.borderColor = UIColor.yellow.cgColor
         playerFourButton.layer.borderWidth = 1
-        
-        playerOneRandomizeButton.layer.cornerRadius = 7
-        playerOneRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerOneRandomizeButton.layer.borderWidth = 1
-        
-        playerTwoRandomizeButton.layer.cornerRadius = 7
-        playerTwoRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerTwoRandomizeButton.layer.borderWidth = 1
-        
-        playerThreeRandomizeButton.layer.cornerRadius = 7
-        playerThreeRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerThreeRandomizeButton.layer.borderWidth = 1
-        
-        playerFourRandomizeButton.layer.cornerRadius = 7
-        playerFourRandomizeButton.layer.borderColor = UIColor.white.cgColor
-        playerFourRandomizeButton.layer.borderWidth = 1
+                
+//        playerOneRandomizeButton.layer.cornerRadius = 25
+//        playerOneRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerOneRandomizeButton.layer.borderWidth = 1
+//
+//        playerTwoRandomizeButton.layer.cornerRadius = 25
+//        playerTwoRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerTwoRandomizeButton.layer.borderWidth = 1
+//
+//        playerThreeRandomizeButton.layer.cornerRadius = 25
+//        playerThreeRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerThreeRandomizeButton.layer.borderWidth = 1
+//
+//        playerFourRandomizeButton.layer.cornerRadius = 25
+//        playerFourRandomizeButton.layer.borderColor = UIColor.white.cgColor
+//        playerFourRandomizeButton.layer.borderWidth = 1
         
 //        randomizeAllButton.layer.cornerRadius = 7
 //        randomizeAllButton.layer.borderColor = UIColor.white.cgColor
@@ -219,6 +219,7 @@ public class RPNewGameView : UIViewController {
                 self.saveNet()
             }
     
+            
             actionSheet.addAction(action)
         }
         
@@ -226,6 +227,7 @@ public class RPNewGameView : UIViewController {
             // reset this selection to "Select Player One"
         }
         actionSheet.addAction(actionCancel)
+        actionSheet.popoverPresentationController?.sourceView = self.view
         present(actionSheet, animated: true, completion: nil)
     }
 
@@ -301,6 +303,16 @@ public class RPNewGameView : UIViewController {
                                            playerThree: playerThree, playerFour: playerFour,
                                        teamOneScore: teamOneScore!,
                                        teamTwoScore: teamTwoScore!)
+                
+                // Show review prompt if this is the second+ game submitted
+                #if !DEBUG
+                if self.session.gameList.count > 1 {
+                    if #available(iOS 10.3, *) {
+                        SKStoreReviewController.requestReview()
+                    }
+                }
+                #endif
+                
                 self.resetGameValues()
             }))
         
