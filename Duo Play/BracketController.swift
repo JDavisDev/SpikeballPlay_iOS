@@ -10,6 +10,7 @@ import Foundation
 import RealmSwift
 
 class BracketController {
+    let bracketGenerator = BracketGenerator()
     let realm = try! Realm()
     let tournament: Tournament
     let poolList: List<Pool>
@@ -58,7 +59,10 @@ class BracketController {
     // NOT how many we have so far.
     func getRoundGameCount(round: Int) -> Int {
         let teamCount = tournament.teamList.count
-        return (teamCount / getRoundCount()) / round
+        let var1 = teamCount + getByeCount()
+        let var2 = var1 / 2
+        let final = var2 / round
+        return final
     }
     
     func getByeCount() -> Int {
@@ -114,6 +118,7 @@ class BracketController {
     // Setting up the bracket. Do not do IF we've already done it before.
     func createMatchups() {
         if tournament.matchupList.count == 0 && byeCount == 0 {
+            // run through all the teams, pairing the high seeds with the low seeds. This solves round one.
             for i in 1...tournament.teamList.count / 2 {
                 try! realm.write {
                     let game = BracketMatchup()
@@ -122,7 +127,6 @@ class BracketController {
                     game.teamTwo = tournament.teamList[tournament.teamList.count - i]
                     game.division = "Advanced"
                     game.round = 1
-                    
                     realm.add(game)
                     tournament.matchupList.append(game)
                 }
@@ -131,9 +135,15 @@ class BracketController {
             // set up byes
             for i in 1...byeCount {
                 try! realm.write {
-                    // give top seeds byes, make them automatically move on. a Win and next round.
-                    tournament.teamList[i-1].wins += 1
-                    tournament.teamList[i-1].bracketRound += 1
+                    // give top seeds byes, keep the round flat. Can iterate through after and advance bye teams
+                    let game = BracketMatchup()
+                    
+                    game.teamOne = tournament.teamList[i-1]
+                    game.teamTwo = nil
+                    game.division = "Advanced"
+                    game.round = 1
+                    realm.add(game)
+                    tournament.matchupList.append(game)
                 }
             }
             
@@ -148,6 +158,7 @@ class BracketController {
                     game.teamTwo = tournament.teamList[tournament.teamList.count - topIndex]
                     game.division = "Advanced"
                     game.round = 1
+                    game.round_position = i
                     topIndex += 1
                     realm.add(game)
                     tournament.matchupList.append(game)
@@ -220,25 +231,6 @@ class BracketController {
         // sorted by seed at this point.
         // need to balance bracket to keep seeds where they need to be. #1 at top, #2 at bottom, etc.
         // sets the teams for this round
-        var availableTeams = List<Team>()
-        var earliestRound = 8
-        for team in tournament.teamList {
-            if team.bracketRound < earliestRound {
-                earliestRound = team.bracketRound
-            }
-        }
-        
-        for team in tournament.teamList {
-            if team.bracketRound == earliestRound {
-                availableTeams.append(team)
-            }
-        }
-        
-        for i in 1...availableTeams.count {
-            try! realm.write {
-                availableTeams[i - 1].id = i
-            }
-        }
     }
     
     // After a match is submitted,
@@ -246,27 +238,6 @@ class BracketController {
     // this will help in figuring out who teams play NEXT.
     // Highest position will have #1, lowest position will have id = availableTeams.count
     func updateBracketIds() {
-        var availableTeams = List<Team>()
-        var earliestRound = 8
-        for player in tournament.teamList {
-            if !player.isEliminated && player.bracketRound < earliestRound {
-                earliestRound = player.bracketRound
-            }
-        }
-        
-        for team in tournament.teamList {
-            if team.bracketRound == earliestRound {
-                availableTeams.append(team)
-            }
-        }
-        
-        if availableTeams.count >= 1 {
-            for i in 1...availableTeams.count {
-                try! realm.write {
-                    tournament.teamList[i - 1].id = i
-                }
-            }
-        }
     }
     
     func drawBracket() {

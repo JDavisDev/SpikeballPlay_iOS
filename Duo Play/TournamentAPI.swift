@@ -1,40 +1,21 @@
 //
-//  Tournament.swift
-//  SpikeballPlay
+//  TournamentAPI.swift
+//  Duo Play
 //
-//  Created by Jordan Davis on 8/11/17.
-//  Copyright © 2017 HoverSlam. All rights reserved.
+//  Created by Jordan Davis on 2/19/18.
+//  Copyright © 2018 Jordan Davis. All rights reserved.
 //
 
 import Foundation
-import RealmSwift
 
-class Tournament : Object {
-    @objc dynamic public var id = ""
-    @objc dynamic public var name = ""
-    @objc dynamic public var url = ""
-    @objc dynamic public var tournament_type = ""
-    @objc dynamic public var isPrivate = false
-    @objc dynamic public var state = ""
-    @objc dynamic public var progress_meter = 0
-    @objc dynamic public var game_id = 0
-    @objc dynamic public var participants_count = 0
-    @objc dynamic public var full_challonge_url = ""
-    @objc dynamic public var live_image_url = ""
-    @objc dynamic public var teams = true
-    
-    
-    var bracket = Bracket()
-    var poolList = List<Pool>()
-    var teamList = List<Team>()
-    var matchupList = List<BracketMatchup>()
-    
+
+struct tournaments {
     
 }
 
+
 /*
- "tournament":
- {
+ "tournament": {
  "id": 1694415,
  "name": "IO Ping Pong Championship",
  "url": "IOTT",
@@ -86,9 +67,9 @@ class Tournament : Object {
  "start_at": null,
  "started_checking_in_at": null,
  "tie_breaks": [
- "match wins vs tied",
- "game wins",
- "points scored"
+    "match wins vs tied",
+    "game wins",
+    "points scored"
  ],
  "locked_at": null,
  "event_id": null,

@@ -13,22 +13,14 @@ class TournamentController {
     static public var currentTournamentId = ""
     let realm = try! Realm()
     
-//    func saveTournaments() {
-//        tournamentDAO.save()
-//    }
-//    
-//    func getTournaments() -> [Tournament] {
-//        tournamentDAO.getTournamentList()
-//    }
-    
     static func getCurrentTournament() -> Tournament {
         let realm = try! Realm()
-        let results = realm.objects(Tournament.self).filter("uuid = '" + TournamentController.getCurrentTournamentId() + "'").first
+        let results = realm.objects(Tournament.self).filter("id = '" + TournamentController.getCurrentTournamentId() + "'").first
         return results!
     }
     
-    static func setTournamentId(uuid: String) {
-        TournamentController.currentTournamentId = uuid
+    static func setTournamentId(id: String) {
+        TournamentController.currentTournamentId = id
     }
     
     static func getCurrentTournamentId() -> String {

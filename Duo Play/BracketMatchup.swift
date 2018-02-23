@@ -15,6 +15,7 @@ class BracketMatchup : Object {
     var teamOneScores = List<Int>()
     var teamTwoScores = List<Int>()
     @objc dynamic public var round = 1
+    @objc dynamic public var round_position = 1
     @objc dynamic public var division = ""
     @objc dynamic public var isReported = false
 }

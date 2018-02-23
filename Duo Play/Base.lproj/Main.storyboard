@@ -25,10 +25,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="zZU-M1-zVP">
-                                <rect key="frame" x="36" y="104" width="303" height="163"/>
+                                <rect key="frame" x="36" y="104" width="303" height="270"/>
                                 <subviews>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g04-i1-tPf" userLabel="Tournament Button">
-                                        <rect key="frame" x="0.0" y="0.0" width="303" height="0.0"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g04-i1-tPf" userLabel="Tournament Button">
+                                        <rect key="frame" x="0.0" y="0.0" width="303" height="57"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Tournament"/>
@@ -37,7 +37,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ara-no-Q7S">
-                                        <rect key="frame" x="0.0" y="0.0" width="303" height="56"/>
+                                        <rect key="frame" x="0.0" y="107" width="303" height="56"/>
                                         <fontDescription key="fontDescription" name=".SFNSDisplay" family=".SF NS Display" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Pick Up"/>
@@ -47,7 +47,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ayk-TE-mkR" userLabel="Rules">
-                                        <rect key="frame" x="0.0" y="81" width="303" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="188" width="303" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Official Rules"/>
@@ -56,7 +56,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6zL-iP-70R">
-                                        <rect key="frame" x="0.0" y="106" width="303" height="57"/>
+                                        <rect key="frame" x="0.0" y="213" width="303" height="57"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Contact Developer"/>
@@ -65,7 +65,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="reb-iy-ycO" userLabel="Review App">
-                                        <rect key="frame" x="0.0" y="163" width="303" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="270" width="303" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
                                         <state key="normal" title="Rate App"/>
@@ -1103,7 +1103,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QII-Bs-gWp" userLabel="AddButton">
-                                <rect key="frame" x="176.5" y="150" width="22" height="22"/>
+                                <rect key="frame" x="72" y="150" width="22" height="22"/>
                                 <connections>
                                     <action selector="addTournamentButtonClicked:" destination="o0F-K2-bEo" eventType="touchUpInside" id="wAF-nZ-sew"/>
                                 </connections>
@@ -1145,6 +1145,15 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uCt-u7-jxC">
+                                <rect key="frame" x="119" y="146" width="184" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="Get Online Tournaments"/>
+                                <connections>
+                                    <action selector="getOnlineTournamentButtonClicked:" destination="o0F-K2-bEo" eventType="touchUpInside" id="HKY-Sx-iqJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1154,7 +1163,7 @@
                             <constraint firstItem="QII-Bs-gWp" firstAttribute="top" secondItem="vPU-4m-hH5" secondAttribute="bottom" constant="28" id="Y4l-wa-kIK"/>
                             <constraint firstItem="vPU-4m-hH5" firstAttribute="leading" secondItem="UPu-dm-XjO" secondAttribute="leadingMargin" constant="56" id="dCt-pF-RJK"/>
                             <constraint firstItem="Yby-EJ-M3m" firstAttribute="leading" secondItem="UPu-dm-XjO" secondAttribute="leadingMargin" constant="-16" id="reZ-om-iMf"/>
-                            <constraint firstItem="QII-Bs-gWp" firstAttribute="centerX" secondItem="UPu-dm-XjO" secondAttribute="centerX" id="tlo-KX-sAL"/>
+                            <constraint firstItem="QII-Bs-gWp" firstAttribute="centerX" secondItem="UPu-dm-XjO" secondAttribute="centerX" constant="-104.5" id="tlo-KX-sAL"/>
                             <constraint firstItem="Yby-EJ-M3m" firstAttribute="centerX" secondItem="UPu-dm-XjO" secondAttribute="centerX" id="v5m-Vu-YPF"/>
                             <constraint firstItem="EAo-eh-dH9" firstAttribute="top" secondItem="Yby-EJ-M3m" secondAttribute="bottom" id="w5l-Cv-XQr"/>
                         </constraints>
@@ -1168,7 +1177,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Y4-jc-5l3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1350" y="-1071"/>
+            <point key="canvasLocation" x="1349.5999999999999" y="-1071.8140929535234"/>
         </scene>
         <!--Standings-->
         <scene sceneID="rTb-AE-s5E">
@@ -1890,7 +1899,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" indicatorStyle="white" translatesAutoresizingMaskIntoConstraints="NO" id="FoU-Pk-7gl">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="FoU-Pk-7gl">
                                 <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>

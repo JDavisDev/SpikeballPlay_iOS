@@ -22,6 +22,7 @@ class LiveBracketViewController: UIViewController {
     var bracketMatchCount = 0
     var roundCount = 0
     var byeCount = 0
+    var teamCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,7 @@ class LiveBracketViewController: UIViewController {
             tournament = TournamentController.getCurrentTournament()
         }
         
+        teamCount = tournament.teamList.count
         bracketMatchCount = getBracketMatchCount()
         roundCount = bracketController.getRoundCount()
         byeCount = bracketController.getByeCount()
@@ -60,8 +62,18 @@ class LiveBracketViewController: UIViewController {
             if bracketController.getRoundGameCount(round: round) > 0 {
                 for game in 1...bracketController.getRoundGameCount(round: round) {
                     // create a cell and set the base position, we'll move later based on round/match #
-                    let yPos = game == 1 ? 8 : (game - 1) * 100 + (game * 10)
-                    let xPos = round == 1 ? 8 : (round - 1) * 252 + (round * 280)
+                    // yPos is not offsetting in the middle of other places
+                    var yPos = 8
+                    if(game == 1 && round > 1) {
+                        yPos = (round - 1) * 75
+                    } else if game > 1 && round == 1{
+                        yPos = ((game - 1) * 100) + (game * 2)
+                    } else if game > 1 && round > 1 {
+                        yPos = (game - 1) * 100 + (round - 1) * 100
+                    }
+                    
+                    // I think xPos is good.
+                    let xPos = round == 1 ? 8 : (round - 1) * 1 + (round * 150)
                     let bracketCell = UIView(frame: CGRect(x: xPos, y: yPos, width: 252, height: 100))
                     bracketCell.backgroundColor = UIColor.white
                     

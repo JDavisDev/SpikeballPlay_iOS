@@ -14,6 +14,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()
+    let challongeConnector = ChallongeAPI()
     
     @IBOutlet weak var tournamentNameTextField: UITextField!
     @IBOutlet weak var tournamentTableView: UITableView!
@@ -63,8 +64,8 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         
-        let uuid = UUID.init().uuidString
-        tournament.uuid = uuid
+        let id = UUID.init().uuidString
+        tournament.id = id
         
         tournament.bracket = Bracket()
         tournament.poolList = List<Pool>()
@@ -75,8 +76,45 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
             tournamentList.append(tournament)
         }
         
-        TournamentController.setTournamentId(uuid: uuid)
+        TournamentController.setTournamentId(id: id)
         updateTournamentList()
+    }
+    
+    @IBAction func getOnlineTournamentButtonClicked(_ sender: UIButton) {
+        parseOnlineTournaments()
+    }
+    
+    func parseOnlineTournaments() {
+        challongeConnector.getTournaments()
+        let onlineTournaments = challongeConnector.tournamentList
+        
+        for tournament in onlineTournaments {
+            let newTournament = Tournament()
+            
+            // assign properties from online tournament to realm tournament for local storage
+            newTournament.name = tournament.value(forKey: "name") as! String
+            newTournament.id = String(tournament.value(forKey: "id") as! Int)
+            newTournament.bracket = Bracket()
+            newTournament.poolList = List<Pool>()
+            newTournament.teamList = List<Team>()
+            newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
+            newTournament.game_id = tournament.value(forKey: "game_id") as! Int
+            newTournament.isPrivate = tournament.value(forKey: "private") as! Bool
+            newTournament.live_image_url = tournament.value(forKey: "live_image_url") as! String
+            newTournament.participants_count = tournament.value(forKey: "participants_count") as! Int
+            newTournament.progress_meter = tournament.value(forKey: "progress_meter") as! Int
+            newTournament.state = tournament.value(forKey: "state") as! String
+            newTournament.teams = tournament.value(forKey: "teams") as! Bool
+            newTournament.url = tournament.value(forKey: "url") as! String
+            newTournament.tournament_type = tournament.value(forKey: "tournament_type") as! String
+            
+            try! realm.write {
+                realm.add(newTournament)
+                tournamentList.append(newTournament)
+            }
+        }
+        updateTournamentList()
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -119,7 +157,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         if tournamentList.count > 0 {
             for tournament in tournamentList {
                 if name == tournament.name {
-                    TournamentController.setTournamentId(uuid: tournament.uuid)
+                    TournamentController.setTournamentId(id: tournament.id)
                 }
             }
         }
