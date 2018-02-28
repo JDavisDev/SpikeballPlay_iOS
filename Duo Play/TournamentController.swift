@@ -11,6 +11,7 @@ import RealmSwift
 
 class TournamentController {
     static public var currentTournamentId = ""
+    static public var IS_QUICK_REPORT = false
     let realm = try! Realm()
     
     static func getCurrentTournament() -> Tournament {

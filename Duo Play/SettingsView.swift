@@ -9,6 +9,15 @@
 import UIKit
 
 class SettingsView: UIViewController {
+    
+    @IBOutlet weak var isQuickReportSwitch: UISwitch!
+    @IBOutlet weak var isBracketOnlySwitch: UISwitch!
+    @IBOutlet weak var playersPerPoolSegementedControl: UISegmentedControl!
+    
+    @IBOutlet weak var bracketOnlyLabel: UILabel!
+    @IBOutlet weak var poolPlayAndBracketLabel: UILabel!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -33,6 +42,10 @@ class SettingsView: UIViewController {
     @IBAction func startBracketButtonClicked(_ sender: UIButton) {
         let bracketController = BracketController()
         bracketController.startBracket()
+    }
+    
+    @IBAction func saveSettings(_ sender: UIButton) {
+        TournamentController.IS_QUICK_REPORT = isQuickReportSwitch.isOn
     }
     
 }

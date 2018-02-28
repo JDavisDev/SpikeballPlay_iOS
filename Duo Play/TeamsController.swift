@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class TeamsViewController {
+class TeamsController {
     let playersPerPool = 8
     let realm = try! Realm()
     let tournamentController = TournamentController()

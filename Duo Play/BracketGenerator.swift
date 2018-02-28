@@ -17,4 +17,8 @@ public class BracketGenerator {
     func generateMatchups(teamsList: List<Team>) {
         
     }
+    
+    func orderInitialMatchups(tournament: Tournament) {
+        
+    }
 }

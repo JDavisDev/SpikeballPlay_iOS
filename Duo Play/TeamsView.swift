@@ -12,7 +12,7 @@ import RealmSwift
 class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
-    var teamsController = TeamsViewController()
+    var teamsController = TeamsController()
     let poolsController = PoolsController()
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
@@ -87,6 +87,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
             try! self.realm.write() {
                 team.name = newName
                 team.division = "Advanced"
+                team.bracketRounds.append(1)
                 team.id = self.tournament.teamList.count + 1
                 self.tournament.teamList.append(team)
             }

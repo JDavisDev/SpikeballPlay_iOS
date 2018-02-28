@@ -107,6 +107,7 @@ class BracketReporterViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
             // move on
             let reporterController = BracketController()
+            
             var teamOneScores = [Int]()
             teamOneScores.append(teamOneGameOneScore!)
             teamOneScores.append(teamOneGameTwoScore!)
