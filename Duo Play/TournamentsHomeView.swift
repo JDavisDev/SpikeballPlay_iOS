@@ -57,12 +57,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     @IBAction func addTournamentButtonClicked(_ sender: UIButton) {
         let tournament = Tournament()
         
-        if tournamentNameTextField.text!.count > 0 {
-            tournament.name = tournamentNameTextField.text!
-        } else {
-            tournament.name = "Tournament #" + String(tournamentList.count + 1)
-        }
-        
+        tournament.name = "Tournament #" + String(tournamentList.count + 1)
         
         let id = UUID.init().uuidString
         tournament.id = id

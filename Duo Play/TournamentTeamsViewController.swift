@@ -24,7 +24,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     override func viewDidDisappear(_ animated: Bool) {
         let bracketController = BracketController()
-        bracketController.startBracket()
+        bracketController.updateBracket()
     }
 
     override func didReceiveMemoryWarning() {

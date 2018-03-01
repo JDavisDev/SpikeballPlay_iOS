@@ -9,6 +9,8 @@
 import Foundation
 import RealmSwift
 
+// NEED to work on deleting unused objects...
+// when deleting matchups, maybe delete all games by tournament id or something...
 class BracketController {
     let bracketGenerator = BracketGenerator()
     let realm = try! Realm()
@@ -23,7 +25,10 @@ class BracketController {
         byeCount = getByeCount()
     }
     
-    func startBracket() {
+    // this will be called when tournament starts
+    // when things change, like settings and teams.
+    // be dynamic and adaptable!
+    func updateBracket() {
         if tournament.teamList.count > 0 {
             seedTeams()
         }
@@ -87,6 +92,9 @@ class BracketController {
         }
     }
     
+    // seeding teams is okay at any point.
+    // if matchups have been reported, let's block them after seeding.
+    // nothing else should be able to be updated
     func seedTeams() {
         try! realm.write {
             var array = Array(tournament.teamList)
@@ -114,7 +122,18 @@ class BracketController {
             }
         }
         
-        createMatchups()
+        // if a match has been reported, no more matchups should be created
+        // matchups will be updated as the tournament progresses
+        var canCreateMatchups = true
+        for matchup in tournament.matchupList {
+            if matchup.isReported {
+                canCreateMatchups = false
+            }
+        }
+        
+        if canCreateMatchups {
+            createMatchups()
+        }
     }
     
     // need a way to edit these.. or finalize starting the bracket.
@@ -122,10 +141,14 @@ class BracketController {
     // once a match is submitted, it also finalizes the tournament
     // Setting up the bracket. Do not do IF we've already done it before.
     func createMatchups() {
-        if tournament.matchupList.count == 0 && byeCount == 0 {
+        try! realm.write {
+            tournament.matchupList.removeAll()
+        }
+        
+        if byeCount == 0 {
             // run through all the teams, pairing the high seeds with the low seeds. This solves round one.
             createRoundOneNoByesMatchups()
-        } else if tournament.matchupList.count == 0 {
+        } else {
             // set up byes
             createRoundOneWithByesMatchups()
         }
@@ -169,7 +192,10 @@ class BracketController {
         
         // now create matchups.
         var topIndex = 1
-        for i in byeCount...tournament.teamList.count / 2 {
+        let iterationCount = (tournament.teamList.count % 2) == 1 ?
+            tournament.teamList.count/2 + 1 :
+            tournament.teamList.count/2
+        for i in byeCount...iterationCount {
             // start with teams who didn't get a bye.
             try! realm.write {
                 let game = BracketMatchup()

@@ -22,7 +22,9 @@ class Tournament : Object {
     @objc dynamic public var full_challonge_url = ""
     @objc dynamic public var live_image_url = ""
     @objc dynamic public var teams = true
-    
+    @objc dynamic public var isPoolPlay = false
+    @objc dynamic public var isQuickReport = false
+    @objc dynamic public var playersPerPool = 8
     
     var bracket = Bracket()
     var poolList = List<Pool>()

@@ -78,6 +78,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         if !matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
             cell!.textLabel?.text = (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
         }
+        
         return cell!
     }
     
