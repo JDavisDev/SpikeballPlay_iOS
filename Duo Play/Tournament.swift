@@ -26,7 +26,6 @@ class Tournament : Object {
     @objc dynamic public var isQuickReport = false
     @objc dynamic public var playersPerPool = 8
     
-    var bracket = Bracket()
     var poolList = List<Pool>()
     var teamList = List<Team>()
     var matchupList = List<BracketMatchup>()

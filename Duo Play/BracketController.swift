@@ -11,6 +11,9 @@ import RealmSwift
 
 // NEED to work on deleting unused objects...
 // when deleting matchups, maybe delete all games by tournament id or something...
+
+// Having a second round issue before the finals. teams are listed as TBD
+
 class BracketController {
     let bracketGenerator = BracketGenerator()
     let realm = try! Realm()
@@ -128,12 +131,34 @@ class BracketController {
         for matchup in tournament.matchupList {
             if matchup.isReported {
                 canCreateMatchups = false
+                break
             }
         }
         
-        if canCreateMatchups {
+        if getTournamentProgress() <= 0 && canCreateMatchups {
             createMatchups()
         }
+    }
+    
+    func getTournamentProgress() -> Int {
+        if tournament.teamList.count > 0 {
+            let pointsPerMatchup = Float(Float(100) / Float((tournament.teamList.count - 1)))
+            var currentPoints = Float(0)
+            
+            for matchup in tournament.matchupList {
+                if matchup.isReported {
+                    currentPoints += (pointsPerMatchup)
+                }
+            }
+            
+            try! realm.write {
+                tournament.progress_meter = Int(round(currentPoints))
+            }
+            
+            return Int(round(currentPoints))
+        }
+        
+        return 0
     }
     
     // need a way to edit these.. or finalize starting the bracket.
@@ -355,6 +380,8 @@ class BracketController {
             
             selectedMatchup.isReported = true
         }
+        
+        getTournamentProgress()
     }
     
     // based on previous position, determine next position
@@ -364,7 +391,6 @@ class BracketController {
     func advanceTeamToNextBracketPosition(winningTeam: Team) {
         var nextPos = 0
         let lastPos = winningTeam.bracketVerticalPositions.last!
-        var isOnBottomOfBracketCell = false
         
         if lastPos % 2 == 1 {
             // odd number
@@ -373,18 +399,7 @@ class BracketController {
             nextPos = lastPos / 2
         }
         
-        if lastPos == 1 {
-            isOnBottomOfBracketCell = false
-        } else if lastPos == 2 {
-            isOnBottomOfBracketCell = true
-        } else if lastPos % 2 == 1 {
-            isOnBottomOfBracketCell = false
-        } else {
-            isOnBottomOfBracketCell = true
-        }
-        
         winningTeam.bracketVerticalPositions.append(nextPos)
-        winningTeam.isOnBottomOfBracketCell = isOnBottomOfBracketCell
         
         // a new matchup may be ready!
         updateMatchups()

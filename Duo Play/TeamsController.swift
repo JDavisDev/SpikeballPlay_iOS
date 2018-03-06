@@ -20,6 +20,9 @@ class TeamsController {
     func addTeam(team: Team) {
         let tournament = TournamentController.getCurrentTournament()
         let newPool = getAvailablePool()
+        if team.name.count == 0 {
+            team.name = "No Name"
+        }
         
         try! realm.write() {
             realm.add(team)

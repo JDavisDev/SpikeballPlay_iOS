@@ -21,7 +21,6 @@ public class Team : Object {
     @objc dynamic public var pointsAgainst: Int = 0
     @objc dynamic public var division = ""
     @objc dynamic public var isEliminated = false
-    @objc dynamic public var isOnBottomOfBracketCell = false
     var bracketRounds = List<Int>()
     var bracketVerticalPositions = List<Int>()
     var poolPlayGameList = List<PoolPlayMatchup>()

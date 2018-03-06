@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     let realm = try! Realm()
@@ -34,40 +35,117 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     // MARK: - Adding teams
     
     @IBAction func addTeam(_ sender: UIButton) {
-        teamsTableView.setEditing(false, animated: true)
-        // let's present an alert to enter a team. cleaner ui
-        let alert = UIAlertController(title: "Add Team",
-                                      message: "", preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
-            _ = alert.textFields![0] as UITextField
-            let newName = alert.textFields![0].text!
-            let team = Team()
+        // check if tournament has started, only add teams if it has not.
+        if tournament.progress_meter <= 0 {
+            teamsTableView.setEditing(false, animated: true)
+            // let's present an alert to enter a team. cleaner ui
+            let alert = UIAlertController(title: "Add Team",
+                                          message: "", preferredStyle: .alert)
             
-            try! self.realm.write() {
-                team.name = newName
-                team.division = "Advanced"
-                team.bracketRounds.append(1)
-                team.id = self.tournament.teamList.count + 1
-                self.tournament.teamList.append(team)
+            let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+                _ = alert.textFields![0] as UITextField
+                let newName = alert.textFields![0].text!
+                let team = Team()
+                
+                try! self.realm.write() {
+                    team.name = newName
+                    team.division = "Advanced"
+                    team.bracketRounds.append(1)
+                    team.id = self.tournament.teamList.count + 1
+                    self.tournament.teamList.append(team)
+                }
+                
+                self.teamsController.addTeam(team: team)
+                self.teamsTableView.reloadData()
             }
             
-            self.teamsController.addTeam(team: team)
-            self.teamsTableView.reloadData()
+            alert.addTextField { (textField) in
+                textField.placeholder = "Team Name"
+            }
+            
+            alert.addAction(action)
+            
+            present(alert, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Tournament Started",
+                                          message: "The tournament has already begun, no more teams may be added.",
+                                          preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+                // ok / dismiss
+                return
+            }))
+            
+            present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func getTeamByName(name: String) -> Team {
+        return realm.objects(Team.self).filter("name = '\(name)'").first!
+    }
+    
+    func deleteTeam(team: Team) {
+        try! realm.write {
+            realm.delete(team.poolPlayGameList)
+            realm.delete(team)
+        }
+    }
+    
+    func longPressGesture() -> UILongPressGestureRecognizer {
+        let lpg = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress))
+        lpg.minimumPressDuration = 0.5
+        return lpg
+    }
+    
+    @objc func longPress(_ sender: UILongPressGestureRecognizer) {
+        var selectedTeam = Team()
+        
+        if let button = sender.view as? UIButton {
+            let name = button.currentTitle
+            selectedTeam = getTeamByName(name: name!)
+        } else {
+            return
+        }
+        //show dialog to rename or delete a team
+        let alert = UIAlertController(title: "Edit Team",
+                                      message: "", preferredStyle: .alert)
         
         alert.addTextField { (textField) in
             textField.placeholder = "Team Name"
+            textField.text = selectedTeam.name
         }
         
-        alert.addAction(action)
+        let renameAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+            _ = alert.textFields![0] as UITextField
+            let newName = alert.textFields![0].text!
+            try! self.realm.write {
+                let team = selectedTeam
+                team.name = newName
+            }
+            
+            // update lists
+            self.teamsTableView.reloadData()
+        }
+        alert.addAction(renameAction)
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
+            self.deleteTeam(team: selectedTeam)
+            self.teamsTableView.reloadData()
+            Answers.logCustomEvent(withName: "Tournament Team Deleted",
+                                   customAttributes: [:])
+        }
+        
+        alert.addAction(deleteAction)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
             // cancel
+            // update history list
+            self.viewDidAppear(true)
             return
         }))
         
-        present(alert, animated: true, completion: nil)
+        alert.popoverPresentationController?.sourceView = self.view
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Tournament Teams Table View
@@ -78,8 +156,13 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamCell")
+        let button = cell?.contentView.subviews[0] as! UIButton
         let team = tournament.teamList[indexPath.row]
         cell!.textLabel?.text = team.name
+        button.setTitle(team.value(forKeyPath: "name") as? String,
+                        for: .normal)
+        
+        button.addGestureRecognizer(self.longPressGesture())
         
         return cell!
     }

@@ -28,6 +28,7 @@ class TournamentsTabBarViewController: UITabBarController {
         // ...
         // Go back to the previous ViewController
         _ = navigationController?.popViewController(animated: true)
+        _ = navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {

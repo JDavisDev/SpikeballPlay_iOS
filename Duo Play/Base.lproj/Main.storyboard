@@ -740,16 +740,16 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Yep-Mx-4ai" userLabel="teamTwoNameStack">
-                                                    <rect key="frame" x="0.0" y="6" width="0.0" height="88"/>
+                                                    <rect key="frame" x="303.5" y="6" width="56.5" height="88"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jordan" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RB3-Ea-sIA" userLabel="PlayerThreeLabel">
-                                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="41.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="56.5" height="41.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Andrew" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OTQ-RD-eNI" userLabel="PlayerFourLabel">
-                                                            <rect key="frame" x="0.0" y="46.5" width="0.0" height="41.5"/>
+                                                            <rect key="frame" x="0.0" y="46.5" width="56.5" height="41.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -1280,6 +1280,10 @@
                                     <segue destination="jE8-Dt-081" kind="show" id="aUY-1D-xKS"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jv5-HK-eDy">
+                                <rect key="frame" x="164" y="499" width="46" height="49"/>
+                                <state key="normal" title="Delete"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -1294,6 +1298,7 @@
                             <constraint firstItem="L57-iI-zRV" firstAttribute="centerY" secondItem="0gV-tS-RAY" secondAttribute="centerY" id="EGi-Aa-ShK"/>
                             <constraint firstItem="MIK-Wq-AaV" firstAttribute="leading" secondItem="nid-0z-bai" secondAttribute="trailing" constant="18" id="FaY-Mc-TUd"/>
                             <constraint firstItem="yjs-kT-FTV" firstAttribute="leading" secondItem="iPN-nT-7IH" secondAttribute="leading" constant="-27" id="Hx8-1D-CO6"/>
+                            <constraint firstItem="kHn-Gx-Rc7" firstAttribute="top" secondItem="jv5-HK-eDy" secondAttribute="bottom" constant="41" id="QIE-cQ-5Mt"/>
                             <constraint firstItem="nid-0z-bai" firstAttribute="leading" secondItem="YDy-1M-meN" secondAttribute="trailing" constant="22" id="R9W-eE-K2Z"/>
                             <constraint firstItem="L57-iI-zRV" firstAttribute="leading" secondItem="OUC-wR-l5I" secondAttribute="leading" id="ROg-Zt-iSI"/>
                             <constraint firstAttribute="trailingMargin" secondItem="0gV-tS-RAY" secondAttribute="trailing" constant="-2" id="RYk-yp-wJx"/>
@@ -1313,6 +1318,7 @@
                             <constraint firstItem="yjs-kT-FTV" firstAttribute="baseline" secondItem="kHn-Gx-Rc7" secondAttribute="baseline" constant="12" id="sKB-4p-ykS"/>
                             <constraint firstItem="iPN-nT-7IH" firstAttribute="leading" secondItem="OUC-wR-l5I" secondAttribute="trailing" constant="8" id="sjT-9A-ZYU"/>
                             <constraint firstItem="OUC-wR-l5I" firstAttribute="centerY" secondItem="iPN-nT-7IH" secondAttribute="centerY" id="uR0-RJ-1t1"/>
+                            <constraint firstItem="jv5-HK-eDy" firstAttribute="centerX" secondItem="QAG-nE-f5N" secondAttribute="centerX" id="yS7-rE-Zq8"/>
                             <constraint firstItem="MIK-Wq-AaV" firstAttribute="trailing" secondItem="QAG-nE-f5N" secondAttribute="trailingMargin" id="zzx-Pw-Emj"/>
                         </constraints>
                     </view>
@@ -1969,7 +1975,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="700" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="FoU-Pk-7gl">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" pagingEnabled="YES" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="FoU-Pk-7gl">
                                 <rect key="frame" x="0.0" y="64" width="1276" height="989"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>
@@ -2017,20 +2023,21 @@
                                 <color key="sectionIndexColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="teamCell" rowHeight="71" id="GtS-5A-gMq">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="71"/>
+                                    <tableViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="teamCell" rowHeight="92" id="GtS-5A-gMq">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="92"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GtS-5A-gMq" id="sV8-ci-bht">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="70.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="91.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Team Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VEU-iT-NVF">
-                                                    <rect key="frame" x="15" y="11" width="345" height="49"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="9ss-Vc-VCk">
+                                                    <rect key="frame" x="15" y="11" width="345" height="70"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                                    <state key="normal" title="Team">
+                                                        <color key="titleColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </tableViewCellContentView>

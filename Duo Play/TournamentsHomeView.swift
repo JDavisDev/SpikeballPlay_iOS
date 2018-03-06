@@ -62,7 +62,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         let id = UUID.init().uuidString
         tournament.id = id
         
-        tournament.bracket = Bracket()
         tournament.poolList = List<Pool>()
         tournament.teamList = List<Team>()
         
@@ -89,7 +88,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
             // assign properties from online tournament to realm tournament for local storage
             newTournament.name = tournament.value(forKey: "name") as! String
             newTournament.id = String(tournament.value(forKey: "id") as! Int)
-            newTournament.bracket = Bracket()
             newTournament.poolList = List<Pool>()
             newTournament.teamList = List<Team>()
             newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
