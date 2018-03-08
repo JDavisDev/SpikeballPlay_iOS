@@ -24,6 +24,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 //        try! realm.write() {
 //            realm.deleteAll()
 //        }
+        
         super.viewDidLoad()
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self

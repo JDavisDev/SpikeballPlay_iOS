@@ -15,12 +15,14 @@ import RealmSwift
 // Having a second round issue before the finals. teams are listed as TBD
 
 class BracketController {
-    let bracketGenerator = BracketGenerator()
     let realm = try! Realm()
     let tournament: Tournament
     let poolList: List<Pool>
     var byeCount = 0
     var roundCount = 0
+    var nodeList = [Node]()
+    var isEnd = false
+    var baseBracketSize = 0
     
     init() {
         tournament = TournamentController.getCurrentTournament()
@@ -78,6 +80,8 @@ class BracketController {
     func getByeCount() -> Int {
         let count = tournament.teamList.count
         switch count {
+        case 3:
+            return 1
         case 5...8:
             return 8 - count
         case 9...16:
@@ -92,6 +96,27 @@ class BracketController {
             return 256 - count
         default:
             return 0
+        }
+    }
+    
+    func getNextPowerOfTwo(num: Int) -> Int {
+        switch(num) {
+        case 3...4:
+            return 4
+            case 5...8:
+                return 8
+            case 9...16:
+                return 16
+            case 17...32:
+                return 32
+            case 33...64:
+                return 64
+            case 65...128:
+                return 128
+            case 129...256:
+                return 256
+            default:
+                return 0
         }
     }
     
@@ -116,7 +141,7 @@ class BracketController {
                 }
             }
             
-            // we've sorted/seeded, not re add
+            // we've sorted/seeded, now re-add
             var seed = 1
             for team in array {
                 team.seed = seed
@@ -168,17 +193,19 @@ class BracketController {
     func createMatchups() {
         try! realm.write {
             tournament.matchupList.removeAll()
+            
         }
         
-        if byeCount == 0 {
-            // run through all the teams, pairing the high seeds with the low seeds. This solves round one.
-            createRoundOneNoByesMatchups()
-        } else {
-            // set up byes
-            createRoundOneWithByesMatchups()
-        }
-        
-        //orderMatchups()
+        orderMatchups()
+//        if byeCount == 0 {
+//            // run through all the teams, pairing the high seeds with the low seeds. This solves round one.
+//            createRoundOneNoByesMatchups()
+//        } else {
+//            // set up byes
+//            createRoundOneWithByesMatchups()
+//        }
+//
+//        orderMatchups()
     }
     
     func createRoundOneNoByesMatchups() {
@@ -192,10 +219,6 @@ class BracketController {
                 game.round = 1
                 realm.add(game)
                 tournament.matchupList.append(game)
-                
-                // move this logic to orderMatchups()
-                game.teamOne?.bracketVerticalPositions.append(i)
-                game.teamTwo?.bracketVerticalPositions.append(i)
             }
         }
     }
@@ -236,43 +259,121 @@ class BracketController {
         }
     }
     
-    // This will be fun.
     // Ordering the match ups based on official tournament seeding
     // 1 seed will always be on top
-    // 2 will always be on bottom.
     // check for nulls.
     // make recursive until it's perfect.
-    // maybe start at the end and work backwards... idk
-    // write a method to get expected winner of each match
+    // >>>>maybe start at the end and work backwards...<<<<
     func orderMatchups() {
-        let orderedMatchups = List<BracketMatchup>()
-        orderedMatchups.append(tournament.matchupList[0])
+        var seedStringList = [String]()
         
-        // this variable is to hold the worst seed (greatest number) that is still expected to win the match by seed.
-        var nextWorstExpectedWinner = 0
-        for matchup in tournament.matchupList {
-            // team one is a 'better' seed
-            if (matchup.teamOne?.seed)! < (matchup.teamTwo?.seed)! {
-                if nextWorstExpectedWinner < (matchup.teamOne?.seed)! {
-                    nextWorstExpectedWinner = (matchup.teamOne?.seed)!
+        for team in tournament.teamList {
+            seedStringList.append(String(team.seed))
+        }
+        
+        nodeList = [Node]()
+        var halfNodesList = [Node]()
+        
+        // need a number to sim bracket size. basically, it's the next highest power of 2
+        // 14 teams is a 16 team bracket wtih 2 byes that'll go to highest seeds, rest of bracket looks the same
+        
+        baseBracketSize = getNextPowerOfTwo(num: tournament.teamList.count)
+        let root = Node(value: [seedStringList[0], seedStringList[1]])
+        seedStringList.removeFirst(2)
+        nodeList.append(root)
+        
+        // handle round by round
+        // create and fill nodes
+        while nodeList.count < baseBracketSize - 1 {
+            halfNodesList.removeAll()
+            
+            for node in nodeList {
+                if node.value.count > 1 && node.children.count <= 0 &&
+                    !(Int(node.value[0])! + Int(node.value[1])! == baseBracketSize + 1) {
+                    // two values, create two splitting branches
+                    let nodeOne = Node(value: [node.value[0]])
+                    let nodeTwo = Node(value: [node.value[1]])
+                    
+                    //add children to that node
+                    node.add(child: nodeOne)
+                    node.add(child: nodeTwo)
+                    
+                    // append both to the list for iteration
+                    nodeList.append(nodeOne)
+                    nodeList.append(nodeTwo)
+                    
+                    halfNodesList.append(nodeOne)
+                    halfNodesList.append(nodeTwo)
                 }
-            } else {
-                // team two is a 'better' seed
-                if nextWorstExpectedWinner < (matchup.teamTwo?.seed)! {
-                    nextWorstExpectedWinner = (matchup.teamOne?.seed)!
+            }
+            
+            addSeedToNode(nodes: halfNodesList, seedList: seedStringList)
+            if isEnd {
+                break
+            }
+        }
+        
+        var copyList = [Node]()
+        
+        for node in nodeList {
+            if node.children.count <= 0 {
+                copyList.append(node)
+            }
+        }
+        
+        createMatchupsFromNodeList(nodes: copyList)
+    }
+    
+    func addSeedToNode(nodes: [Node], seedList: [String]) {
+        var copyList = [Node]()
+        
+        for node in nodeList {
+            if node.value.count >= 2 {
+                copyList.append(node)
+            }
+        }
+        
+        // delete and readd nodes that contain two values.
+        // keep the nodeList intact with no half nodes.
+        nodeList.removeAll()
+        nodeList = copyList
+        
+        for node in nodes {
+            for seed in seedList {
+                if Int(node.value[0])! + Int(seed)! == (nodes.count * 2) + 1 {
+                    node.value.append(seed)
+                    nodeList.append(node)
+                    break;
                 }
             }
         }
         
-        for matchup in tournament.matchupList {
-            if !orderedMatchups.contains(matchup) && (matchup.teamTwo?.seed == nextWorstExpectedWinner ||
-                matchup.teamOne?.seed == nextWorstExpectedWinner) {
-                /// found a match that has next expected winner
-                orderedMatchups.append(matchup)
+        if nodeList.count == baseBracketSize - 1 {
+            isEnd = true
+        }
+    }
+    
+    func createMatchupsFromNodeList(nodes: [Node]) {
+        let teamsController = TeamsController()
+        var verticalPositionCounter = 1
+        try! realm.write {
+            tournament.matchupList.removeAll()
+        
+            for node in nodes {
+                if node.value.count == 2 {
+                    let game = BracketMatchup()
+                    
+                    game.teamOne = teamsController.getTeamByName(name: node.value[0])
+                    game.teamTwo = teamsController.getTeamByName(name: node.value[1])
+                    game.division = "Advanced"
+                    game.round = 1
+                    game.round_position = verticalPositionCounter
+                    realm.add(game)
+                    tournament.matchupList.append(game)
+                    verticalPositionCounter += 1
+                }
             }
         }
-        
-        tournament.matchupList = orderedMatchups
     }
     
     // Run through teams, see if they are next to each other based on position,

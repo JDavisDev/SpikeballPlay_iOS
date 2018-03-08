@@ -84,7 +84,7 @@ class LiveBracketViewController: UIViewController {
     
     // could generate first round positions.
     // then each cell after, is in the middle of the next two cells and offset.
-    // only do ONCE
+    // only do ONCE UNLESS A NEW TEAM IS ADDED... check team counts or something.
     func reloadBracket() {
         if bracketCells.count <= 0 {
             var views = scrollView.subviews
@@ -133,12 +133,20 @@ class LiveBracketViewController: UIViewController {
                     // make sure we have games to fill in teams
                     // otherwise, just write TBD so they can visualize the entire bracket.
                     if tournament.matchupList.count > (game - 1) && tournament.matchupList[game - 1].round == 1 {
-                        teamOneLabel.text = tournament.matchupList[game - 1].teamOne?.name
-                        if tournament.matchupList[game - 1].teamTwo == nil {
+                        let teamOne = tournament.matchupList[game - 1].teamOne
+                        let teamTwo = tournament.matchupList[game - 1].teamTwo
+                        
+                        teamOne?.bracketVerticalPositions.append(game)
+                        teamOneLabel.text = teamOne?.name
+                        if teamTwo == nil {
                             teamTwoLabel.text = "BYE"
                         } else {
-                           teamTwoLabel.text = tournament.matchupList[game - 1].teamTwo?.name
+                           teamTwoLabel.text = teamTwo?.name
+                           teamTwo?.bracketVerticalPositions.append(game)
                         }
+                        
+                        teamOneLabel.textColor = UIColor.white
+                        teamTwoLabel.textColor = UIColor.white
                     } else {
                         teamOneLabel.text = "TBD"
                         teamTwoLabel.text = "TBD"
@@ -155,7 +163,6 @@ class LiveBracketViewController: UIViewController {
     // sets position of bracket cells for each subsequent match up
     // get bracketCells[x].frame to get x/y position, then set next bracketCells accordingly
     
-    // ONE ERROR, if reporting 8 team bracket out of order: one team moves through fast, it is placed in incorrect cells.
     // matchups still are correct, but the display is wrong.
     func createAdditionalBracketCells() {
         for round in 2...roundCount {
@@ -177,74 +184,81 @@ class LiveBracketViewController: UIViewController {
                             }
                         }
                     }
-                    // X IS GOOD
-                    xPos = Int(prevCells[0].frame.maxX) + 10
                     
-                    // Y IS GOOD!
-                    let maxOne = Int(prevCells[0].frame.maxY)
-                    let maxTwo = Int(prevCells[1].frame.maxY)
-                    
-                    if maxOne > maxTwo {
-                        // first cell is further down, grab it's minY, maxY for other cell
-                        let minY = Int(prevCells[0].frame.minY)
-                        let maxY = Int(prevCells[1].frame.maxY)
-                        let spaceY = minY - maxY
-                        let midPoint = spaceY / 2
-                        yPos = midPoint + maxY - 50
-                    } else {
-                        // second cell is further down, grab it's minY, maxY for other cell
-                        let minY = Int(prevCells[1].frame.minY)
-                        let maxY = Int(prevCells[0].frame.maxY)
-                        let spaceY = minY - maxY
-                        let midPoint = spaceY / 2
-                        yPos = midPoint + maxY - 50
-                    }
-                    
-                    let bracketCell = UIView(frame: CGRect(x: xPos, y: yPos, width: bracketCellWidth, height: 100))
-                    bracketCell.backgroundColor = UIColor.darkGray
-                    
-                    bracketCells.append(bracketCell)
-                    
-                    let bracketPos = (x: round, y: game)
-                    bracketDict[bracketCell] = bracketPos
-                    
-                    // create team labels inside the cell
-                    let teamOneLabel = UILabel(frame: CGRect(x: 8, y: 0, width: labelWidth, height: 50))
-                    let teamTwoLabel = UILabel(frame: CGRect(x: 8, y: 50, width: labelWidth, height: 50))
-                    
-                    // add ui labels to cell
-                    bracketCell.addSubview(teamOneLabel)
-                    bracketCell.addSubview(teamTwoLabel)
-                    scrollView.addSubview(bracketCell)
-                    
-                    try! realm.write {
-                        // set team labels
-                        let tournament = TournamentController.getCurrentTournament()
+                    if prevCells.count >= 2 {
+                        // X IS GOOD
+                        xPos = Int(prevCells[0].frame.maxX) + 10
                         
-                        // make sure we have games to fill in teams
-                        // otherwise, just write TBD so they can visualize the entire bracket.
-                        if tournament.matchupList.count > (game - 1) && tournament.matchupList[game - 1].round == round {
-                            let teamOne = tournament.matchupList[game - 1].teamOne
-                            let teamTwo = tournament.matchupList[game - 1].teamTwo
-                            
-                            teamOne?.bracketVerticalPositions.append(game)
-                            teamTwo?.bracketVerticalPositions.append(game)
-                            
-                            teamOneLabel.text = teamOne?.name
-                            if teamTwo == nil {
-                                teamTwoLabel.text = "BYE"
-                            } else {
-                                teamTwoLabel.text = teamTwo?.name
-                            }
+                        // Y IS GOOD!
+                        let maxOne = Int(prevCells[0].frame.maxY)
+                        let maxTwo = Int(prevCells[1].frame.maxY)
+                        
+                        if maxOne > maxTwo {
+                            // first cell is further down, grab it's minY, maxY for other cell
+                            let minY = Int(prevCells[0].frame.minY)
+                            let maxY = Int(prevCells[1].frame.maxY)
+                            let spaceY = minY - maxY
+                            let midPoint = spaceY / 2
+                            yPos = midPoint + maxY - 50
                         } else {
-                            teamOneLabel.text = "TBD"
-                            teamTwoLabel.text = "TBD"
+                            // second cell is further down, grab it's minY, maxY for other cell
+                            let minY = Int(prevCells[1].frame.minY)
+                            let maxY = Int(prevCells[0].frame.maxY)
+                            let spaceY = minY - maxY
+                            let midPoint = spaceY / 2
+                            yPos = midPoint + maxY - 50
                         }
+                        
+                        let bracketCell = UIView(frame: CGRect(x: xPos, y: yPos, width: bracketCellWidth, height: 100))
+                        bracketCell.backgroundColor = UIColor.darkGray
+                        
+                        bracketCells.append(bracketCell)
+                        
+                        let bracketPos = (x: round, y: game)
+                        bracketDict[bracketCell] = bracketPos
+                        
+                        // create team labels inside the cell
+                        let teamOneLabel = UILabel(frame: CGRect(x: 8, y: 0, width: labelWidth, height: 50))
+                        let teamTwoLabel = UILabel(frame: CGRect(x: 8, y: 50, width: labelWidth, height: 50))
+                        
+                        // add ui labels to cell
+                        bracketCell.addSubview(teamOneLabel)
+                        bracketCell.addSubview(teamTwoLabel)
+                        scrollView.addSubview(bracketCell)
+                        
+                        try! realm.write {
+                            // set team labels
+                            let tournament = TournamentController.getCurrentTournament()
+                            
+                            // make sure we have games to fill in teams
+                            // otherwise, just write TBD so they can visualize the entire bracket.
+                            if tournament.matchupList.count > (game - 1) && tournament.matchupList[game - 1].round == round {
+                                let teamOne = tournament.matchupList[game - 1].teamOne
+                                let teamTwo = tournament.matchupList[game - 1].teamTwo
+                                
+                               // teamOne?.bracketVerticalPositions.append(game)
+                             //   teamTwo?.bracketVerticalPositions.append(game)
+                                
+                                teamOneLabel.text = teamOne?.name
+                                
+                                if teamTwo == nil {
+                                    teamTwoLabel.text = "BYE"
+                                } else {
+                                    teamTwoLabel.text = teamTwo?.name
+                                }
+                                
+                                teamOneLabel.textColor = UIColor.white
+                                teamTwoLabel.textColor = UIColor.white
+                            } else {
+                                teamOneLabel.text = "TBD"
+                                teamTwoLabel.text = "TBD"
+                            }
+                        }
+                        
+                        // tap recognizer
+                        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
+                        self.view.addGestureRecognizer(gesture)
                     }
-                    
-                    // tap recognizer
-                    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
-                    self.view.addGestureRecognizer(gesture)
                 }
             }
         }
@@ -259,6 +273,8 @@ class LiveBracketViewController: UIViewController {
         bracketCell.backgroundColor = UIColor.darkGray
         
         bracketCells.append(bracketCell)
+        let bracketPos = (x: roundCount + 1, y: 1)
+        bracketDict[bracketCell] = bracketPos
         
         // create team labels inside the cell
         // width of 8 less than the winner cell's width
@@ -315,6 +331,7 @@ class LiveBracketViewController: UIViewController {
                 for team in tournament.teamList {
                     // skip round 1, ensure that each team matches the round and new vert position
                     if team.bracketRounds.count >= 1 && team.bracketRounds.contains(coord.x) &&
+                        team.bracketVerticalPositions.count > coord.x - 1 &&
                         team.bracketVerticalPositions[coord.x - 1] == (coord.y) {
                         // this team belongs in this cell!
                         if isTeamOnBottomOfBracketCell(team: team, currentRound: coord.x) {
@@ -326,7 +343,10 @@ class LiveBracketViewController: UIViewController {
                             // this means that the team moved on, color the cell accordingly
                             if team.wins >= coord.x {
                                 teamLabel.textColor = UIColor.yellow
+                            } else if team.isEliminated {
+                                teamLabel.textColor = UIColor.black
                             }
+                            
                         } else {
                             // put them on top
                             let teamLabel = bracketView.subviews[0] as! UILabel

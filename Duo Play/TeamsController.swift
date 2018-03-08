@@ -35,6 +35,10 @@ class TeamsController {
         }
     }
     
+    func getTeamByName(name: String) -> Team {
+        return realm.objects(Team.self).filter("name = '\(name)'").first!
+    }
+    
     func getAvailablePool() -> Pool {
         let tournament = TournamentController.getCurrentTournament()
         for pool in tournament.poolList {
