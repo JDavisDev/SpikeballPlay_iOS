@@ -21,9 +21,9 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         
     override func viewDidLoad() {
         
-//        try! realm.write() {
-//            realm.deleteAll()
-//        }
+        try! realm.write() {
+            realm.deleteAll()
+        }
         
         super.viewDidLoad()
         tournamentTableView.delegate = self
@@ -60,8 +60,13 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         
         tournament.name = "Tournament #" + String(tournamentList.count + 1)
         
-        let id = UUID.init().uuidString
-        tournament.id = id
+        let max = 2147483600
+        var id = Int(arc4random_uniform(UInt32(max)))
+        while !isIdUnique(id: id) {
+            id = Int(arc4random_uniform(UInt32(max)))
+        }
+        
+        tournament.id = Int(id)
         
         tournament.poolList = List<Pool>()
         tournament.teamList = List<Team>()
@@ -73,6 +78,15 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         
         TournamentController.setTournamentId(id: id)
         updateTournamentList()
+    }
+    
+    func isIdUnique(id: Int) -> Bool {
+        var count = 0
+        try! realm.write {
+             count = realm.objects(Tournament.self).filter("id = \(id)").count
+        }
+        
+        return count == 0
     }
     
     @IBAction func getOnlineTournamentButtonClicked(_ sender: UIButton) {
@@ -88,7 +102,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
             
             // assign properties from online tournament to realm tournament for local storage
             newTournament.name = tournament.value(forKey: "name") as! String
-            newTournament.id = String(tournament.value(forKey: "id") as! Int)
+            newTournament.id = tournament.value(forKey: "id") as! Int
             newTournament.poolList = List<Pool>()
             newTournament.teamList = List<Team>()
             newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String

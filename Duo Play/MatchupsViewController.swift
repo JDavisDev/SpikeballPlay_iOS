@@ -58,7 +58,8 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.matchupList.removeAll()
         
         for matchup in tournament.matchupList {
-            if !matchup.isReported {
+            if !matchup.isReported && matchup.teamOne != nil &&
+                matchup.teamTwo != nil {
                 self.matchupList.append(matchup)
             }
         }

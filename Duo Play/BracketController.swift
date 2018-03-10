@@ -12,8 +12,6 @@ import RealmSwift
 // NEED to work on deleting unused objects...
 // when deleting matchups, maybe delete all games by tournament id or something...
 
-// Having a second round issue before the finals. teams are listed as TBD
-
 class BracketController {
     let realm = try! Realm()
     let tournament: Tournament
@@ -23,6 +21,7 @@ class BracketController {
     var nodeList = [Node]()
     var isEnd = false
     var baseBracketSize = 0
+    var tournamentProgress = 0
     
     init() {
         tournament = TournamentController.getCurrentTournament()
@@ -33,9 +32,14 @@ class BracketController {
     // this will be called when tournament starts
     // when things change, like settings and teams.
     // be dynamic and adaptable!
-    func updateBracket() {
+    func createBracket() {
         if tournament.teamList.count > 0 {
             seedTeams()
+            updateTournamentProgress()
+            
+            if tournamentProgress <= 0 {
+                createAndOrderMatchups()
+            }
         }
     }
     
@@ -131,11 +135,16 @@ class BracketController {
             // seed the teams here based on wins, then point diff, then name
             array.sort {
                 if $0.wins == $1.wins {
-                    if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
-                        return $0.name < $1.name
-                    } else {
-                        return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
-                    }
+					// if tournament has started, sort by wins, then seed.
+					if tournament.progress_meter <= 0 {
+                    	if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
+                        	return $0.name < $1.name
+                    	} else {
+                        	return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
+                    	}
+					} else {
+						return $0.seed < $1.seed
+					}
                 } else {
                     return $0.wins > $1.wins
                 }
@@ -144,28 +153,24 @@ class BracketController {
             // we've sorted/seeded, now re-add
             var seed = 1
             for team in array {
-                team.seed = seed
+				// if tournament has begun, don't change their seeds!
+				if tournament.progress_meter <= 0 {
+					team.seed = seed
+				}
+				
                 tournament.teamList.append(team)
                 seed += 1
             }
         }
-        
-        // if a match has been reported, no more matchups should be created
-        // matchups will be updated as the tournament progresses
-        var canCreateMatchups = true
-        for matchup in tournament.matchupList {
-            if matchup.isReported {
-                canCreateMatchups = false
-                break
-            }
-        }
-        
-        if getTournamentProgress() <= 0 && canCreateMatchups {
-            createMatchups()
-        }
     }
+	
+	// run through the list and SET seeds based position in the list
+	// if we hit here, the user has edited th seeds.
+	func updateSeeds() {
+		
+	}
     
-    func getTournamentProgress() -> Int {
+    func updateTournamentProgress() {
         if tournament.teamList.count > 0 {
             let pointsPerMatchup = Float(Float(100) / Float((tournament.teamList.count - 1)))
             var currentPoints = Float(0)
@@ -175,115 +180,53 @@ class BracketController {
                     currentPoints += (pointsPerMatchup)
                 }
             }
-            
-            try! realm.write {
-                tournament.progress_meter = Int(round(currentPoints))
-            }
-            
-            return Int(round(currentPoints))
-        }
-        
-        return 0
+			
+			// BYE matchups are counted as reported.
+			// if we ONLY have byes reported, set to zero
+			// when another is reported, we can count them in the progress
+			if getByeCount() == Int(currentPoints/pointsPerMatchup) {
+				tournamentProgress = 0
+			} else {
+				let progress = Int(round(currentPoints))
+            	tournamentProgress = progress
+			}
+		} else {
+        	tournamentProgress = 0
+		}
+		
+		try! realm.write {
+			tournament.progress_meter = tournamentProgress
+		}
     }
     
-    // need a way to edit these.. or finalize starting the bracket.
-    // once it's began, edits can't happen.
-    // once a match is submitted, it also finalizes the tournament
-    // Setting up the bracket. Do not do IF we've already done it before.
-    func createMatchups() {
-        try! realm.write {
-            tournament.matchupList.removeAll()
-            
-        }
-        
-        orderMatchups()
-//        if byeCount == 0 {
-//            // run through all the teams, pairing the high seeds with the low seeds. This solves round one.
-//            createRoundOneNoByesMatchups()
-//        } else {
-//            // set up byes
-//            createRoundOneWithByesMatchups()
-//        }
-//
-//        orderMatchups()
-    }
-    
-    func createRoundOneNoByesMatchups() {
-        for i in 1...tournament.teamList.count / 2 {
-            try! realm.write {
-                let game = BracketMatchup()
-                
-                game.teamOne = tournament.teamList[i - 1]
-                game.teamTwo = tournament.teamList[tournament.teamList.count - i]
-                game.division = "Advanced"
-                game.round = 1
-                realm.add(game)
-                tournament.matchupList.append(game)
-            }
-        }
-    }
-    
-    func createRoundOneWithByesMatchups() {
-        for i in 1...byeCount {
-            try! realm.write {
-                // give top seeds byes, keep the round flat. Can iterate through after and advance bye teams
-                let game = BracketMatchup()
-                
-                game.teamOne = tournament.teamList[i-1]
-                game.teamTwo = nil
-                game.division = "Advanced"
-                game.round = 1
-                realm.add(game)
-                tournament.matchupList.append(game)
-            }
-        }
-        
-        // now create matchups.
-        var topIndex = 1
-        let iterationCount = (tournament.teamList.count % 2) == 1 ?
-            tournament.teamList.count/2 + 1 :
-            tournament.teamList.count/2
-        for i in byeCount...iterationCount {
-            // start with teams who didn't get a bye.
-            try! realm.write {
-                let game = BracketMatchup()
-                
-                game.teamOne = tournament.teamList[i]
-                game.teamTwo = tournament.teamList[tournament.teamList.count - topIndex]
-                game.division = "Advanced"
-                game.round = 1
-                topIndex += 1
-                realm.add(game)
-                tournament.matchupList.append(game)
-            }
-        }
-    }
-    
+    // Setting up the bracket matchups
     // Ordering the match ups based on official tournament seeding
-    // 1 seed will always be on top
-    // check for nulls.
-    // make recursive until it's perfect.
-    // >>>>maybe start at the end and work backwards...<<<<
-    func orderMatchups() {
+    func createAndOrderMatchups() {
         var seedStringList = [String]()
-        
-        for team in tournament.teamList {
-            seedStringList.append(String(team.seed))
-        }
-        
         nodeList = [Node]()
         var halfNodesList = [Node]()
         
         // need a number to sim bracket size. basically, it's the next highest power of 2
         // 14 teams is a 16 team bracket wtih 2 byes that'll go to highest seeds, rest of bracket looks the same
-        
         baseBracketSize = getNextPowerOfTwo(num: tournament.teamList.count)
+		
+		if baseBracketSize > 0 {
+        	for i in 1...baseBracketSize {
+            	seedStringList.append(String(i))
+        	}
+		} else {
+			return
+		}
+        
+        // 1/2 are always at the end, set that up now.
         let root = Node(value: [seedStringList[0], seedStringList[1]])
         seedStringList.removeFirst(2)
         nodeList.append(root)
         
         // handle round by round
         // create and fill nodes
+        // half nodes need filled in, as they were just branched.
+        // we know we've reached the end based on node counts and it's children and baseBracketSize
         while nodeList.count < baseBracketSize - 1 {
             halfNodesList.removeAll()
             
@@ -302,17 +245,21 @@ class BracketController {
                     nodeList.append(nodeOne)
                     nodeList.append(nodeTwo)
                     
+                    // we just branched off of full nodes, so they are now halves.
                     halfNodesList.append(nodeOne)
                     halfNodesList.append(nodeTwo)
                 }
             }
             
             addSeedToNode(nodes: halfNodesList, seedList: seedStringList)
+            // check if counts match up to be the final round
             if isEnd {
                 break
             }
         }
         
+        // use this to make sure we only have the final round of nodes in our list
+        // to gen match ups from
         var copyList = [Node]()
         
         for node in nodeList {
@@ -324,7 +271,11 @@ class BracketController {
         createMatchupsFromNodeList(nodes: copyList)
     }
     
+    // iterate thru the half nodes and add a seed to each
     func addSeedToNode(nodes: [Node], seedList: [String]) {
+        // may be able to delete the nodeList.add() in the order method above.
+        // delete and re-add nodes that contain two values.
+        // keep the nodeList intact with no half nodes.
         var copyList = [Node]()
         
         for node in nodeList {
@@ -333,11 +284,14 @@ class BracketController {
             }
         }
         
-        // delete and readd nodes that contain two values.
-        // keep the nodeList intact with no half nodes.
         nodeList.removeAll()
         nodeList = copyList
         
+        // check counts and additions of seeds to match current round
+        // current round is calculated by nodes.count * 2 + 1
+        // example: round 2 of nodes will always have just 2 full nodes.
+        // 1v4 & 2v3. 2 nodes * 2 = 4 + 1 = 5. 1+4 = 5 & 2+3 = 5.
+        // this is the same for each subsequent round.
         for node in nodes {
             for seed in seedList {
                 if Int(node.value[0])! + Int(seed)! == (nodes.count * 2) + 1 {
@@ -348,14 +302,15 @@ class BracketController {
             }
         }
         
+        // check to see if we have all we need, and call isEnd to break out of the loop above.
         if nodeList.count == baseBracketSize - 1 {
             isEnd = true
         }
     }
     
     func createMatchupsFromNodeList(nodes: [Node]) {
-        let teamsController = TeamsController()
-        var verticalPositionCounter = 1
+        var verticalPositionCounter: Int = 1
+        
         try! realm.write {
             tournament.matchupList.removeAll()
         
@@ -363,55 +318,110 @@ class BracketController {
                 if node.value.count == 2 {
                     let game = BracketMatchup()
                     
-                    game.teamOne = teamsController.getTeamByName(name: node.value[0])
-                    game.teamTwo = teamsController.getTeamByName(name: node.value[1])
+                    game.tournament_id = tournament.id
+                    game.teamOne = getTeamBySeed(seed: node.value[0])
+                    resetTeamValues(team: (game.teamOne)!)
+					
                     game.division = "Advanced"
                     game.round = 1
                     game.round_position = verticalPositionCounter
-                    realm.add(game)
-                    tournament.matchupList.append(game)
-                    verticalPositionCounter += 1
+                    game.teamOne?.bracketVerticalPositions.append(game.round_position)
+					
+                    // check if a node value exceeds our teams, in which case, it's a bye.
+                    let seedInt = Int(node.value[1])!
+                    if seedInt > tournament.teamList.count {
+						// teamOne will get a bye here.
+						game.teamTwo = nil
+						game.isReported = true
+						reportByeMatch(teamToAdvance: game.teamOne!)
+                    } else {
+						// not a bye, proceed normally
+                        game.teamTwo = getTeamBySeed(seed: node.value[1])
+						resetTeamValues(team: (game.teamTwo)!)
+						game.teamTwo?.bracketVerticalPositions.append(game.round_position)
+                    }
+					
+					realm.add(game)
+					tournament.matchupList.append(game)
+					verticalPositionCounter += 1
                 }
             }
         }
+		
+		if getByeCount() > 2 {
+			updateMatchups()
+		}
+		
+		updateTournamentProgress()
+    }
+	
+	func resetTeamValues(team: Team) {
+		team.wins = 0
+		team.losses = 0
+		team.bracketRounds.removeAll()
+		team.bracketRounds.append(1)
+		team.bracketVerticalPositions.removeAll()
+	}
+    
+    // called from within a realm.write
+    func getTeamBySeed(seed: String) -> Team {
+        return realm.objects(Team.self).filter("seed = \(Int(seed)!) AND tournament_id = \(tournament.id)").first!
     }
     
     // Run through teams, see if they are next to each other based on position,
     // are NOT in a matchup already, too.
-    // already in realm write
+	// this doesn't update the bracket view itself,
+	// just checks to see if a new match up is ready to be played.
     func updateMatchups() {
         let availableTeams = List<Team>()
-        for team in tournament.teamList {
-            var isAvailable = true
-            for matchup in tournament.matchupList {
-                if matchup.teamOne == team || matchup.teamTwo == team ||
-                    team.isEliminated || team.bracketRounds.count <= 1 {
-                        isAvailable = false
-                    }
-                }
-            
-            if isAvailable {
-                availableTeams.append(team)
-            }
-        }
-        
+		
+		for team in tournament.teamList {
+			if !team.isEliminated {
+				availableTeams.append(team)
+			}
+		}
+		
+		
+		
         for team in availableTeams {
+			var canContinue = true
+			for matchup in tournament.matchupList {
+				if !matchup.isReported && matchup.teamOne?.seed == team.seed ||
+					matchup.teamTwo?.seed == team.seed {
+					canContinue = false
+					break
+				}
+			}
+			
             for teamTwo in availableTeams {
-                if team.name != teamTwo.name && team.bracketRounds.last == teamTwo.bracketRounds.last &&
+				// make sure the team isn't in another matchup
+				for matchup in tournament.matchupList {
+					if	!matchup.isReported && matchup.teamOne?.seed == teamTwo.seed ||
+						matchup.teamTwo?.seed == teamTwo.seed {
+						canContinue = false
+						break
+					}
+				}
+				
+                if canContinue &&
+					team.name != teamTwo.name && team.bracketRounds.last == teamTwo.bracketRounds.last &&
+                    team.bracketVerticalPositions.last != nil &&
                     team.bracketVerticalPositions.last == teamTwo.bracketVerticalPositions.last {
+					
                     // teams are in same spot! create a match up.
-                    let game = BracketMatchup()
-                    
-                    game.teamOne = team
-                    game.teamTwo = teamTwo
-                    game.round = team.bracketRounds.last!
-                    game.round_position = team.bracketVerticalPositions.last!
-                    game.division = "Advanced"
-                    realm.add(game)
-                    tournament.matchupList.append(game)
-                    availableTeams.remove(at: availableTeams.index(of: team)!)
-                    availableTeams.remove(at: availableTeams.index(of: teamTwo)!)
-                    break
+					try! realm.write {
+						let game = BracketMatchup()
+						
+						game.tournament_id = tournament.id
+						// better seed is shown first.
+						game.teamOne = team.seed < teamTwo.seed ? team : teamTwo
+						game.teamTwo = team.seed < teamTwo.seed ? teamTwo : team
+						game.round = team.bracketRounds.last!
+						game.round_position = team.bracketVerticalPositions.last!
+						game.division = "Advanced"
+						realm.add(game)
+						tournament.matchupList.append(game)
+					}
                 }
             }
         }
@@ -426,6 +436,14 @@ class BracketController {
         
         return true
     }
+	
+	// use this to advance teams if they have a bye
+	// already in a write transaction
+	func reportByeMatch(teamToAdvance: Team) {
+		teamToAdvance.wins += 1
+		teamToAdvance.bracketRounds.append(teamToAdvance.bracketRounds.last! + 1)
+		advanceTeamToNextBracketPosition(winningTeam: teamToAdvance)
+	}
     
     func reportMatch(selectedMatchup: BracketMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
         // save the match!
@@ -482,27 +500,28 @@ class BracketController {
             selectedMatchup.isReported = true
         }
         
-        getTournamentProgress()
-    }
+        updateTournamentProgress()
+		
+		// a new matchup may be ready!
+		updateMatchups()
+	}
     
     // based on previous position, determine next position
     // also set if the team is on the bottom or top for easy reading
     // set the property, then update the bracket view, which will set teams based on attributes.
     // already in Realm.write here.
     func advanceTeamToNextBracketPosition(winningTeam: Team) {
-        var nextPos = 0
-        let lastPos = winningTeam.bracketVerticalPositions.last!
-        
-        if lastPos % 2 == 1 {
-            // odd number
-            nextPos = lastPos / 2 + 1
-        } else {
-            nextPos = lastPos / 2
+        if winningTeam.bracketVerticalPositions.count > 0 {
+            var nextPos = 0
+            let lastPos = winningTeam.bracketVerticalPositions.last!
+            if lastPos % 2 == 1 {
+                // odd number
+                nextPos = lastPos / 2 + 1
+            } else {
+                nextPos = lastPos / 2
+            }
+            
+            winningTeam.bracketVerticalPositions.append(nextPos)
         }
-        
-        winningTeam.bracketVerticalPositions.append(nextPos)
-        
-        // a new matchup may be ready!
-        updateMatchups()
     }
 }

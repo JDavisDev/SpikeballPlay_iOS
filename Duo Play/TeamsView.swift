@@ -90,6 +90,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
                 team.bracketRounds.append(1)
                 team.id = self.tournament.teamList.count + 1
                 self.tournament.teamList.append(team)
+                team.tournament_id = self.tournament.id
             }
             
             self.teamsController.addTeam(team: team)

@@ -20,11 +20,12 @@ class TeamsController {
     func addTeam(team: Team) {
         let tournament = TournamentController.getCurrentTournament()
         let newPool = getAvailablePool()
-        if team.name.count == 0 {
-            team.name = "No Name"
-        }
         
         try! realm.write() {
+            if team.name.count == 0 {
+                team.name = "Team #" + String(tournament.teamList.count)
+            }
+            
             realm.add(team)
             newPool.teamList.append(team)
             
@@ -35,8 +36,8 @@ class TeamsController {
         }
     }
     
-    func getTeamByName(name: String) -> Team {
-        return realm.objects(Team.self).filter("name = '\(name)'").first!
+    func getTeamByName(name: String, tournamentId: Int) -> Team {
+        return realm.objects(Team.self).filter("name = '\(name)' AND tournament_id = \(tournamentId)").first!
     }
     
     func getAvailablePool() -> Pool {

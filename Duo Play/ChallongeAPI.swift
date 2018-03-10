@@ -61,7 +61,7 @@ public class ChallongeAPI {
             
             // assign properties from online tournament to realm tournament for local storage
             newTournament.name = tournament.value(forKey: "name") as! String
-            newTournament.id = String(tournament.value(forKey: "id") as! Int)
+            newTournament.id = (tournament.value(forKey: "id") as! Int)
             newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
             newTournament.game_id = tournament.value(forKey: "game_id") as! Int
             newTournament.isPrivate = tournament.value(forKey: "private") as! Bool

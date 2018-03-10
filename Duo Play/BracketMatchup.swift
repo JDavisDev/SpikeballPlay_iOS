@@ -18,4 +18,5 @@ class BracketMatchup : Object {
     @objc dynamic public var round_position = 1
     @objc dynamic public var division = ""
     @objc dynamic public var isReported = false
+    @objc dynamic public var tournament_id: Int = 0
 }

@@ -11,23 +11,36 @@ import UIKit
 class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var teamSeedsTableView: UITableView!
+	var bracketController = BracketController()
     var teamList = [Team]()
     let tournament = TournamentController.getCurrentTournament()
+	@IBOutlet weak var editSeedsButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         teamSeedsTableView.delegate = self
         teamSeedsTableView.dataSource = self
-        
-        updateTeamSeedsList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         updateTeamSeedsList()
+		updateTitle()
     }
+	func updateTitle() {
+		if tournament.progress_meter > 0 {
+			tabBarItem.title = "Standings"
+			editSeedsButton.isHidden = true
+		} else {
+			tabBarItem.title = "Seeds"
+			editSeedsButton.isHidden = false
+		}
+		
+	}
     
     func updateTeamSeedsList() {
+		seedTeams()
+		
         self.teamList.removeAll()
         
         for team in tournament.teamList {
@@ -36,6 +49,23 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         teamSeedsTableView.reloadData()
     }
+	
+	func seedTeams() {
+		bracketController.seedTeams()
+	}
+	
+	
+	@IBAction func editSeedsButtonClicked(_ sender: UIButton) {
+		if teamSeedsTableView.isEditing {
+			// turn editing off
+			self.teamSeedsTableView.setEditing(false, animated: true)
+			editSeedsButton.setTitle("Edit Seeds", for: .normal)
+			bracketController.updateSeeds()
+		} else {
+			self.teamSeedsTableView.setEditing(true, animated: true)
+			editSeedsButton.setTitle("End Editing", for: .normal)
+		}
+	}
     
     // MARK: - Table View methods
     
@@ -49,13 +79,12 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + ": " + String(team.wins) + "-" + String(team.losses)
         return cell!
     }
-    
-//    // Dragging teams around
-//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        let movedObject = self.teamList[sourceIndexPath.row]
-//        self.teamList.remove(at: sourceIndexPath.row)
-//        self.teamList.insert(movedObject, at: destinationIndexPath.row)
-//        self.teamSeedsTableView.reloadData()
-//    }
-
+	
+	func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+		<#code#>
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		<#code#>
+	}
 }

@@ -15,6 +15,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     let tournament = TournamentController.getCurrentTournament()
     let teamsController = TeamsController()
     @IBOutlet weak var teamsTableView: UITableView!
+	var didTeamsChange = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,8 +25,12 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        let bracketController = BracketController()
-        bracketController.updateBracket()
+		if didTeamsChange {
+        	let bracketController = BracketController()
+        	bracketController.createBracket()
+		}
+		
+		super.viewDidDisappear(true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,8 +58,10 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
                     team.bracketRounds.append(1)
                     team.id = self.tournament.teamList.count + 1
                     self.tournament.teamList.append(team)
+                    team.tournament_id = self.tournament.id
                 }
-                
+				
+				self.didTeamsChange = true
                 self.teamsController.addTeam(team: team)
                 self.teamsTableView.reloadData()
             }
@@ -67,27 +74,32 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
             
             present(alert, animated: true, completion: nil)
         } else {
-            let alert = UIAlertController(title: "Tournament Started",
-                                          message: "The tournament has already begun, no more teams may be added.",
-                                          preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                // ok / dismiss
-                return
-            }))
-            
-            present(alert, animated: true, completion: nil)
+			presentTournamentStartedAlert()
         }
     }
+	
+	func presentTournamentStartedAlert() {
+		let alert = UIAlertController(title: "Tournament Started",
+									  message: "The tournament has already begun, teams may not be changed.",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			// ok / dismiss
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
     
     func getTeamByName(name: String) -> Team {
-        return realm.objects(Team.self).filter("name = '\(name)'").first!
+        return realm.objects(Team.self).filter("name = '\(name)' AND tournament_id = \(tournament.id)").first!
     }
     
     func deleteTeam(team: Team) {
         try! realm.write {
             realm.delete(team.poolPlayGameList)
             realm.delete(team)
+			self.didTeamsChange = true
         }
     }
     
@@ -99,53 +111,59 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     @objc func longPress(_ sender: UILongPressGestureRecognizer) {
         var selectedTeam = Team()
-        
-        if let button = sender.view as? UIButton {
-            let name = button.currentTitle
-            selectedTeam = getTeamByName(name: name!)
-        } else {
-            return
-        }
-        //show dialog to rename or delete a team
-        let alert = UIAlertController(title: "Edit Team",
-                                      message: "", preferredStyle: .alert)
-        
-        alert.addTextField { (textField) in
-            textField.placeholder = "Team Name"
-            textField.text = selectedTeam.name
-        }
-        
-        let renameAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
-            _ = alert.textFields![0] as UITextField
-            let newName = alert.textFields![0].text!
-            try! self.realm.write {
-                let team = selectedTeam
-                team.name = newName
-            }
-            
-            // update lists
-            self.teamsTableView.reloadData()
-        }
-        alert.addAction(renameAction)
-        
-        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
-            self.deleteTeam(team: selectedTeam)
-            self.teamsTableView.reloadData()
-            Answers.logCustomEvent(withName: "Tournament Team Deleted",
-                                   customAttributes: [:])
-        }
-        
-        alert.addAction(deleteAction)
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-            // cancel
-            // update history list
-            self.viewDidAppear(true)
-            return
-        }))
-        
-        alert.popoverPresentationController?.sourceView = self.view
-        self.present(alert, animated: true, completion: nil)
+		
+		if tournament.progress_meter <= 0 {
+			if let button = sender.view as? UIButton {
+				let name = button.currentTitle
+				selectedTeam = getTeamByName(name: name!)
+			} else {
+				return
+			}
+			
+			//show dialog to rename or delete a team
+			let alert = UIAlertController(title: "Edit Team",
+										  message: "", preferredStyle: .alert)
+			
+			alert.addTextField { (textField) in
+				textField.placeholder = "Team Name"
+				textField.text = selectedTeam.name
+			}
+			
+			let renameAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+				_ = alert.textFields![0] as UITextField
+				let newName = alert.textFields![0].text!
+				try! self.realm.write {
+					let team = selectedTeam
+					team.name = newName
+					self.didTeamsChange = true
+				}
+				
+				// update lists
+				self.teamsTableView.reloadData()
+			}
+			alert.addAction(renameAction)
+			
+			let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
+				self.deleteTeam(team: selectedTeam)
+				self.teamsTableView.reloadData()
+				Answers.logCustomEvent(withName: "Tournament Team Deleted",
+									   customAttributes: [:])
+			}
+			
+			alert.addAction(deleteAction)
+			
+			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+				// cancel
+				// update history list
+				self.viewDidAppear(true)
+				return
+			}))
+			
+			alert.popoverPresentationController?.sourceView = self.view
+			self.present(alert, animated: true, completion: nil)
+		} else {
+			presentTournamentStartedAlert()
+		}
     }
     
     // MARK: - Tournament Teams Table View
@@ -159,6 +177,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         let button = cell?.contentView.subviews[0] as! UIButton
         let team = tournament.teamList[indexPath.row]
         cell!.textLabel?.text = team.name
+		cell!.textLabel?.textColor = UIColor.white
         button.setTitle(team.value(forKeyPath: "name") as? String,
                         for: .normal)
         

@@ -72,7 +72,7 @@ class TournamentSettingsView: UIViewController {
         // else go to bracket play
         
         let bracketController = BracketController()
-        bracketController.updateBracket()
+        bracketController.createBracket()
         
         
     }
