@@ -27,6 +27,7 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         updateTeamSeedsList()
 		updateTitle()
     }
+	
 	func updateTitle() {
 		if tournament.progress_meter > 0 {
 			tabBarItem.title = "Standings"
@@ -60,10 +61,10 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 			// turn editing off
 			self.teamSeedsTableView.setEditing(false, animated: true)
 			editSeedsButton.setTitle("Edit Seeds", for: .normal)
-			bracketController.updateSeeds()
+			bracketController.updateSeeds(teamList: teamList)
 		} else {
 			self.teamSeedsTableView.setEditing(true, animated: true)
-			editSeedsButton.setTitle("End Editing", for: .normal)
+			editSeedsButton.setTitle("Save Seeds", for: .normal)
 		}
 	}
     
@@ -80,11 +81,23 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell!
     }
 	
-	func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-		<#code#>
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		return .none
 	}
 	
-	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		<#code#>
+	func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+		return false
+	}
+	
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		let movedObject = self.teamList[sourceIndexPath.row]
+		self.teamList.remove(at: sourceIndexPath.row)
+		self.teamList.insert(movedObject, at: destinationIndexPath.row)
+		NSLog("%@", "\(sourceIndexPath.row) => \(destinationIndexPath.row) \(self.teamList)")
+		self.teamSeedsTableView.reloadData()
+	}
+	
+	func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		return true
 	}
 }

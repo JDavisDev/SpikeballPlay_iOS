@@ -138,7 +138,7 @@ class BracketController {
 					// if tournament has started, sort by wins, then seed.
 					if tournament.progress_meter <= 0 {
                     	if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
-                        	return $0.name < $1.name
+                        	return $0.seed < $1.seed
                     	} else {
                         	return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
                     	}
@@ -163,11 +163,22 @@ class BracketController {
             }
         }
     }
-	
+	//THIS WILL CONFLICT WITH THE ABOVE METHOD
 	// run through the list and SET seeds based position in the list
 	// if we hit here, the user has edited th seeds.
-	func updateSeeds() {
+	func updateSeeds(teamList: [Team]) {
+		try! realm.write {
+			tournament.teamList.removeAll()
+			var counter = 1
+			for team in teamList {
+				team.seed = counter
+				tournament.teamList.append(team)
+				counter += 1
+			}
+		}
 		
+		seedTeams()
+		createBracket()
 	}
     
     func updateTournamentProgress() {
