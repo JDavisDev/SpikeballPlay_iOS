@@ -34,16 +34,22 @@ class TournamentSettingsView: UIViewController {
 			// bracket AND Pool Play
 			poolPlayAndBracketButton.setTitleColor(UIColor.yellow, for: .normal)
 			bracketOnlyButton.setTitleColor(UIColor.white, for: .normal)
-			advanceButton.setTitle("Advance To Pool Play", for: UIControlState.normal)
 			playersPerPoolSegementedControl.isHidden = false
 			playersPerPoolLabel.isHidden = false
 		} else {
 			// bracket only
 			poolPlayAndBracketButton.setTitleColor(UIColor.white, for: .normal)
 			bracketOnlyButton.setTitleColor(UIColor.yellow, for: .normal)
-			advanceButton.setTitle("Advance To Bracket", for: UIControlState.normal)
 			playersPerPoolSegementedControl.isHidden = true
 			playersPerPoolLabel.isHidden = true
+		}
+		
+		if tournament.progress_meter > 0 {
+			// tournament has begun, don't let settings be editable
+			bracketOnlyButton.isEnabled = false
+			poolPlayAndBracketButton.isEnabled = false
+			playersPerPoolSegementedControl.isEnabled = false
+			// maybe show a message as to why everything is disabled.
 		}
     }
 
@@ -54,6 +60,24 @@ class TournamentSettingsView: UIViewController {
 	
 	@IBAction func deleteButton(_ sender: UIButton) {
 		// show safety dialog first.
+		let alert = UIAlertController(title: "Add Team",
+									  message: "", preferredStyle: .alert)
+		
+		let action = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
+			self.deleteTournament()
+		}
+		
+		alert.addAction(action)
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func deleteTournament() {
 		try! realm.write {
 			for team in tournament.teamList {
 				for game in team.poolPlayGameList {
@@ -89,7 +113,7 @@ class TournamentSettingsView: UIViewController {
 		// bracket AND Pool Play
 		poolPlayAndBracketButton.setTitleColor(UIColor.yellow, for: .normal)
 		bracketOnlyButton.setTitleColor(UIColor.white, for: .normal)
-		advanceButton.setTitle("Advance To Pool Play", for: UIControlState.normal)
+		//advanceButton.setTitle("Advance To Pool Play", for: UIControlState.normal)
 		playersPerPoolSegementedControl.isHidden = false
 		playersPerPoolLabel.isHidden = false
 	}
@@ -102,7 +126,7 @@ class TournamentSettingsView: UIViewController {
 		// bracket only
 		poolPlayAndBracketButton.setTitleColor(UIColor.white, for: .normal)
 		bracketOnlyButton.setTitleColor(UIColor.yellow, for: .normal)
-		advanceButton.setTitle("Advance To Bracket", for: UIControlState.normal)
+		//advanceButton.setTitle("Advance To Bracket", for: UIControlState.normal)
 		playersPerPoolSegementedControl.isHidden = true
 		playersPerPoolLabel.isHidden = true
 	}
@@ -116,18 +140,6 @@ class TournamentSettingsView: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-    @IBAction func advanceButtonClicked(_ sender: UIButton) {
-        // if pool play, go to that tab bar
-        // else go to bracket play
-		if !tournament.isPoolPlay {
-			let bracketController = BracketController()
-			bracketController.createBracket()
-			
-			performSegue(withIdentifier: "bracketSegue", sender: self)
-		} else {
-			performSegue(withIdentifier: "poolPlaySegue", sender: self)
-		}
-    }
     
     @IBAction func saveSettings(_ sender: UIButton) {
         TournamentController.IS_QUICK_REPORT = isQuickReportSwitch.isOn
@@ -140,5 +152,4 @@ class TournamentSettingsView: UIViewController {
                 tournament.name
         }
     }
-    
 }

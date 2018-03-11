@@ -11,8 +11,8 @@ import RealmSwift
 
 public class Pool : Object {
     @objc dynamic public var name = ""
-    var teamList = List<Team>()
     @objc dynamic var division = ""
     @objc dynamic var isPowerPool = false
     var matchupList = List<PoolPlayMatchup>()
+	var teamList = List<Team>()
 }

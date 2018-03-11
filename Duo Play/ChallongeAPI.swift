@@ -63,7 +63,6 @@ public class ChallongeAPI {
             newTournament.name = tournament.value(forKey: "name") as! String
             newTournament.id = (tournament.value(forKey: "id") as! Int)
             newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
-            newTournament.game_id = tournament.value(forKey: "game_id") as! Int
             newTournament.isPrivate = tournament.value(forKey: "private") as! Bool
             newTournament.live_image_url = tournament.value(forKey: "live_image_url") as! String
             newTournament.participants_count = tournament.value(forKey: "participants_count") as! Int

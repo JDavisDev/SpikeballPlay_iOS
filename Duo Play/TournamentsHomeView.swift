@@ -24,11 +24,11 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         try! realm.write() {
             realm.deleteAll()
         }
-        
-        super.viewDidLoad()
+		
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
-        // Do any additional setup after loading the view.
+		
+		super.viewDidLoad()
     }
     
     override func viewDidAppear(_ animated: Bool) {

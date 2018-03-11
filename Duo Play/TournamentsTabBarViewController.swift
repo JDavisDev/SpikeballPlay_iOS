@@ -19,8 +19,8 @@ class TournamentsTabBarViewController: UITabBarController {
         // if tournament is bracketOnly, set title = "bracketPlay"
         // else check the tab or something to see if it's pool play or bracket play
         
-        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.back(sender:)))
-        self.navigationItem.leftBarButtonItem = newBackButton
+//        let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(self.back(sender:)))
+//        self.navigationItem.leftBarButtonItem = newBackButton
     }
     
     @objc func back(sender: UIBarButtonItem) {

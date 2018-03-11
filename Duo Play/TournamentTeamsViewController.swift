@@ -83,6 +83,15 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         }
     }
 	
+	func getPoolPlayProgress() -> Int {
+		var returnProgress: Int = 0
+		
+		// check tournament pools for match ups not yet reported.
+		// could implement a new tournament property for pool progress.
+		
+		return returnProgress
+	}
+	
 	func presentTournamentStartedAlert() {
 		let alert = UIAlertController(title: "Tournament Started",
 									  message: "The tournament has already begun, teams may not be changed.",
