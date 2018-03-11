@@ -351,10 +351,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
                     teamLabel.textColor = UIColor.yellow
                 }
             }
-            
         }
-		
-		bracketController.updateTournamentProgress()
     }
     
     func isTeamOnBottomOfBracketCell(team: Team, currentRound: Int) -> Bool {
@@ -388,6 +385,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func matchTouched(sender:UITapGestureRecognizer) {
         // open score entry page, or just select a winner. Maybe a dialog for quickness
+		// currently this is hitting with every touch AND sender.view is the entire view, not the cell
 //        if true {
 //            let clickedCell = sender.view
 //            let teamOneLabel = clickedCell?.subviews[0] as! UILabel

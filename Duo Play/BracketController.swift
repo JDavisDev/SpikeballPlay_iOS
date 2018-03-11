@@ -180,17 +180,40 @@ class BracketController {
 		seedTeams()
 		createBracket()
 	}
-    
+	
+	// if pool play, check the pool matches
+	// else just check bracket matchups.
     func updateTournamentProgress() {
         if tournament.teamList.count > 0 {
-            let pointsPerMatchup = Float(Float(100) / Float((tournament.teamList.count - 1)))
-            var currentPoints = Float(0)
-            
-            for matchup in tournament.matchupList {
-                if matchup.isReported {
-                    currentPoints += (pointsPerMatchup)
-                }
-            }
+			var currentPoints = Float(0)
+			var pointsPerMatchup: Float
+			
+			if tournament.isPoolPlay {
+				var totalMatchCounter = 0
+				var matchupReportedCounter = 0
+				
+				for pool in tournament.poolList {
+					for match in pool.matchupList {
+						totalMatchCounter += 1
+						
+						if match.isReported {
+							matchupReportedCounter += 1
+						}
+					}
+				}
+				
+				
+				pointsPerMatchup = Float(Float(100) / Float((tournament.teamList.count - 1) + totalMatchCounter))
+				currentPoints = Float(pointsPerMatchup) * Float(matchupReportedCounter)
+			} else {
+				pointsPerMatchup = Float(Float(100) / Float((tournament.teamList.count - 1)))
+			}
+			
+			for matchup in tournament.matchupList {
+				if matchup.isReported {
+					currentPoints += (pointsPerMatchup)
+				}
+			}
 			
 			// BYE matchups are counted as reported.
 			// if we ONLY have byes reported, set to zero
@@ -199,7 +222,7 @@ class BracketController {
 				tournamentProgress = 0
 			} else {
 				let progress = Int(round(currentPoints))
-            	tournamentProgress = progress
+				tournamentProgress = progress
 			}
 		} else {
         	tournamentProgress = 0
@@ -362,8 +385,6 @@ class BracketController {
 		if getByeCount() > 2 {
 			updateMatchups()
 		}
-		
-		updateTournamentProgress()
     }
 	
 	func resetTeamValues(team: Team) {
@@ -391,9 +412,7 @@ class BracketController {
 				availableTeams.append(team)
 			}
 		}
-		
-		
-		
+	
         for team in availableTeams {
 			var canContinue = true
 			for matchup in tournament.matchupList {
