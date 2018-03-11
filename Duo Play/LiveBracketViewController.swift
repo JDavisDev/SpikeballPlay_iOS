@@ -168,7 +168,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 	
 		// grab bracketCells.last! to get the furthest DOWN cell
 		// that's the low point of our view
-		frameWidth = bracketCells.last!.frame.maxY + 50
+		//frameWidth = bracketCells.last!.frame.maxY + 50
     }
     
     // sets position of bracket cells for each subsequent match up

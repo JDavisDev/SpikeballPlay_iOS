@@ -214,7 +214,6 @@
 				47DE96361F3E2F9900F944F0 /* TeamsView.swift */,
 				47DE963A1F3E3D5300F944F0 /* PoolsView.swift */,
 				478388B31FBB8BA000D8052E /* PoolsDetailView.swift */,
-				47DE963E1F3E425700F944F0 /* TournamentSettingsView.swift */,
 				47967CBB1FF998B2007E67E4 /* PoolStandingsView.swift */,
 				472104031F5E022F00CA76C3 /* PoolPlayMatchReporterView.swift */,
 			);
@@ -309,6 +308,7 @@
 		47DE96261F3E073800F944F0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				47DE963E1F3E425700F944F0 /* TournamentSettingsView.swift */,
 				47DE96321F3E2AE100F944F0 /* TournamentsHomeView.swift */,
 			);
 			name = Views;

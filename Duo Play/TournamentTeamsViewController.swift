@@ -71,6 +71,11 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
             }
             
             alert.addAction(action)
+			
+			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+				// cancel
+				return
+			}))
             
             present(alert, animated: true, completion: nil)
         } else {
