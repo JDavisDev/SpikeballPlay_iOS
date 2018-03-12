@@ -24,6 +24,7 @@ class Tournament : Object {
     @objc dynamic public var teams = true
     @objc dynamic public var isPoolPlay = false
     @objc dynamic public var isQuickReport = false
+	@objc dynamic public var isPoolPlayFinished = false
     @objc dynamic public var playersPerPool = 8
 	@objc dynamic public var swissRounds = 0
     var poolList = List<Pool>()

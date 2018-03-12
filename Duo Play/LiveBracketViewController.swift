@@ -386,25 +386,95 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     @objc func matchTouched(sender:UITapGestureRecognizer) {
         // open score entry page, or just select a winner. Maybe a dialog for quickness
 		// currently this is hitting with every touch AND sender.view is the entire view, not the cell
-//        if true {
-//            let clickedCell = sender.view
-//            let teamOneLabel = clickedCell?.subviews[0] as! UILabel
-//            let teamTwoLabel = clickedCell?.subviews[1] as! UILabel
-//
-//            let alert = UIAlertController(title: "Select Winner",
-//                                          message: "", preferredStyle: .alert)
-//
-//
-//            alert.addAction(UIAlertAction(title: teamOneLabel.text, style: .default, handler: { (action: UIAlertAction!) in
-//                // team one!
-//            }))
-//
-//            alert.addAction(UIAlertAction(title: teamTwoLabel.text, style: .default, handler: { (action: UIAlertAction!) in
-//                // teamtwo
-//            }))
-//
-//            present(alert, animated: true, completion: nil)
-//
-//        }
+		// Get the first touch and its location in this view controller's view coordinate system
+		let touchLocation = sender.location(ofTouch: 0, in: self.view)
+		//let touchLocation = touch.locationInView(self.view)
+		
+		for cell in bracketCells {
+			// Convert the location of the obstacle view to this view controller's view coordinate system
+			let viewFrame = self.view.convert(cell.frame, from: cell.superview)
+			
+			// Check if the touch is inside the obstacle view
+			if viewFrame.contains(touchLocation) && cell.subviews.count >= 2 {
+				let teamOneLabel = cell.subviews[0] as! UILabel
+				let teamTwoLabel = cell.subviews[1] as! UILabel
+				
+				if teamOneLabel.text != "BYE" && teamOneLabel.text != "TBD" &&
+					teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" {
+					
+					var selectedMatchup = BracketMatchup()
+					var coords = (x: 0, y: 0)
+					
+					for key in bracketDict.keys {
+						if key == cell {
+							coords = bracketDict[key]!
+							break
+						}
+					}
+					
+					for matchup in tournament.matchupList {
+						if matchup.round == coords.x &&
+							coords.y == matchup.round_position && matchup.teamOne?.name == teamOneLabel.text &&
+							matchup.teamTwo?.name == teamTwoLabel.text {
+							selectedMatchup = matchup
+							break
+						}
+					}
+					
+					// prevent duplicate reports.
+					if selectedMatchup.isReported || selectedMatchup.teamTwo == nil ||
+						selectedMatchup.teamOne == nil {
+						return
+						
+					}
+					
+					if tournament.isQuickReport {
+						let alert = UIAlertController(title: "Select Winner",
+													  message: "", preferredStyle: .alert)
+						
+						
+						alert.addAction(UIAlertAction(title: teamOneLabel.text, style: .default, handler: { (action: UIAlertAction!) in
+							// team one!
+							self.bracketController.reportQuickMatch(teamToAdvance: selectedMatchup.teamOne!, losingTeam: selectedMatchup.teamTwo!)
+							
+							try! self.realm.write {
+								selectedMatchup.isReported = true
+							}
+							
+							self.updateBracketView()
+						}))
+						
+						alert.addAction(UIAlertAction(title: teamTwoLabel.text, style: .default, handler: { (action: UIAlertAction!) in
+							// team two!
+							self.bracketController.reportQuickMatch(teamToAdvance: selectedMatchup.teamTwo!, losingTeam: selectedMatchup.teamOne!)
+							
+							try! self.realm.write {
+								selectedMatchup.isReported = true
+							}
+							
+							self.updateBracketView()
+						}))
+						
+						alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(action: UIAlertAction!) in
+							// cancel
+							return
+						}))
+						// Add delete in here. to maybe delete match ups and reset everything down stream...
+						present(alert, animated: true, completion: nil)
+					} else {
+						// not quick report. send to match reporter.
+						performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
+					}
+				}
+			}
+		}
     }
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "bracketReporterOnTouchSegue" {
+			if let nextVC = segue.destination as? BracketReporterViewController {
+				nextVC.selectedMatchup = sender as! BracketMatchup
+			}
+		}
+	}
 }

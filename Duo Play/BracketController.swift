@@ -474,6 +474,24 @@ class BracketController {
 		teamToAdvance.bracketRounds.append(teamToAdvance.bracketRounds.last! + 1)
 		advanceTeamToNextBracketPosition(winningTeam: teamToAdvance)
 	}
+	
+	// quick report match
+	// no scores, just wins/losses/advancing
+	func reportQuickMatch(teamToAdvance: Team, losingTeam: Team) {
+		try! realm.write {
+			teamToAdvance.wins += 1
+			teamToAdvance.bracketRounds.append(teamToAdvance.bracketRounds.last! + 1)
+			advanceTeamToNextBracketPosition(winningTeam: teamToAdvance)
+			
+			losingTeam.losses += 1
+			losingTeam.isEliminated = true
+		}
+		
+		updateTournamentProgress()
+		
+		// a new matchup may be ready!
+		updateMatchups()
+	}
     
     func reportMatch(selectedMatchup: BracketMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
         // save the match!

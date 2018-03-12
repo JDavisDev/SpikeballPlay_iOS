@@ -2041,6 +2041,7 @@
                     <size key="freeformSize" width="700" height="667"/>
                     <connections>
                         <outlet property="scrollView" destination="FoU-Pk-7gl" id="ELp-eh-MkJ"/>
+                        <segue destination="1cT-kW-IQp" kind="show" identifier="bracketReporterOnTouchSegue" id="P5w-8Q-kx8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mqY-vR-Rmb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2524,6 +2525,7 @@
         <image name="TeamsBarItemImage" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="P5w-8Q-kx8"/>
         <segue reference="jbB-yX-6Yi"/>
         <segue reference="6zO-Kk-Wiy"/>
         <segue reference="7Z9-cP-3MF"/>
