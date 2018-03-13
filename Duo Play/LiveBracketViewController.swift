@@ -10,12 +10,12 @@ import UIKit
 import RealmSwift
 
 class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
-    // currently we are drawing everything multiple times, overlapping each other
     let realm = try! Realm()
     var tournament = Tournament()
+	// used for quick report
+	var selectedMatchup = BracketMatchup()
     var bracketCellWidth = 76
     var labelWidth = 68
-    //var scrollView = UIScrollView()
     @IBOutlet weak var scrollView: UIScrollView!
     
     let bracketController = BracketController()
@@ -27,8 +27,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     var byeCount = 0
     var teamCount = 0
 	var frameWidth: CGFloat = 0
-    
-    
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -402,55 +401,28 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 				if teamOneLabel.text != "BYE" && teamOneLabel.text != "TBD" &&
 					teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" {
 					
-					var selectedMatchup = BracketMatchup()
-					var coords = (x: 0, y: 0)
-					
-					for key in bracketDict.keys {
-						if key == cell {
-							coords = bracketDict[key]!
-							break
-						}
-					}
-					
 					for matchup in tournament.matchupList {
-						if matchup.round == coords.x &&
-							coords.y == matchup.round_position && matchup.teamOne?.name == teamOneLabel.text &&
-							matchup.teamTwo?.name == teamTwoLabel.text {
+						if	!matchup.isReported && matchup.teamOne!.name == teamOneLabel.text &&
+							matchup.teamTwo!.name == teamTwoLabel.text {
 							selectedMatchup = matchup
 							break
 						}
 					}
 					
-					// prevent duplicate reports.
-					if selectedMatchup.isReported || selectedMatchup.teamTwo == nil ||
-						selectedMatchup.teamOne == nil {
-						return
-						
-					}
-					
-					if tournament.isQuickReport {
+					if !selectedMatchup.isReported && tournament.isQuickReport {
 						let alert = UIAlertController(title: "Select Winner",
 													  message: "", preferredStyle: .alert)
 						
-						
 						alert.addAction(UIAlertAction(title: teamOneLabel.text, style: .default, handler: { (action: UIAlertAction!) in
 							// team one!
-							self.bracketController.reportQuickMatch(teamToAdvance: selectedMatchup.teamOne!, losingTeam: selectedMatchup.teamTwo!)
-							
-							try! self.realm.write {
-								selectedMatchup.isReported = true
-							}
+							self.bracketController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: 1, teamOneScores: [1, 0, 0], teamTwoScores: [0, 0, 0])
 							
 							self.updateBracketView()
 						}))
 						
 						alert.addAction(UIAlertAction(title: teamTwoLabel.text, style: .default, handler: { (action: UIAlertAction!) in
 							// team two!
-							self.bracketController.reportQuickMatch(teamToAdvance: selectedMatchup.teamTwo!, losingTeam: selectedMatchup.teamOne!)
-							
-							try! self.realm.write {
-								selectedMatchup.isReported = true
-							}
+							self.bracketController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: 1, teamOneScores: [0, 0, 0], teamTwoScores: [1, 0, 0])
 							
 							self.updateBracketView()
 						}))
@@ -461,7 +433,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 						}))
 						// Add delete in here. to maybe delete match ups and reset everything down stream...
 						present(alert, animated: true, completion: nil)
-					} else {
+					} else if !selectedMatchup.isReported {
 						// not quick report. send to match reporter.
 						performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
 					}

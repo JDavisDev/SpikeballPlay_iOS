@@ -13,6 +13,7 @@ import RealmSwift
 // when deleting matchups, maybe delete all games by tournament id or something...
 
 class BracketController {
+	static var hasDrawn = false
     let realm = try! Realm()
     let tournament: Tournament
     let poolList: List<Pool>
@@ -498,19 +499,15 @@ class BracketController {
         try! realm.write {
             
             var teamOneWins = 0
-            for score in teamOneScores {
-                if score == 21 {
-                    teamOneWins += 1
-                }
+			var teamTwoWins = 0
+            for i in 0..<teamOneScores.count {
+				if teamOneScores[i] > teamTwoScores[i] {
+					teamOneWins += 1
+				} else if teamTwoScores[i] > teamOneScores[i] {
+					teamTwoWins += 1
+				}
             }
-            
-            var teamTwoWins = 0
-            for score in teamTwoScores {
-                if score == 21 {
-                    teamTwoWins += 1
-                }
-            }
-            
+			
             if teamOneWins > teamTwoWins {
                 selectedMatchup.teamOne?.wins += 1
                 selectedMatchup.teamTwo?.losses += 1

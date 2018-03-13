@@ -55,13 +55,12 @@ class TournamentSettingsView: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 	
 	@IBAction func deleteButton(_ sender: UIButton) {
 		// show safety dialog first.
-		let alert = UIAlertController(title: "Add Team",
-									  message: "", preferredStyle: .alert)
+		let alert = UIAlertController(title: "Delete Tourament",
+									  message: "Everything Will Be Deleted!", preferredStyle: .alert)
 		
 		let action = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
 			self.deleteTournament()
@@ -87,9 +86,7 @@ class TournamentSettingsView: UIViewController {
 				realm.delete(team)
 			}
 			
-			for matchup in tournament.matchupList {
-				realm.delete(matchup)
-			}
+			realm.delete(realm.objects(BracketMatchup.self).filter("tournament_id = \(tournament.id)"))
 			
 			for pool in tournament.poolList {
 				for matchup in pool.matchupList {
@@ -113,7 +110,6 @@ class TournamentSettingsView: UIViewController {
 		// bracket AND Pool Play
 		poolPlayAndBracketButton.setTitleColor(UIColor.yellow, for: .normal)
 		bracketOnlyButton.setTitleColor(UIColor.white, for: .normal)
-		//advanceButton.setTitle("Advance To Pool Play", for: UIControlState.normal)
 		playersPerPoolSegementedControl.isHidden = false
 		playersPerPoolLabel.isHidden = false
 	}
@@ -126,26 +122,15 @@ class TournamentSettingsView: UIViewController {
 		// bracket only
 		poolPlayAndBracketButton.setTitleColor(UIColor.white, for: .normal)
 		bracketOnlyButton.setTitleColor(UIColor.yellow, for: .normal)
-		//advanceButton.setTitle("Advance To Bracket", for: UIControlState.normal)
 		playersPerPoolSegementedControl.isHidden = true
 		playersPerPoolLabel.isHidden = true
 	}
-	
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     @IBAction func saveSettings(_ sender: UIButton) {
-        TournamentController.IS_QUICK_REPORT = isQuickReportSwitch.isOn
+        TournamentController.IS_QUICK_REPORT = false //isQuickReportSwitch.isOn
         
         try! realm.write {
-            tournament.isQuickReport = isQuickReportSwitch.isOn
+            tournament.isQuickReport = false //isQuickReportSwitch.isOn
             tournament.playersPerPool = playersPerPoolSegementedControl.selectedSegmentIndex + 6
             tournament.name = (tournamentNameTextField.text?.count.magnitude)! > 0 ?
                 tournamentNameTextField.text! :

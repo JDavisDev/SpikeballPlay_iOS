@@ -16,7 +16,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var tournamentButton: UIButton!
     @IBOutlet weak var randomPlayButton: UIButton!
-    @IBOutlet weak var rulesButton: UIButton!
+    @IBOutlet weak var tgButton: UIButton!
     @IBOutlet weak var contactButton: UIButton!
     @IBOutlet weak var rateButton: UIButton!
     
@@ -42,10 +42,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         randomPlayButton.layer.borderColor = UIColor.yellow.cgColor
         randomPlayButton.layer.borderWidth = 1
         
-        rulesButton.layer.cornerRadius = 20
-        rulesButton.layer.borderColor = UIColor.yellow.cgColor
-        rulesButton.layer.borderWidth = 1
-        
+        tgButton.layer.cornerRadius = 20
+        tgButton.layer.borderColor = UIColor.yellow.cgColor
+        tgButton.layer.borderWidth = 1
+		
         contactButton.layer.cornerRadius = 20
         contactButton.layer.borderColor = UIColor.yellow.cgColor
         contactButton.layer.borderWidth = 1
@@ -115,5 +115,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         // Dismiss the mail compose view controller.
         controller.dismiss(animated: true, completion: nil)
     }
+	
+	@IBAction func tgButtonClicked(_ sender: UIButton) {
+		//may not need.
+	}
+	
 }
 
