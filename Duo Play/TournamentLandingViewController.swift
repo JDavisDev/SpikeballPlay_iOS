@@ -23,13 +23,12 @@ class TournamentLandingViewController: UIViewController {
         super.viewDidLoad()
 
         tournament = TournamentController.getCurrentTournament()
+		updateButtons()
+		updateView()
     }
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(true)
-		
-		updateButtons()
-		updateView()
 	}
 	
 	func updateButtons() {
@@ -57,9 +56,4 @@ class TournamentLandingViewController: UIViewController {
 			bracketButton.isHidden = true
 		}
 	}
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 }

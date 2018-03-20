@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -20,11 +21,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var tournamentTableView: UITableView!
         
     override func viewDidLoad() {
-        
-        try! realm.write() {
-            realm.deleteAll()
-        }
-		
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
 		
@@ -32,6 +28,11 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     override func viewDidAppear(_ animated: Bool) {
+		Answers.logContentView(withName: "Tournaments Page View",
+							   contentType: "Tournaments Page View",
+							   contentId: "8",
+							   customAttributes: [:])
+		
         updateTournamentList()
         tournamentTableView.reloadData()
         

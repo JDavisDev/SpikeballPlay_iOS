@@ -8,7 +8,10 @@
 
 import UIKit
 import RealmSwift
-
+import Crashlytics
+// TODO : Disable settings if tournament has started!
+// Need some pool play settings to check where we are in tournament.
+// controlling flow between pool play and bracket or Bracket only.
 class TournamentSettingsView: UIViewController {
     
     @IBOutlet weak var tournamentNameTextField: UITextField!
@@ -51,6 +54,8 @@ class TournamentSettingsView: UIViewController {
 			playersPerPoolSegementedControl.isEnabled = false
 			// maybe show a message as to why everything is disabled.
 		}
+		
+		tournamentNameTextField.text = tournament.name
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,6 +69,9 @@ class TournamentSettingsView: UIViewController {
 		
 		let action = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
 			self.deleteTournament()
+			
+			Answers.logCustomEvent(withName: "Tournament Deleted",
+								   customAttributes: [:])
 		}
 		
 		alert.addAction(action)

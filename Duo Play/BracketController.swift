@@ -67,6 +67,8 @@ class BracketController {
             return 7
         case 129...256:
             return 8
+		case 257...512:
+			return 9
         default:
             return 3
         }
@@ -99,6 +101,8 @@ class BracketController {
             return 128 - count
         case 129...256:
             return 256 - count
+		case 257...512:
+			return 512 - count
         default:
             return 0
         }
@@ -120,6 +124,8 @@ class BracketController {
                 return 128
             case 129...256:
                 return 256
+			case 257...512:
+				return 512
             default:
                 return 0
         }
@@ -409,7 +415,7 @@ class BracketController {
         let availableTeams = List<Team>()
 		
 		for team in tournament.teamList {
-			if !team.isEliminated {
+			if !team.isEliminated && team.bracketRounds.count > 1 {
 				availableTeams.append(team)
 			}
 		}

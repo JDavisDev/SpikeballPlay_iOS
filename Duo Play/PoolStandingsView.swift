@@ -14,6 +14,7 @@ class PoolStandingsView: UIViewController, UITableViewDelegate, UITableViewDataS
     @IBOutlet weak var teamStandingsTableView: UITableView!
     var pool = Pool()
     var teamList = [Team]()
+	var poolController = PoolsController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +24,6 @@ class PoolStandingsView: UIViewController, UITableViewDelegate, UITableViewDataS
         teamStandingsTableView.dataSource = self
         
         updateTeamStandingsList()
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,7 +48,7 @@ class PoolStandingsView: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func updateTeamStandingsList() {
         self.teamList.removeAll()
-        
+		
         for team in pool.teamList {
             self.teamList.append(team)
         }

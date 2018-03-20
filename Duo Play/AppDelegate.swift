@@ -10,6 +10,7 @@ import UIKit
 import Fabric
 import Crashlytics
 import Firebase
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,13 +24,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
         
-        FirebaseApp.configure()
-        let fireDB = Firestore.firestore()
+		
         
         #if !DEBUG
             Fabric.with([Crashlytics.self])
-            
+			FirebaseApp.configure()
+			let fireDB = Firestore.firestore()
         #endif
+		
+		Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
         return true
     }
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -24,6 +25,12 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+		
+		Answers.logContentView(withName: "Bracket Seeds Page View",
+							   contentType: "Bracket Seeds Page View",
+							   contentId: "12",
+							   customAttributes: [:])
+		
         updateTeamSeedsList()
 		updateTitle()
     }
@@ -36,7 +43,6 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 			tabBarItem.title = "Seeds"
 			editSeedsButton.isHidden = false
 		}
-		
 	}
     
     func updateTeamSeedsList() {

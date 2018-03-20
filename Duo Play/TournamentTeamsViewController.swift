@@ -23,6 +23,15 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
+		
+		Answers.logContentView(withName: "Bracket Teams View",
+							   contentType: "Bracket Teams View",
+							   contentId: "7",
+							   customAttributes: [:])
+	}
     
     override func viewDidDisappear(_ animated: Bool) {
 		if didTeamsChange {
@@ -38,6 +47,30 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     }
     
     // MARK: - Adding teams
+	
+	@IBAction func addTeamsInBulk(_ sender: UIButton) {
+		// debug only for now
+		// add a ton of teams to see what happens
+		
+		for _ in 1...2 {
+			let team = Team()
+			
+			try! self.realm.write() {
+				team.name = "Team #" + String(tournament.teamList.count + 1)
+				team.division = "Advanced"
+				team.bracketRounds.append(1)
+				team.id = self.tournament.teamList.count + 1
+				self.tournament.teamList.append(team)
+				team.tournament_id = self.tournament.id
+			}
+			
+			
+			self.teamsController.addTeam(team: team)
+		}
+		
+		self.didTeamsChange = true
+		self.teamsTableView.reloadData()
+	}
     
     @IBAction func addTeam(_ sender: UIButton) {
         // check if tournament has started, only add teams if it has not.

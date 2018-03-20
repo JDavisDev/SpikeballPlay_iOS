@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Crashlytics
 
 class MatchupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -25,6 +26,12 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+		
+		Answers.logContentView(withName: "Bracket Matchups View",
+							   contentType: "Bracket Matchups Page View",
+							   contentId: "11",
+							   customAttributes: [:])
+		
         updateMatchupsList()
     }
     
@@ -49,6 +56,8 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
             return 7
         case 129...256:
             return 8
+		case 257...512:
+			return 9
         default:
             return 0
         }
@@ -85,6 +94,8 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedMatchup = matchupList[indexPath.row]
+		Answers.logCustomEvent(withName: "Matchup List Tapped",
+							   customAttributes: [:])
         performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
     }
     

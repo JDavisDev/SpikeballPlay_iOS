@@ -8,9 +8,12 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
-    let realm = try! Realm()
+	var pinch = UIPinchGestureRecognizer()
+	
+	let realm = try! Realm()
     var tournament = Tournament()
 	// used for quick report
 	var selectedMatchup = BracketMatchup()
@@ -30,17 +33,25 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 	
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = UIColor.black
         self.view.addSubview(scrollView)
-		
 		self.scrollView.delegate = self
+		self.scrollView.addGestureRecognizer(pinch)
+		pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.pinch(sender:)))
+		self.scrollView.minimumZoomScale = 1
+		self.scrollView.maximumZoomScale = 10
 		self.scrollView.isUserInteractionEnabled = true
+		self.scrollView.contentSize = CGSize(width: 10000, height: 10000)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
+		
+		Answers.logContentView(withName: "Bracket Page View",
+							   contentType: "Bracket Page View",
+							   contentId: "9",
+							   customAttributes: [:])
+		
         try! realm.write() {
             tournament = TournamentController.getCurrentTournament()
         }
@@ -58,7 +69,15 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+	
+	// Pinch Controls
+	@objc func pinch(sender:UIPinchGestureRecognizer) {
+		if sender.state == .began || sender.state == .changed {
+			self.scrollView.setZoomScale(sender.scale * sender.velocity * 20, animated: true)
+			
+		}
+	}
+		
     func getMaxBracketWidth() -> Int {
         var returnInt = 50
         
@@ -86,20 +105,29 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     // could generate first round positions.
     // then each cell after, is in the middle of the next two cells and offset.
     func createBracketView() {
-        if tournament.progress_meter <= 0 {
-            var views = scrollView.subviews
-            views.removeAll()
-			
-			for cell in bracketCells {
-				cell.removeFromSuperview()
-			}
-			
-            bracketCells.removeAll()
-            bracketDict.removeAll()
+		bracketCellWidth = getMaxBracketWidth()
+		teamCount = tournament.teamList.count
+		bracketMatchCount = getBracketMatchCount()
+		roundCount = bracketController.getRoundCount()
+		byeCount = bracketController.getByeCount()
 		
-            createFirstRoundBracketCells()
-            createAdditionalBracketCells()
-        }
+		Answers.logCustomEvent(withName: "Bracket Drawn",
+									   customAttributes: [
+										"Team Count": teamCount])
+		
+		var views = scrollView.subviews
+		views.removeAll()
+		
+		for cell in bracketCells {
+			cell.removeFromSuperview()
+		}
+		
+		bracketCells.removeAll()
+		bracketDict.removeAll()
+		
+		createFirstRoundBracketCells()
+		createAdditionalBracketCells()
+
     }
     
     // create first round based on match counts
@@ -240,7 +268,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
                         bracketCell.addSubview(teamOneLabel)
                         bracketCell.addSubview(teamTwoLabel)
                         scrollView.addSubview(bracketCell)
-						self.view.addSubview(scrollView)
 						
                         // tap recognizer
                         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
@@ -279,8 +306,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 			teamOneLabel.textColor = UIColor.black
 			
 			//grab bracketCells.last OR this one cell to get the first RIGHT a bracket should be.
-			let height = bracketCell.frame.maxX + 50
-			scrollView.contentSize = CGSize(width: frameWidth, height: height)
+			//let height = bracketCell.frame.maxX + 50
+			//scrollView.contentSize = CGSize(width: frameWidth, height: height)
 		}
     }
     
@@ -374,7 +401,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 				} else {
 					return true
 				}
-			} else if team.seed - byeCount < tournament.teamList.count/2 {
+			} else if Float(team.seed) <= Float(Float(tournament.teamList.count + byeCount)/2) {
+				// need float division to get accurate results.
                 return false
             } else {
                 return true
@@ -399,7 +427,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 				let teamTwoLabel = cell.subviews[1] as! UILabel
 				
 				if teamOneLabel.text != "BYE" && teamOneLabel.text != "TBD" &&
-					teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" {
+					teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" &&
+					teamOneLabel.text != teamTwoLabel.text {
 					
 					for matchup in tournament.matchupList {
 						if	!matchup.isReported && matchup.teamOne!.name == teamOneLabel.text &&
@@ -435,6 +464,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 						present(alert, animated: true, completion: nil)
 					} else if !selectedMatchup.isReported {
 						// not quick report. send to match reporter.
+						Answers.logCustomEvent(withName: "Bracket Match Tapped",
+											   customAttributes: [:])
 						performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
 					}
 				}

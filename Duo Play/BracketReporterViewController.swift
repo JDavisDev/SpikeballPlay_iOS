@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class BracketReporterViewController: UIViewController {    
     let realm = try! Realm()
@@ -20,7 +21,6 @@ class BracketReporterViewController: UIViewController {
     @IBOutlet weak var teamOneGameOneSlider: UISlider!
     @IBOutlet weak var teamTwoGameOneSlider: UISlider!
     
-    
     // Score labels
     @IBOutlet weak var teamOneGameOneScoreLabel: UILabel!
     @IBOutlet weak var teamOneGameTwoScoreLabel: UILabel!
@@ -30,8 +30,10 @@ class BracketReporterViewController: UIViewController {
     @IBOutlet weak var teamTwoGameThreeScoreLabel: UILabel!
     
     override func viewDidLoad() {
-        teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
-        teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
+		if selectedMatchup.teamOne != nil && selectedMatchup.teamTwo != nil {
+        	teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
+        	teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
+		}
     }
     
     /* SLIDER VALUE CHANGED TEAM ONE
@@ -119,6 +121,10 @@ class BracketReporterViewController: UIViewController {
             teamTwoScores.append(teamTwoGameThreeScore!)
             
             reporterController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: numOfGamesPlayed, teamOneScores: teamOneScores, teamTwoScores: teamTwoScores)
+			
+			Answers.logCustomEvent(withName: "Bracket Match Reported",
+								   customAttributes: [
+									"Games Submitted": numOfGamesPlayed])
             
             self.navigationController?.popViewController(animated: true)
         }))
