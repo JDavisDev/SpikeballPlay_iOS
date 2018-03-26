@@ -586,11 +586,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/TournamentsHomeView.swift"
-            timestampString = "543202229.858796"
+            timestampString = "543731574.372177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "addTournamentButtonClicked(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -762,11 +762,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/TeamsView.swift"
-            timestampString = "542850135.293447"
+            timestampString = "543422429.2640311"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -810,11 +810,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798303"
+            timestampString = "543422429.264133"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "getNextOpponent(teamOne:round:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -826,11 +826,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798352"
+            timestampString = "543422429.264192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "getNextOpponent(teamOne:round:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -842,11 +842,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/TeamsView.swift"
-            timestampString = "542850135.293547"
+            timestampString = "543422429.264259"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "addTeam(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -858,11 +858,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798409"
+            timestampString = "543422429.26434"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
             landmarkName = "isTeamAvailable(id:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -874,12 +874,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798449"
+            timestampString = "543422429.264408"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
-            landmarkName = "getNextOpponent(teamOne:round:gameList:)"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
+            landmarkName = "isTeamAvailable(id:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -922,11 +922,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798517"
+            timestampString = "543422429.264506"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
+            startingLineNumber = "243"
+            endingLineNumber = "243"
             landmarkName = "getLastOpponent(teamOne:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -938,13 +938,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798557"
+            timestampString = "543422429.2645479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "isTeamAvailable(id:gameList:)"
-            landmarkType = "7">
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "PoolPlayMatchGenerator"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -955,12 +955,12 @@
             condition = "round == 3"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798593"
+            timestampString = "543422429.2645839"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
-            landmarkName = "isTeamAvailable(id:gameList:)"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "getTeamOne(id:gameList:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -971,7 +971,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798629"
+            timestampString = "543422429.2646199"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "92"
@@ -987,11 +987,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.798665"
+            timestampString = "543422429.264654"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "174"
-            endingLineNumber = "174"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "slideMatrix()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1003,7 +1003,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/PoolPlayMatchGenerator.swift"
-            timestampString = "542443829.7987"
+            timestampString = "543422429.264689"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "115"
@@ -1643,38 +1643,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duo Play/TournamentsHomeView.swift"
-            timestampString = "543202229.859701"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "parseOnlineTournaments()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/TournamentsHomeView.swift"
-            timestampString = "543202229.859743"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "parseOnlineTournaments()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Duo Play/ChallongeAPI.swift"
             timestampString = "542664168.267206"
             startingColumnNumber = "9223372036854775807"
@@ -1740,11 +1708,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.859846"
+            timestampString = "543716864.582818"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "createAdditionalBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1756,11 +1724,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.860502"
+            timestampString = "543716864.58287"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
             landmarkName = "createAdditionalBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1777,7 +1745,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "69"
             endingLineNumber = "69"
-            landmarkName = "getRoundCount()"
+            landmarkName = "updateMatchupsList()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1788,11 +1756,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.861001"
+            timestampString = "543731574.373069"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
             landmarkName = "createBracket()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1820,11 +1788,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.861089"
+            timestampString = "543716864.583006"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
+            startingLineNumber = "381"
+            endingLineNumber = "381"
             landmarkName = "updateBracketView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1836,11 +1804,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.861595"
+            timestampString = "543716864.5830491"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "358"
-            endingLineNumber = "358"
+            startingLineNumber = "364"
+            endingLineNumber = "364"
             landmarkName = "updateBracketView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1852,11 +1820,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.862011"
+            timestampString = "543716864.583089"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "362"
-            endingLineNumber = "362"
+            startingLineNumber = "368"
+            endingLineNumber = "368"
             landmarkName = "updateBracketView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1868,11 +1836,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.862455"
+            timestampString = "543731574.373191"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
+            startingLineNumber = "277"
+            endingLineNumber = "277"
             landmarkName = "createAndOrderMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1884,11 +1852,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.862532"
+            timestampString = "543731574.3732491"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "275"
-            endingLineNumber = "275"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
             landmarkName = "createAndOrderMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1900,11 +1868,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.862599"
+            timestampString = "543731574.373301"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "271"
-            endingLineNumber = "271"
+            startingLineNumber = "284"
+            endingLineNumber = "284"
             landmarkName = "createAndOrderMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1916,11 +1884,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.862666"
+            timestampString = "543716864.583281"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "createAdditionalBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1942,11 +1910,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.863119"
+            timestampString = "543716864.5833189"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "175"
-            endingLineNumber = "175"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "createFirstRoundBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1958,11 +1926,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.863516"
+            timestampString = "543716864.583358"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "174"
-            endingLineNumber = "174"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
             landmarkName = "createFirstRoundBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1974,11 +1942,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.86392"
+            timestampString = "543716864.583397"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "createBracketView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1990,11 +1958,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.864364"
+            timestampString = "543716864.583434"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "178"
+            endingLineNumber = "178"
             landmarkName = "createFirstRoundBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2006,11 +1974,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.8648469"
+            timestampString = "543731574.373417"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "433"
-            endingLineNumber = "433"
+            startingLineNumber = "468"
+            endingLineNumber = "468"
             landmarkName = "updateMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2022,11 +1990,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.864899"
+            timestampString = "543731574.373472"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "423"
-            endingLineNumber = "423"
+            startingLineNumber = "458"
+            endingLineNumber = "458"
             landmarkName = "updateMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2038,11 +2006,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.8649499"
+            timestampString = "543731574.373521"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "435"
-            endingLineNumber = "435"
+            startingLineNumber = "470"
+            endingLineNumber = "470"
             landmarkName = "updateMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2054,27 +2022,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.86499"
+            timestampString = "543731574.373572"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "createBracket()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.865029"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "238"
-            endingLineNumber = "238"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "updateTournamentProgress()"
             landmarkType = "7">
             <Locations>
@@ -2118,11 +2070,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.8650711"
+            timestampString = "543731574.3736219"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "232"
-            endingLineNumber = "232"
+            startingLineNumber = "243"
+            endingLineNumber = "243"
             landmarkName = "updateTournamentProgress()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2134,11 +2086,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.8651119"
+            timestampString = "543731574.3736711"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "updateTournamentProgress()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2150,11 +2102,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.865152"
+            timestampString = "543731574.373721"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
             landmarkName = "updateTournamentProgress()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2166,11 +2118,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.86519"
+            timestampString = "543731574.373771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "updateTournamentProgress()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2182,11 +2134,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.865231"
+            timestampString = "543716864.583909"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "433"
-            endingLineNumber = "433"
+            startingLineNumber = "439"
+            endingLineNumber = "439"
             landmarkName = "matchTouched(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2198,11 +2150,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.865636"
+            timestampString = "543716864.583948"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "435"
-            endingLineNumber = "435"
+            startingLineNumber = "441"
+            endingLineNumber = "441"
             landmarkName = "matchTouched(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2214,11 +2166,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.866184"
+            timestampString = "543716864.583985"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "446"
-            endingLineNumber = "446"
+            startingLineNumber = "452"
+            endingLineNumber = "452"
             landmarkName = "matchTouched(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2230,11 +2182,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.86681"
+            timestampString = "543731574.373862"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "489"
-            endingLineNumber = "489"
+            startingLineNumber = "547"
+            endingLineNumber = "547"
             landmarkName = "reportQuickMatch(teamToAdvance:losingTeam:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2246,11 +2198,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.866886"
+            timestampString = "543731574.373912"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "488"
-            endingLineNumber = "488"
+            startingLineNumber = "546"
+            endingLineNumber = "546"
             landmarkName = "reportQuickMatch(teamToAdvance:losingTeam:)"
             landmarkType = "7">
             <Locations>
@@ -2294,11 +2246,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.866959"
+            timestampString = "543716864.5841171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "440"
-            endingLineNumber = "440"
+            startingLineNumber = "446"
+            endingLineNumber = "446"
             landmarkName = "matchTouched(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2310,11 +2262,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.867637"
+            timestampString = "543731574.3739769"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
             landmarkName = "createBracket()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2326,11 +2278,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.867704"
+            timestampString = "543731574.374027"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "517"
-            endingLineNumber = "517"
+            startingLineNumber = "575"
+            endingLineNumber = "575"
             landmarkName = "reportMatch(selectedMatchup:numOfGamesPlayed:teamOneScores:teamTwoScores:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2342,11 +2294,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.867781"
+            timestampString = "543731574.374076"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "554"
-            endingLineNumber = "554"
+            startingLineNumber = "613"
+            endingLineNumber = "613"
             landmarkName = "reportMatch(selectedMatchup:numOfGamesPlayed:teamOneScores:teamTwoScores:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2358,11 +2310,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.8678499"
+            timestampString = "543716864.584296"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "448"
-            endingLineNumber = "448"
+            startingLineNumber = "454"
+            endingLineNumber = "454"
             landmarkName = "matchTouched(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2374,11 +2326,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.86854"
+            timestampString = "543716864.584335"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "364"
-            endingLineNumber = "364"
+            startingLineNumber = "370"
+            endingLineNumber = "370"
             landmarkName = "updateBracketView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2390,11 +2342,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.869247"
+            timestampString = "543731574.374153"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "557"
-            endingLineNumber = "557"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
             landmarkName = "reportMatch(selectedMatchup:numOfGamesPlayed:teamOneScores:teamTwoScores:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2406,11 +2358,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.869324"
+            timestampString = "543731574.374203"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "417"
-            endingLineNumber = "417"
+            startingLineNumber = "452"
+            endingLineNumber = "452"
             landmarkName = "updateMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2422,11 +2374,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.869396"
+            timestampString = "543731574.374253"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "450"
-            endingLineNumber = "450"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
             landmarkName = "updateMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2438,11 +2390,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.869459"
+            timestampString = "543731574.374302"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "507"
-            endingLineNumber = "507"
+            startingLineNumber = "565"
+            endingLineNumber = "565"
             landmarkName = "reportMatch(selectedMatchup:numOfGamesPlayed:teamOneScores:teamTwoScores:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2502,11 +2454,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/BracketController.swift"
-            timestampString = "543202229.869615"
+            timestampString = "543731574.37439"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "419"
-            endingLineNumber = "419"
+            startingLineNumber = "454"
+            endingLineNumber = "454"
             landmarkName = "updateMatchups()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2518,7 +2470,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.869706"
+            timestampString = "543716864.5846519"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "36"
@@ -2534,7 +2486,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/TournamentLandingViewController.swift"
-            timestampString = "543202229.8721091"
+            timestampString = "543347937.454308"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "45"
@@ -2550,7 +2502,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/TournamentLandingViewController.swift"
-            timestampString = "543202229.872205"
+            timestampString = "543347937.460767"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "39"
@@ -2566,11 +2518,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.8722889"
+            timestampString = "543716864.5847189"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
             landmarkName = "createFirstRoundBracketCells()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2582,12 +2534,236 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duo Play/LiveBracketViewController.swift"
-            timestampString = "543202229.8729759"
+            timestampString = "543716864.584758"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
+            startingLineNumber = "410"
+            endingLineNumber = "410"
             landmarkName = "isTeamOnBottomOfBracketCell(team:currentRound:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TeamsView.swift"
+            timestampString = "543422429.272174"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TeamsView.swift"
+            timestampString = "543422429.272249"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "172"
+            endingLineNumber = "172"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/LiveBracketViewController.swift"
+            timestampString = "543716864.584823"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "326"
+            endingLineNumber = "326"
+            landmarkName = "updateBracketView()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/LiveBracketViewController.swift"
+            timestampString = "543716864.584862"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "createFirstRoundBracketCells()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/LiveBracketViewController.swift"
+            timestampString = "543716864.5848989"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "viewDidAppear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentTeamsViewController.swift"
+            timestampString = "543731574.374565"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "viewDidDisappear(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/SeedsViewController.swift"
+            timestampString = "543731574.374612"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "updateTitle()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/SeedsViewController.swift"
+            timestampString = "543731574.374653"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "editSeedsButtonClicked(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/BracketController.swift"
+            timestampString = "543731574.374692"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
+            landmarkName = "createMatchupsFromNodeList(nodes:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentDAO.swift"
+            timestampString = "543731574.375568"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "addOnlineMatchup(matchup:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentsHomeView.swift"
+            timestampString = "543731574.3756239"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "updateLocalTournamentList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentsHomeView.swift"
+            timestampString = "543731574.3756779"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
+            landmarkName = "didGetOnlineTournaments(onlineTournamentList:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentParser.swift"
+            timestampString = "543731574.375729"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "didFetchData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Duo Play/TournamentParser.swift"
+            timestampString = "543731574.376013"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

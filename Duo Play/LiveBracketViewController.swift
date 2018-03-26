@@ -61,6 +61,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
         bracketMatchCount = getBracketMatchCount()
         roundCount = bracketController.getRoundCount()
         byeCount = bracketController.getByeCount()
+		//bracketController.createBracket()
         createBracketView()
         updateBracketView()
     }
@@ -129,6 +130,11 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 		createAdditionalBracketCells()
 
     }
+	
+	// reset wins/losses for each team so we can truly reset the bracket positions.
+	func resetTeamStats() {
+		
+	}
     
     // create first round based on match counts
     func createFirstRoundBracketCells() {

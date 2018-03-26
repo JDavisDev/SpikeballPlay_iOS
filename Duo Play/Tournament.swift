@@ -27,6 +27,8 @@ class Tournament : Object {
 	@objc dynamic public var isPoolPlayFinished = false
     @objc dynamic public var playersPerPool = 8
 	@objc dynamic public var swissRounds = 0
+	@objc dynamic public var created_date = Date()
+	@objc dynamic public var updated_date = Date()
     var poolList = List<Pool>()
     var teamList = List<Team>()
     var matchupList = List<BracketMatchup>()

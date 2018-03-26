@@ -23,7 +23,8 @@ class TournamentSettingsView: UIViewController {
 	
 	@IBOutlet weak var poolPlayAndBracketButton: UIButton!
 	@IBOutlet weak var bracketOnlyButton: UIButton!
-    
+	
+	let bracketController = BracketController()
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     
@@ -39,6 +40,7 @@ class TournamentSettingsView: UIViewController {
 			bracketOnlyButton.setTitleColor(UIColor.white, for: .normal)
 			playersPerPoolSegementedControl.isHidden = false
 			playersPerPoolLabel.isHidden = false
+			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
 		} else {
 			// bracket only
 			poolPlayAndBracketButton.setTitleColor(UIColor.white, for: .normal)
@@ -56,10 +58,6 @@ class TournamentSettingsView: UIViewController {
 		}
 		
 		tournamentNameTextField.text = tournament.name
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 	
 	@IBAction func deleteButton(_ sender: UIButton) {
@@ -85,6 +83,9 @@ class TournamentSettingsView: UIViewController {
 	}
 	
 	func deleteTournament() {
+		let tournamentDAO = TournamentDAO()
+		tournamentDAO.deleteOnlineTournament(tournament: tournament)
+		
 		try! realm.write {
 			for team in tournament.teamList {
 				for game in team.poolPlayGameList {
@@ -144,5 +145,12 @@ class TournamentSettingsView: UIViewController {
                 tournamentNameTextField.text! :
                 tournament.name
         }
+		
+		Answers.logCustomEvent(withName: "Tournament Settings Saved",
+							   customAttributes: [
+								"isPoolPlay": String(tournament.isPoolPlay)])
+		
+		let tournamentDao = TournamentDAO()
+		tournamentDao.updateOnlineTournament(tournament: tournament)
     }
 }

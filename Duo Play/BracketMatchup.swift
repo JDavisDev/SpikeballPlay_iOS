@@ -10,6 +10,7 @@ import Foundation
 import RealmSwift
 
 class BracketMatchup : Object {
+	@objc dynamic var id: Int = 0
     @objc dynamic var teamOne: Team?
     @objc dynamic var teamTwo: Team?
     var teamOneScores = List<Int>()

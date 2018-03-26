@@ -11,34 +11,30 @@ import RealmSwift
 
 class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
-    @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
+	@IBOutlet weak var editTeamsButton: UIButton!
+	@IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     var teamsController = TeamsController()
     let poolsController = PoolsController()
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     var teamList = [Team]()
+	var bracketController = BracketController()
     
     @IBOutlet weak var teamNameTextField: UITextField!
     @IBOutlet weak var teamsTableView: UITableView!
     
     override func viewDidLoad() {
+		super.viewDidLoad()
+		
         title = "Teams"
-        
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
-        updateTeamList()
+		
         initGestureRecognizer()
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        viewDidLoad()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        updateTeamList()
     }
     
     func updateTeamList() {
@@ -58,19 +54,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
     
     @objc func onLongPress() {
-        teamsTableView.setEditing(true, animated: true)
+        //teamsTableView.setEditing(true, animated: true)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     
     @IBAction func addTeam(_ sender: UIButton) {
@@ -136,22 +121,36 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     // Dragging teams around
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let movedObject = tournament.teamList[sourceIndexPath.row]
-        tournament.teamList.remove(at: sourceIndexPath.row)
-        tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
+		try! realm.write {
+			tournament.teamList.remove(at: sourceIndexPath.row)
+			tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
+		}
+		
+		resetPoolTeams()
         self.teamsTableView.reloadData()
-        resetPoolTeams()
+		
     }
     
     func resetPoolTeams() {
         // teams were moved around, reset which pool they belong to
-        var poolIndex = 0
-        for index in 1...tournament.teamList.count {
-            if index % 8 == 0 {
-                poolIndex += 1
-            }
-            
-            poolsController.addTeamToPool(pool: tournament.poolList[poolIndex], team: tournament.teamList[index - 1])
-        }
+		
+		try! realm.write {
+			for pool in tournament.poolList {
+				pool.teamList.removeAll()
+			}
+		}
+		
+			
+			var poolIndex = 0
+			for index in 1...tournament.teamList.count {
+				if index % tournament.playersPerPool == 0 {
+					poolIndex += 1
+				}
+				
+				if tournament.poolList.count > poolIndex && tournament.teamList.count > index - 1 {
+					poolsController.addTeamToPool(pool: tournament.poolList[poolIndex], team: tournament.teamList[index - 1])
+				}
+		}
     }
     
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
@@ -168,10 +167,24 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
         
         // hacky modifier.. 
-        let modifier = indexPath.section * teamList.count - 1 > 0 ? indexPath.section * teamList.count - 1 : 0
-        cell!.textLabel?.text = tournament.teamList[indexPath.row + modifier].name
-        cell?.detailTextLabel?.text = String(describing: tournament.teamList[indexPath.row].division)
+        let modifier = indexPath.section * tournament.teamList.count - 1 > 0 ? (indexPath.section * tournament.playersPerPool) : 0
+		
+		if tournament.teamList.count > indexPath.row + modifier {
+        	cell!.textLabel?.text = tournament.teamList[indexPath.row + modifier].name
+        	cell?.detailTextLabel?.text = String(describing: tournament.teamList[indexPath.row].division)
+		}
         return cell!
     }
 
+	@IBAction func editTeamsButtonClicked(_ sender: UIButton) {
+		if teamsTableView.isEditing {
+			// turn editing off
+			self.teamsTableView.setEditing(false, animated: true)
+			editTeamsButton.setTitle("Edit", for: .normal)
+			//bracketController.updateSeeds(teamList: teamList)
+		} else {
+			self.teamsTableView.setEditing(true, animated: true)
+			editTeamsButton.setTitle("Save", for: .normal)
+		}
+	}
 }

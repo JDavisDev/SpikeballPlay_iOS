@@ -109,6 +109,22 @@ class PoolsController {
 			}
 		}
 	}
+	
+	func finishPoolPlay() {
+		// end all pool play matches and seed teams
+		for pool in tournament.poolList {
+			finishPoolMatchups(pool: pool)
+		}
+		
+		tournament.isPoolPlayFinished = true
+		seedTeams()
+	}
     
-    
+	func finishPoolMatchups(pool: Pool) {
+		try! realm.write {
+			for matchup in pool.matchupList {
+				matchup.isReported = true
+			}
+		}
+	}
 }

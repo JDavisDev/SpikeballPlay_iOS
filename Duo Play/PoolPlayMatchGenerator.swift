@@ -114,15 +114,17 @@ class PoolPlayMatchGenerator {
         for _ in 0..<teamCount - 1 {
             for column in 0..<teamCount/2 {
                 try! realm.write {
-                    let matchup = PoolPlayMatchup()
-                    matchup.teamOne = teamList[matchupMatrix[0][column] - 1]
-                    matchup.teamTwo = teamList[matchupMatrix[1][column] - 1]
-                        
-                    matchup.round = currentRound
-                    matchup.division = "Advanced"
-                    matchup.isReported = false
-                    realm.add(matchup)
-                    pool.matchupList.append(matchup)
+					if teamList.count > 2 {
+						let matchup = PoolPlayMatchup()
+						matchup.teamOne = teamList[matchupMatrix[0][column] - 1]
+						matchup.teamTwo = teamList[matchupMatrix[1][column] - 1]
+						
+						matchup.round = currentRound
+						matchup.division = "Advanced"
+						matchup.isReported = false
+						realm.add(matchup)
+						pool.matchupList.append(matchup)
+					}
                 }
             }
             

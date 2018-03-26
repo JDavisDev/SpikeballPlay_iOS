@@ -28,10 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         #if !DEBUG
             Fabric.with([Crashlytics.self])
-			FirebaseApp.configure()
-			let fireDB = Firestore.firestore()
+			
         #endif
 		
+		FirebaseApp.configure()
+		
+		let fireDB = Firestore.firestore()
 		Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
         return true
     }

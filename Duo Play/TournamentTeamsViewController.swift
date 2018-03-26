@@ -14,7 +14,11 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     let teamsController = TeamsController()
+	let tournamentDAO = TournamentDAO()
     @IBOutlet weak var teamsTableView: UITableView!
+	
+	@IBOutlet weak var teamsSearchBar: UISearchBar!
+	
 	var didTeamsChange = false
     
     override func viewDidLoad() {
@@ -37,6 +41,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 		if didTeamsChange {
         	let bracketController = BracketController()
         	bracketController.createBracket()
+			didTeamsChange = false
 		}
 		
 		super.viewDidDisappear(true)
@@ -51,25 +56,29 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 	@IBAction func addTeamsInBulk(_ sender: UIButton) {
 		// debug only for now
 		// add a ton of teams to see what happens
-		
-		for _ in 1...2 {
-			let team = Team()
-			
-			try! self.realm.write() {
-				team.name = "Team #" + String(tournament.teamList.count + 1)
-				team.division = "Advanced"
-				team.bracketRounds.append(1)
-				team.id = self.tournament.teamList.count + 1
-				self.tournament.teamList.append(team)
-				team.tournament_id = self.tournament.id
+		if tournament.progress_meter <= 0 {
+			for _ in 1...2 {
+				let team = Team()
+				
+				try! self.realm.write() {
+					team.name = "Team #" + String(tournament.teamList.count + 1)
+					team.division = "Advanced"
+					team.bracketRounds.append(1)
+					team.id = self.tournament.teamList.count + 1
+					self.tournament.teamList.append(team)
+					team.tournament_id = self.tournament.id
+				}
+				
+				self.teamsController.addTeam(team: team)
+				self.tournamentDAO.addOnlineTournamentTeam(team: team)
 			}
 			
 			
-			self.teamsController.addTeam(team: team)
+			self.didTeamsChange = true
+			self.teamsTableView.reloadData()
+		} else {
+			presentTournamentStartedAlert()
 		}
-		
-		self.didTeamsChange = true
-		self.teamsTableView.reloadData()
 	}
     
     @IBAction func addTeam(_ sender: UIButton) {
@@ -94,6 +103,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
                     team.tournament_id = self.tournament.id
                 }
 				
+				self.tournamentDAO.addOnlineTournamentTeam(team: team)
 				self.didTeamsChange = true
                 self.teamsController.addTeam(team: team)
                 self.teamsTableView.reloadData()
@@ -135,6 +145,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     func deleteTeam(team: Team) {
         try! realm.write {
+			self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
             realm.delete(team.poolPlayGameList)
             realm.delete(team)
 			self.didTeamsChange = true

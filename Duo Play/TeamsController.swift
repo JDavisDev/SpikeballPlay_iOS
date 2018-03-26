@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 class TeamsController {
-    let playersPerPool = 8
+    var playersPerPool = 8
     let realm = try! Realm()
     let tournamentController = TournamentController()
     var isNewPool = false
@@ -18,13 +18,15 @@ class TeamsController {
     
     
     func addTeam(team: Team) {
-        let tournament = TournamentController.getCurrentTournament()
         let newPool = getAvailablePool()
-        
+        let tournament = TournamentController.getCurrentTournament()
+		
         try! realm.write() {
             if team.name.count == 0 {
-                team.name = "Team #" + String(tournament.teamList.count)
+				team.name = "Team #" + getNextTeamNameId(tournament: tournament)
             }
+			
+			playersPerPool = tournament.playersPerPool
             
             realm.add(team)
             newPool.teamList.append(team)
@@ -35,9 +37,35 @@ class TeamsController {
             }
         }
     }
+	
+	func getNextTeamNameId(tournament: Tournament) -> String {
+		var count = tournament.teamList.count
+		var countString = String(count)
+		
+		for _ in 1...tournament.teamList.count {
+			if getTeamByName(name: "Team #" + countString, tournamentId: tournament.id).name == "Team #" + countString {
+				// we've found a match, try another number
+				count += 1
+				countString = String(count)
+			} else {
+				return countString
+			}
+		}
+		
+		// we've went thru them all with duplicates..
+		return "infinity"
+	}
     
     func getTeamByName(name: String, tournamentId: Int) -> Team {
-        return realm.objects(Team.self).filter("name = '\(name)' AND tournament_id = \(tournamentId)").first!
+		let teams = realm.objects(Team.self).filter("name = '\(name)' AND tournament_id = \(tournamentId)")
+		
+		if teams.count > 0 {
+			return teams.first!
+		} else {
+			let team = Team()
+			team.name = "nil"
+			return team
+		}
     }
     
     func getAvailablePool() -> Pool {

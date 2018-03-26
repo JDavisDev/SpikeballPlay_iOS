@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Firebase
 
 // NEED to work on deleting unused objects...
 // when deleting matchups, maybe delete all games by tournament id or something...
@@ -17,13 +18,15 @@ class BracketController {
     let realm = try! Realm()
     let tournament: Tournament
     let poolList: List<Pool>
+	let tournamentDAO = TournamentDAO()
     var byeCount = 0
     var roundCount = 0
     var nodeList = [Node]()
     var isEnd = false
     var baseBracketSize = 0
     var tournamentProgress = 0
-    
+	
+	
     init() {
         tournament = TournamentController.getCurrentTournament()
         poolList = tournament.poolList
@@ -36,11 +39,20 @@ class BracketController {
     func createBracket() {
         if tournament.teamList.count > 0 {
             seedTeams()
-            updateTournamentProgress()
             
             if tournamentProgress <= 0 {
                 createAndOrderMatchups()
-            }
+			} else {
+				try! realm.write {
+					for team in tournament.teamList {
+						resetTeamValues(team: team)
+					}
+				}
+				
+				createAndOrderMatchups()
+			}
+			
+			updateTournamentProgress()
         }
     }
     
@@ -181,11 +193,11 @@ class BracketController {
 				team.seed = counter
 				tournament.teamList.append(team)
 				counter += 1
+				resetTeamValues(team: team)
 			}
 		}
 		
-		seedTeams()
-		createBracket()
+		createAndOrderMatchups()
 	}
 	
 	// if pool play, check the pool matches
@@ -209,7 +221,6 @@ class BracketController {
 					}
 				}
 				
-				
 				pointsPerMatchup = Float(Float(100) / Float((tournament.teamList.count - 1) + totalMatchCounter))
 				currentPoints = Float(pointsPerMatchup) * Float(matchupReportedCounter)
 			} else {
@@ -218,7 +229,7 @@ class BracketController {
 			
 			for matchup in tournament.matchupList {
 				if matchup.isReported {
-					currentPoints += (pointsPerMatchup)
+					currentPoints += pointsPerMatchup
 				}
 			}
 			
@@ -238,6 +249,8 @@ class BracketController {
 		try! realm.write {
 			tournament.progress_meter = tournamentProgress
 		}
+		
+		tournamentDAO.updateOnlineTournament(tournament: tournament)
     }
     
     // Setting up the bracket matchups
@@ -358,7 +371,15 @@ class BracketController {
             for node in nodes {
                 if node.value.count == 2 {
                     let game = BracketMatchup()
-                    
+					
+					let max = 2147483600
+					var id = Int(arc4random_uniform(UInt32(max)))
+					while !isIdUnique(id: id) {
+						id = Int(arc4random_uniform(UInt32(max)))
+					}
+					
+					game.id = Int(id)
+					
                     game.tournament_id = tournament.id
                     game.teamOne = getTeamBySeed(seed: node.value[0])
                     resetTeamValues(team: (game.teamOne)!)
@@ -384,6 +405,7 @@ class BracketController {
 					
 					realm.add(game)
 					tournament.matchupList.append(game)
+					tournamentDAO.addOnlineMatchup(matchup: game)
 					verticalPositionCounter += 1
                 }
             }
@@ -393,6 +415,19 @@ class BracketController {
 			updateMatchups()
 		}
     }
+	
+	func isIdUnique(id: Int) -> Bool {
+		var count = 0
+		if !realm.isInWriteTransaction {
+			try! realm.write {
+				count = realm.objects(BracketMatchup.self).filter("id = \(id)").count
+			}
+		} else {
+			count = realm.objects(BracketMatchup.self).filter("id = \(id)").count
+		}
+		
+		return count == 0
+	}
 	
 	func resetTeamValues(team: Team) {
 		team.wins = 0
@@ -449,6 +484,14 @@ class BracketController {
 					try! realm.write {
 						let game = BracketMatchup()
 						
+						let max = 2147483600
+						var id = Int(arc4random_uniform(UInt32(max)))
+						while !isBracketMatchupIdUnique(id: id) {
+							id = Int(arc4random_uniform(UInt32(max)))
+						}
+						
+						game.id = Int(id)
+						
 						game.tournament_id = tournament.id
 						// better seed is shown first.
 						game.teamOne = team.seed < teamTwo.seed ? team : teamTwo
@@ -458,11 +501,26 @@ class BracketController {
 						game.division = "Advanced"
 						realm.add(game)
 						tournament.matchupList.append(game)
+						tournamentDAO.addOnlineMatchup(matchup: game)
 					}
                 }
             }
         }
     }
+	
+	func isBracketMatchupIdUnique(id: Int) -> Bool {
+		var count = 0
+		
+		if realm.isInWriteTransaction {
+			count = realm.objects(BracketMatchup.self).filter("id = \(id)").count
+		} else {
+			try! realm.write {
+				count = realm.objects(BracketMatchup.self).filter("id = \(id)").count
+			}
+		}
+		
+		return count == 0
+	}
     
     func isGameUnique(game: BracketMatchup) -> Bool {
         for matchup in tournament.matchupList {
@@ -549,6 +607,7 @@ class BracketController {
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[2]
             
             selectedMatchup.isReported = true
+			tournamentDAO.addOnlineMatchup(matchup: selectedMatchup)
         }
         
         updateTournamentProgress()

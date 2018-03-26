@@ -16,6 +16,7 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     var teamList = [Team]()
     let tournament = TournamentController.getCurrentTournament()
 	@IBOutlet weak var editSeedsButton: UIButton!
+	var didSeedsChange = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,8 +47,6 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 	}
     
     func updateTeamSeedsList() {
-		seedTeams()
-		
         self.teamList.removeAll()
         
         for team in tournament.teamList {
@@ -57,21 +56,23 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         teamSeedsTableView.reloadData()
     }
 	
-	func seedTeams() {
-		bracketController.seedTeams()
-	}
-	
 	
 	@IBAction func editSeedsButtonClicked(_ sender: UIButton) {
 		if teamSeedsTableView.isEditing {
 			// turn editing off
 			self.teamSeedsTableView.setEditing(false, animated: true)
 			editSeedsButton.setTitle("Edit Seeds", for: .normal)
-			bracketController.updateSeeds(teamList: teamList)
+			
+			if didSeedsChange {
+				bracketController.updateSeeds(teamList: teamList)
+				didSeedsChange = false
+			}
 		} else {
 			self.teamSeedsTableView.setEditing(true, animated: true)
 			editSeedsButton.setTitle("Save Seeds", for: .normal)
 		}
+		
+		self.teamSeedsTableView.reloadData()
 	}
     
     // MARK: - Table View methods
@@ -83,7 +84,13 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "seedCell")
         let team = self.teamList[indexPath.row]
-        cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + ": " + String(team.wins) + "-" + String(team.losses)
+		if tournament.progress_meter > 0 {
+			// tournament has started, show wins/losses
+        	cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + ": " + String(team.wins) + "-" + String(team.losses)
+		} else {
+			// just show seeds.
+			cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name
+		}
         return cell!
     }
 	
@@ -99,7 +106,7 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 		let movedObject = self.teamList[sourceIndexPath.row]
 		self.teamList.remove(at: sourceIndexPath.row)
 		self.teamList.insert(movedObject, at: destinationIndexPath.row)
-		NSLog("%@", "\(sourceIndexPath.row) => \(destinationIndexPath.row) \(self.teamList)")
+		didSeedsChange = true
 		self.teamSeedsTableView.reloadData()
 	}
 	

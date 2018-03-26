@@ -9,20 +9,27 @@
 import UIKit
 import RealmSwift
 import Crashlytics
+import Firebase
 
-class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate, TournamentParserDelegate {
 
     let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()
     let challongeConnector = ChallongeAPI()
-    
+	let tournamentDao = TournamentDAO()
+	let fireDB = Firestore.firestore()
+	let tournamentParser = TournamentParser()
+	
+	var onlineTournamentList = [[String:Any]]()
+	
     @IBOutlet weak var tournamentNameTextField: UITextField!
     @IBOutlet weak var tournamentTableView: UITableView!
         
     override func viewDidLoad() {
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
+		tournamentParser.delegate = self
 		
 		super.viewDidLoad()
     }
@@ -33,28 +40,12 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 							   contentId: "8",
 							   customAttributes: [:])
 		
-        updateTournamentList()
-        tournamentTableView.reloadData()
+		tournamentList.removeAll()
+		getOnlineTournaments()
+		updateLocalTournamentList()
         
         super.viewDidAppear(true)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-    }
-    
     
     @IBAction func addTournamentButtonClicked(_ sender: UIButton) {
         let tournament = Tournament()
@@ -76,7 +67,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
             realm.add(tournament)
             tournamentList.append(tournament)
         }
-        
+
+		Analytics.logEvent("Tournament_Created", parameters: [
+			"id": id ])
+		
         TournamentController.setTournamentId(id: id)
         updateTournamentList()
     }
@@ -90,42 +84,42 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         return count == 0
     }
     
-    @IBAction func getOnlineTournamentButtonClicked(_ sender: UIButton) {
-        parseOnlineTournaments()
-    }
-    
-    func parseOnlineTournaments() {
-        challongeConnector.getTournaments()
-        let onlineTournaments = challongeConnector.tournamentList
-        
-        for tournament in onlineTournaments {
-            let newTournament = Tournament()
-            
-            // assign properties from online tournament to realm tournament for local storage
-            newTournament.name = tournament.value(forKey: "name") as! String
-            newTournament.id = tournament.value(forKey: "id") as! Int
-            newTournament.poolList = List<Pool>()
-            newTournament.teamList = List<Team>()
-            newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
-            newTournament.game_id = tournament.value(forKey: "game_id") as! Int
-            newTournament.isPrivate = tournament.value(forKey: "private") as! Bool
-            newTournament.live_image_url = tournament.value(forKey: "live_image_url") as! String
-            newTournament.participants_count = tournament.value(forKey: "participants_count") as! Int
-            newTournament.progress_meter = tournament.value(forKey: "progress_meter") as! Int
-            newTournament.state = tournament.value(forKey: "state") as! String
-            newTournament.teams = tournament.value(forKey: "teams") as! Bool
-            newTournament.url = tournament.value(forKey: "url") as! String
-            newTournament.tournament_type = tournament.value(forKey: "tournament_type") as! String
-            
-            try! realm.write {
-                realm.add(newTournament)
-                tournamentList.append(newTournament)
-            }
-        }
-        updateTournamentList()
-        
-    }
-    
+//    @IBAction func getOnlineTournamentButtonClicked(_ sender: UIButton) {
+//        parseOnlineTournaments()
+//    }
+//
+//    func parseOnlineTournaments() {
+//        challongeConnector.getTournaments()
+//        let onlineTournaments = challongeConnector.tournamentList
+//
+//        for tournament in onlineTournaments {
+//            let newTournament = Tournament()
+//
+//            // assign properties from online tournament to realm tournament for local storage
+//            newTournament.name = tournament.value(forKey: "name") as! String
+//            newTournament.id = tournament.value(forKey: "id") as! Int
+//            newTournament.poolList = List<Pool>()
+//            newTournament.teamList = List<Team>()
+//            newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
+//            newTournament.game_id = tournament.value(forKey: "game_id") as! Int
+//            newTournament.isPrivate = tournament.value(forKey: "private") as! Bool
+//            newTournament.live_image_url = tournament.value(forKey: "live_image_url") as! String
+//            newTournament.participants_count = tournament.value(forKey: "participants_count") as! Int
+//            newTournament.progress_meter = tournament.value(forKey: "progress_meter") as! Int
+//            newTournament.state = tournament.value(forKey: "state") as! String
+//            newTournament.teams = tournament.value(forKey: "teams") as! Bool
+//            newTournament.url = tournament.value(forKey: "url") as! String
+//            newTournament.tournament_type = tournament.value(forKey: "tournament_type") as! String
+//
+//            try! realm.write {
+//                realm.add(newTournament)
+//                tournamentList.append(newTournament)
+//            }
+//        }
+//        updateTournamentList()
+//
+//    }
+	
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tournamentButtonCell")
         let button = cell?.contentView.subviews[0] as! UIButton
@@ -150,28 +144,64 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         return tournamentList.count
     }
     
-    func updateTournamentList() {
+    func updateLocalTournamentList() {
         // fetch session list from db
         let results = realm.objects(Tournament.self)
-        tournamentList.removeAll()
         for tournament in results {
             tournamentList.append(tournament)
         }
-        
-        tournamentTableView.reloadData()
+		
+        updateTournamentList()
     }
-    
+	
+	func getOnlineTournaments() {
+		tournamentParser.getOnlineTournaments()
+	}
+	
+	func didParseTournamentData() {
+		performSegue(withIdentifier: "tournamentSelectedSegue", sender: self)
+	}
+	
+	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
+		for tournament in onlineTournamentList {
+			if isTournamentUnique(tournament: tournament) {
+				if realm.isInWriteTransaction {
+					realm.add(tournament)
+				} else {
+					try! realm.write {
+						realm.add(tournament)
+					}
+				}
+				
+				tournamentList.append(tournament)
+			}
+		}
+		
+		updateTournamentList()
+	}
+	
+	func isTournamentUnique(tournament: Tournament) -> Bool {
+		var count = 0
+		try! realm.write {
+			count = realm.objects(Tournament.self).filter("id = \(tournament.id)").count
+		}
+		
+		return count == 0
+	}
+	
+	func updateTournamentList() {
+		tournamentTableView.reloadData()
+	}
+	
     @IBAction func tournamentButton_Clicked(sender: UIButton) {
         let name = sender.currentTitle
         if tournamentList.count > 0 {
             for tournament in tournamentList {
                 if name == tournament.name {
                     TournamentController.setTournamentId(id: tournament.id)
+					tournamentParser.getTournamentData(tournament: tournament)
                 }
             }
         }
-        
-        performSegue(withIdentifier: "tournamentSelectedSegue", sender: self)
-    }
-
+	}
 }

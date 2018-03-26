@@ -70,6 +70,10 @@
 		47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */; };
 		47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8171F34B18800C88DEA /* RPHistoryView.swift */; };
 		47FA9E321FB3AA86008E7D74 /* Net.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FA9E311FB3AA86008E7D74 /* Net.swift */; };
+		47FF2D772068055600712D83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 47FF2D762068055500712D83 /* GoogleService-Info.plist */; };
+		47FF2D79206810B200712D83 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47FF2D78206810B100712D83 /* AdSupport.framework */; };
+		47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FF2D7A2068A14700712D83 /* TournamentParser.swift */; };
+		47FF2D7D2068A39500712D83 /* TournamentParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */; };
 		FC7578FE5667C5CB0D5CBDD0 /* Pods_Duo_Play_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0474B81A4D3411505200B1 /* Pods_Duo_Play_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -165,6 +169,10 @@
 		47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPStatisticsView.swift; sourceTree = "<group>"; };
 		47F9F8171F34B18800C88DEA /* RPHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryView.swift; sourceTree = "<group>"; };
 		47FA9E311FB3AA86008E7D74 /* Net.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Net.swift; sourceTree = "<group>"; };
+		47FF2D762068055500712D83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		47FF2D78206810B100712D83 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		47FF2D7A2068A14700712D83 /* TournamentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentParser.swift; sourceTree = "<group>"; };
+		47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentParserDelegate.swift; sourceTree = "<group>"; };
 		62ED0A748027FE2449D8070E /* Pods-Duo Play Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Duo Play Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Duo Play Tests/Pods-Duo Play Tests.release.xcconfig"; sourceTree = "<group>"; };
 		73FBDF7AFC1BAA1AF7B657FB /* Pods-Duo Play.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Duo Play.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Duo Play/Pods-Duo Play.debug.xcconfig"; sourceTree = "<group>"; };
 		D0E7A5F1B58C77568415C467 /* Pods_Duo_Play.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Duo_Play.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +184,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47FF2D79206810B200712D83 /* AdSupport.framework in Frameworks */,
 				47F15E181F4733AE00518901 /* Crashlytics.framework in Frameworks */,
 				47F15E171F4733AE00518901 /* Fabric.framework in Frameworks */,
 				241AFD6114B98C25DB4C0F13 /* Pods_Duo_Play.framework in Frameworks */,
@@ -256,6 +265,7 @@
 		475FF26F1FA9698A0018BB63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				47FF2D78206810B100712D83 /* AdSupport.framework */,
 				D0E7A5F1B58C77568415C467 /* Pods_Duo_Play.framework */,
 				DA0474B81A4D3411505200B1 /* Pods_Duo_Play_Tests.framework */,
 			);
@@ -435,6 +445,7 @@
 				47F9F7E91F32814900C88DEA /* Assets.xcassets */,
 				47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */,
 				47F9F7EE1F32814900C88DEA /* Info.plist */,
+				47FF2D762068055500712D83 /* GoogleService-Info.plist */,
 			);
 			path = "Duo Play";
 			sourceTree = "<group>";
@@ -469,6 +480,8 @@
 				47DE96281F3E074700F944F0 /* Models */,
 				47DE96271F3E074000F944F0 /* Controllers */,
 				47DE96261F3E073800F944F0 /* Views */,
+				47FF2D7A2068A14700712D83 /* TournamentParser.swift */,
+				47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */,
 			);
 			name = Tournaments;
 			sourceTree = "<group>";
@@ -608,6 +621,7 @@
 			files = (
 				47F9F7ED1F32814900C88DEA /* LaunchScreen.storyboard in Resources */,
 				47B5DF2B200E9920004DB444 /* GoogleService-Info.plist in Resources */,
+				47FF2D772068055600712D83 /* GoogleService-Info.plist in Resources */,
 				47F9F7EA1F32814900C88DEA /* Assets.xcassets in Resources */,
 				47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */,
 			);
@@ -791,6 +805,7 @@
 				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
 				47CA524E203BA86E00781BC7 /* TournamentAPI.swift in Sources */,
 				478388B21FBA5DF500D8052E /* PoolsController.swift in Sources */,
+				47FF2D7D2068A39500712D83 /* TournamentParserDelegate.swift in Sources */,
 				47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */,
 				47C13A532000275000CE886D /* LiveBracketViewController.swift in Sources */,
 				47967CC41FF9EEE8007E67E4 /* SeedsViewController.swift in Sources */,
@@ -818,6 +833,7 @@
 				47DE963F1F3E425700F944F0 /* TournamentSettingsView.swift in Sources */,
 				47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */,
 				47F9F8101F33B51400C88DEA /* RPController.swift in Sources */,
+				47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */,
 				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
 				47E894BA2056D3EA00F9CEE8 /* TGPlayersViewController.swift in Sources */,
 				47F9F8121F33E08400C88DEA /* RPNewGameView.swift in Sources */,
