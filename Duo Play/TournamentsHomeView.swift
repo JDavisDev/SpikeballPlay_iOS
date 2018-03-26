@@ -13,7 +13,9 @@ import Firebase
 
 class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate, TournamentParserDelegate {
 
-    let tournamentController = TournamentController()
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+	
+	let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()
     let challongeConnector = ChallongeAPI()
@@ -35,45 +37,90 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
+		activityIndicator.startAnimating()
 		Answers.logContentView(withName: "Tournaments Page View",
 							   contentType: "Tournaments Page View",
 							   contentId: "8",
 							   customAttributes: [:])
 		
 		tournamentList.removeAll()
-		getOnlineTournaments()
 		updateLocalTournamentList()
-        
-        super.viewDidAppear(true)
+		getOnlineTournaments()
+		//activityIndicator.stopAnimating()
     }
-    
+	
+	// ADD Tournament Button clicked
+	
     @IBAction func addTournamentButtonClicked(_ sender: UIButton) {
-        let tournament = Tournament()
-        
-        tournament.name = "Tournament #" + String(tournamentList.count + 1)
-        
-        let max = 2147483600
-        var id = Int(arc4random_uniform(UInt32(max)))
-        while !isIdUnique(id: id) {
-            id = Int(arc4random_uniform(UInt32(max)))
-        }
-        
-        tournament.id = Int(id)
-        
-        tournament.poolList = List<Pool>()
-        tournament.teamList = List<Team>()
-        
-        try! realm.write {
-            realm.add(tournament)
-            tournamentList.append(tournament)
-        }
-
+		let alert = UIAlertController(title: "Add Tournament",
+									  message: "", preferredStyle: .alert)
+		
+		let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+			_ = alert.textFields![0] as UITextField
+			let newName = alert.textFields![0].text!
+			let pw = alert.textFields![1].text!
+			self.createNewTournament(newName: newName, password: pw)
+			self.updateTournamentList()
+		}
+		
+		alert.addTextField { (textField) in
+			textField.placeholder = "Tournament Name"
+			textField.borderStyle = UITextBorderStyle.roundedRect
+		}
+		
+		alert.addTextField { (textField) in
+			textField.placeholder = "Editing Password (Optional)"
+			textField.borderStyle = UITextBorderStyle.roundedRect
+		}
+		
+		alert.addAction(action)
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+    }
+	
+	// Create tournament from dialog
+	func createNewTournament(newName: String, password: String) {
+		let tournament = Tournament()
+		
+		if newName.count > 0 {
+			tournament.name = newName
+		} else {
+			tournament.name = "Tournament #" + String(self.tournamentList.count + 1)
+		}
+		
+		if password.count > 0 {
+			tournament.password = password
+		}
+		
+		let max = 2147483600
+		var id = Int(arc4random_uniform(UInt32(max)))
+		while !self.isIdUnique(id: id) {
+			id = Int(arc4random_uniform(UInt32(max)))
+		}
+		
+		tournament.id = Int(id)
+		tournament.poolList = List<Pool>()
+		tournament.teamList = List<Team>()
+		tournament.userID = Analytics.appInstanceID()
+		tournament.created_date = Date()
+		
+		try! self.realm.write {
+			self.realm.add(tournament)
+			self.self.tournamentList.append(tournament)
+		}
+		
 		Analytics.logEvent("Tournament_Created", parameters: [
 			"id": id ])
 		
-        TournamentController.setTournamentId(id: id)
-        updateTournamentList()
-    }
+		
+		TournamentController.setTournamentId(id: id)
+	}
     
     func isIdUnique(id: Int) -> Bool {
         var count = 0
@@ -158,7 +205,9 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournamentParser.getOnlineTournaments()
 	}
 	
+	// DELEGATION METHODS
 	func didParseTournamentData() {
+		activityIndicator.stopAnimating()
 		performSegue(withIdentifier: "tournamentSelectedSegue", sender: self)
 	}
 	
@@ -178,7 +227,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		}
 		
 		updateTournamentList()
+		activityIndicator.stopAnimating()
 	}
+	
+	// END DELEGATION METHODS
 	
 	func isTournamentUnique(tournament: Tournament) -> Bool {
 		var count = 0
@@ -199,9 +251,87 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
             for tournament in tournamentList {
                 if name == tournament.name {
                     TournamentController.setTournamentId(id: tournament.id)
-					tournamentParser.getTournamentData(tournament: tournament)
+					
+					// check if tournament is local or online and we need to download data
+					if tournament.isOnline {
+						// is there a password? Is this the usr who created the tournament?
+						// this allows users who uninstall or w/e to fetch their tournaments with a pw.
+						if tournament.password.count > 0 && tournament.userID != Analytics.appInstanceID() {
+							// prompt user to fetch password. if they do not know, set to read only.
+							// alert : password or read only
+							showPasswordAlert(tournament: tournament)
+						} else {
+							// we are online, but it's public, fetch the data.
+							activityIndicator.startAnimating()
+							tournamentParser.getTournamentData(tournament: tournament)
+						}
+					} else {
+						// didn't need to download data, just move forward like normal
+						didParseTournamentData()
+					}
                 }
             }
         }
+	}
+	
+	func showPasswordAlert(tournament: Tournament) {
+		let alert = UIAlertController(title: "Password",
+									  message: "Please enter password to edit this tournament.\n" +
+												"Or press Read-Only to view.", preferredStyle: .alert)
+		
+		let submit = UIAlertAction(title: "Submit", style: .default) { (alertAction) in
+			_ = alert.textFields![0] as UITextField
+			let pw = alert.textFields![0].text!
+			let password = tournament.password
+			
+			if pw == password {
+				try! self.realm.write {
+					tournament.isReadOnly = false
+				}
+				
+				self.activityIndicator.startAnimating()
+				self.tournamentParser.getTournamentData(tournament: tournament)
+			} else {
+				self.showPasswordResultAlert(isSuccess: false)
+			}
+		}
+		
+		alert.addAction(submit)
+		
+		alert.addAction(UIAlertAction(title: "Read Only", style: .default, handler: { (action: UIAlertAction!) in
+			// read only
+			try! self.realm.write {
+				tournament.isReadOnly = true
+			}
+			
+			self.activityIndicator.startAnimating()
+			self.tournamentParser.getTournamentData(tournament: tournament)
+		}))
+		
+		alert.addTextField { (textField) in
+			textField.placeholder = "Tournament Password"
+			textField.borderStyle = UITextBorderStyle.roundedRect
+		}
+		
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func showPasswordResultAlert(isSuccess: Bool) {
+		let message = isSuccess ? "Correct" : "Incorrect"
+		let alert = UIAlertController(title: "Password",
+									  message: "Password is \(message)", preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
 	}
 }

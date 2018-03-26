@@ -740,16 +740,16 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Yep-Mx-4ai" userLabel="teamTwoNameStack">
-                                                    <rect key="frame" x="0.0" y="6" width="0.0" height="88"/>
+                                                    <rect key="frame" x="303.5" y="6" width="56.5" height="88"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jordan" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RB3-Ea-sIA" userLabel="PlayerThreeLabel">
-                                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="41.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="56.5" height="41.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Andrew" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OTQ-RD-eNI" userLabel="PlayerFourLabel">
-                                                            <rect key="frame" x="0.0" y="46.5" width="0.0" height="41.5"/>
+                                                            <rect key="frame" x="0.0" y="46.5" width="56.5" height="41.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -1291,6 +1291,11 @@
                                     <action selector="getOnlineTournamentButtonClicked:" destination="o0F-K2-bEo" eventType="touchUpInside" id="HKY-Sx-iqJ"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="lbI-kw-dCA">
+                                <rect key="frame" x="170" y="316" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1308,6 +1313,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Tournaments" id="IKl-3h-APy"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="lbI-kw-dCA" id="qET-Fr-ZdC"/>
                         <outlet property="tournamentTableView" destination="Yby-EJ-M3m" id="VWd-DZ-daM"/>
                         <segue destination="Tsw-tC-GGE" kind="show" identifier="tournamentSelectedSegue" id="FuP-YO-FG9"/>
                     </connections>
@@ -2215,6 +2221,11 @@
                                 <rect key="frame" x="0.0" y="64" width="1276" height="989"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </scrollView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GW2-0V-Mg8">
+                                <rect key="frame" x="331" y="315" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
@@ -2231,6 +2242,7 @@
                     <tabBarItem key="tabBarItem" title="Bracket" id="3u2-tO-LUR"/>
                     <size key="freeformSize" width="700" height="667"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="GW2-0V-Mg8" id="MLF-Me-nmz"/>
                         <outlet property="scrollView" destination="FoU-Pk-7gl" id="ELp-eh-MkJ"/>
                         <segue destination="1cT-kW-IQp" kind="show" identifier="bracketReporterOnTouchSegue" id="P5w-8Q-kx8"/>
                     </connections>
@@ -2304,7 +2316,7 @@
                                     <action selector="addTeamsInBulk:" destination="W62-W3-ujY" eventType="touchUpInside" id="90X-8i-TYa"/>
                                 </connections>
                             </button>
-                            <searchBar contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search Teams" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dvz-pq-7jk">
+                            <searchBar hidden="YES" contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search Teams" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dvz-pq-7jk">
                                 <rect key="frame" x="0.0" y="136" width="375" height="56"/>
                                 <color key="barTintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words" textContentType="name"/>
@@ -2768,7 +2780,7 @@
         <image name="TeamsBarItemImage" width="48" height="48"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="vIx-zL-6tc"/>
+        <segue reference="P5w-8Q-kx8"/>
         <segue reference="jbB-yX-6Yi"/>
         <segue reference="6zO-Kk-Wiy"/>
         <segue reference="GxF-Rh-4sk"/>

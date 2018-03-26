@@ -238,7 +238,6 @@
 		472103F91F5D4F5A00CA76C3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				47DE96381F3E305600F944F0 /* TeamsController.swift */,
 				478388B11FBA5DF500D8052E /* PoolsController.swift */,
 				472103FB1F5D524C00CA76C3 /* PoolPlayMatchGenerator.swift */,
 				472104051F62939A00CA76C3 /* PoolPlayMatchReporterController.swift */,
@@ -334,6 +333,7 @@
 		47DE96271F3E074000F944F0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				47DE96381F3E305600F944F0 /* TeamsController.swift */,
 				472103F31F59FF6B00CA76C3 /* TournamentController.swift */,
 			);
 			name = Controllers;

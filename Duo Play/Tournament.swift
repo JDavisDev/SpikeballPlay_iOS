@@ -10,7 +10,11 @@ import Foundation
 import RealmSwift
 
 class Tournament : Object {
+	@objc dynamic public var userID = ""
+	@objc dynamic public var isReadOnly = false
+	@objc dynamic public var password = ""
     @objc dynamic public var id: Int = 0
+	@objc dynamic public var isOnline = false
     @objc dynamic public var name = ""
     @objc dynamic public var url = ""
     @objc dynamic public var tournament_type = ""

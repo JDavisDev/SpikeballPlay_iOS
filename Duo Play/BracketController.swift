@@ -396,11 +396,14 @@ class BracketController {
 						game.teamTwo = nil
 						game.isReported = true
 						reportByeMatch(teamToAdvance: game.teamOne!)
+						tournamentDAO.addOnlineTournamentTeam(team: game.teamOne!)
                     } else {
 						// not a bye, proceed normally
                         game.teamTwo = getTeamBySeed(seed: node.value[1])
 						resetTeamValues(team: (game.teamTwo)!)
 						game.teamTwo?.bracketVerticalPositions.append(game.round_position)
+						tournamentDAO.addOnlineTournamentTeam(team: game.teamOne!)
+						tournamentDAO.addOnlineTournamentTeam(team: game.teamTwo!)
                     }
 					
 					realm.add(game)
@@ -468,8 +471,8 @@ class BracketController {
             for teamTwo in availableTeams {
 				// make sure the team isn't in another matchup
 				for matchup in tournament.matchupList {
-					if	!matchup.isReported && matchup.teamOne?.seed == teamTwo.seed ||
-						matchup.teamTwo?.seed == teamTwo.seed {
+					if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
+						matchup.teamTwo?.seed == teamTwo.seed)) {
 						canContinue = false
 						break
 					}
@@ -614,6 +617,9 @@ class BracketController {
 		
 		// a new matchup may be ready!
 		updateMatchups()
+		
+		tournamentDAO.addOnlineTournamentTeam(team: selectedMatchup.teamOne!)
+		tournamentDAO.addOnlineTournamentTeam(team: selectedMatchup.teamTwo!)
 	}
     
     // based on previous position, determine next position

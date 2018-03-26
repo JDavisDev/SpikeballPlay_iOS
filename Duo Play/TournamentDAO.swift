@@ -17,8 +17,15 @@ class TournamentDAO {
 	func updateOnlineTournament(tournament: Tournament) {
 		// Add a new document
 		// Create an initial document to update.
+		let updatedDate = Date()
+	
 		let tournamentsRef = fireDB.collection("tournaments").document(String(tournament.id))
 		tournamentsRef.setData([
+			"userID": tournament.userID,
+			"password": tournament.password,
+			"isReadOnly": tournament.isReadOnly,
+			"created_date": tournament.created_date,
+			"updated_date": updatedDate,
 			"name": tournament.name,
 			"id": tournament.id,
 			"isOfficial": true,
@@ -30,7 +37,7 @@ class TournamentDAO {
 			"playersPerPool" : tournament.playersPerPool,
 			"state" : tournament.state,
 			"tournament_type" : tournament.tournament_type,
-			"participants_count" : tournament.participants_count
+			"participants_count" : tournament.teamList.count
 			])
 	}
 	
@@ -74,6 +81,7 @@ class TournamentDAO {
 			.document(
 				String(matchup.tournament_id) + " : " + String(matchup.round) + "-" + String(matchup.round_position))
 		bracketMatchupRef.setData([
+			"id": matchup.id,
 			"teamOneId" : matchup.teamOne?.id ?? 0,
 			"teamTwoId" : matchup.teamTwo?.id ?? 0,
 			"teamOneScores": Array(matchup.teamOneScores),
@@ -93,10 +101,10 @@ class TournamentDAO {
 	func addOnlineTournamentTeam(team: Team) {
 		// Add a new document
 		// Create an initial document to update.
-		let bracketMatchupRef = fireDB.collection("teams")
+		let teamsRef = fireDB.collection("teams")
 			.document(
 				String(team.tournament_id) + " : " + String(team.id) + "-" + String(team.name))
-		bracketMatchupRef.setData([
+		teamsRef.setData([
 			"tournament_id": team.tournament_id,
 			"id": team.id,
 			"seed": team.seed,
@@ -133,17 +141,18 @@ class TournamentDAO {
 		}
 	}
 	
-	func getOnlineTournaments() {
-		var tournamentList = [[String: Any]]()
-		
-		fireDB.collection("tournaments").getDocuments { (querySnapshot, err) in
-			if let err = err {
-				print("Error getting tournaments \(err)")
-			} else {
-				for document in querySnapshot!.documents {
-					tournamentList.append(document.data())
-				}
-			}
-		}
-	}
+	// currently unused
+//	func getOnlineTournaments() {
+//		var tournamentList = [[String: Any]]()
+//
+//		fireDB.collection("tournaments").getDocuments { (querySnapshot, err) in
+//			if let err = err {
+//				print("Error getting tournaments \(err)")
+//			} else {
+//				for document in querySnapshot!.documents {
+//					tournamentList.append(document.data())
+//				}
+//			}
+//		}
+//	}
 }

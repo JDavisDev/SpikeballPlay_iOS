@@ -9,10 +9,12 @@
 import UIKit
 import RealmSwift
 import Crashlytics
+import Firebase
 
 class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 	var pinch = UIPinchGestureRecognizer()
 	
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	let realm = try! Realm()
     var tournament = Tournament()
 	// used for quick report
@@ -33,6 +35,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 	
     override func viewDidLoad() {
         super.viewDidLoad()
+		
         self.view.backgroundColor = UIColor.black
         self.view.addSubview(scrollView)
 		self.scrollView.delegate = self
@@ -46,11 +49,14 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+		activityIndicator.startAnimating()
 		
 		Answers.logContentView(withName: "Bracket Page View",
 							   contentType: "Bracket Page View",
 							   contentId: "9",
 							   customAttributes: [:])
+		
+		Analytics.logEvent("Live_Bracket_View_Viewed", parameters: nil)
 		
         try! realm.write() {
             tournament = TournamentController.getCurrentTournament()
@@ -384,6 +390,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
                 }
             }
         }
+		
+		activityIndicator.stopAnimating()
     }
     
     func isTeamOnBottomOfBracketCell(team: Team, currentRound: Int) -> Bool {

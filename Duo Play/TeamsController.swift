@@ -67,6 +67,18 @@ class TeamsController {
 			return team
 		}
     }
+	
+	func getTeamById(id: Int, tournamentId: Int) -> Team {
+		let teams = realm.objects(Team.self).filter("id = \(id) AND tournament_id = \(tournamentId)")
+		
+		if teams.count > 0 {
+			return teams.first!
+		} else {
+			let team = Team()
+			team.name = "nil"
+			return team
+		}
+	}
     
     func getAvailablePool() -> Pool {
         let tournament = TournamentController.getCurrentTournament()

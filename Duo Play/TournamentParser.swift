@@ -38,6 +38,40 @@ class TournamentParser {
 		}
 	}
 	
+	func getOnlineTournamentByName(name: String) {
+		var list = [[String: Any]]()
+		fireDB.collection("tournaments")
+			.whereField("name", isEqualTo: name)
+			.getDocuments { (querySnapshot, err) in
+			if let err = err {
+				print("Error getting tournaments \(err)")
+			} else {
+				for document in querySnapshot!.documents {
+					list.append(document.data())
+				}
+				
+				self.parseOnlineTournaments(onlineTournamentData: list)
+			}
+		}
+	}
+	
+	func getOnlineTournamentById(id: String) {
+		var list = [[String: Any]]()
+		fireDB.collection("tournaments")
+			.whereField("id", isEqualTo: id)
+			.getDocuments { (querySnapshot, err) in
+				if let err = err {
+					print("Error getting tournaments \(err)")
+				} else {
+					for document in querySnapshot!.documents {
+						list.append(document.data())
+					}
+					
+					self.parseOnlineTournaments(onlineTournamentData: list)
+				}
+		}
+	}
+	
 	func parseOnlineTournaments(onlineTournamentData: [[String: Any]]) {
 		var tournamentArray = [Tournament]()
 		
@@ -45,6 +79,8 @@ class TournamentParser {
 			let tournament = Tournament()
 			
 			tournament.id = obj["id"] as! Int
+			tournament.password = obj["password"] as! String
+			tournament.isOnline = true
 			tournament.state = obj["state"] as! String
 			tournament.tournament_type = obj["tournament_type"] as! String
 			tournament.isPoolPlay = obj["isPoolPlay"] as! Bool
@@ -104,22 +140,35 @@ class TournamentParser {
 			team.division = obj["division"] as! String
 			team.seed = obj["seed"] as! Int
 			team.isCheckedIn = obj["isCheckedIn"] as! Bool
-			// manually parse these guys
-			//team.bracketRounds = obj["bracketRounds"] as! List<Int>
-			//team.bracketVerticalPositions = obj["bracketVerticalPositions"] as! List<Int>
 			team.wins = obj["wins"] as! Int
 			team.losses = obj["losses"] as! Int
 			team.pointsFor = obj["pointsFor"] as! Int
 			team.pointsAgainst = obj["pointsAgainst"] as! Int
+			// fetch pool by name
 			//team.pool = obj["poolName"] as! String
 			team.isEliminated = obj["isEliminated"] as! Bool
 			team.tournament_id = obj["tournament_id"] as! Int
 			
+			// manually parse these guys
+			let roundsArray = obj["bracketRounds"] as! [Int]
+			let vertArray = obj["bracketVerticalPositions"] as! [Int]
+			
+			for item in roundsArray {
+				team.bracketRounds.append(item)
+			}
+			
+			for item in vertArray {
+				team.bracketVerticalPositions.append(item)
+			}
+			
 			// check for duplicates and this should be good!
 			// then do the same for bracket match ups!!!!
-			teamArray.append(team)
+			if isTeamUnique(team: team) {
+				teamArray.append(team)
+			}
 		}
 		
+		// add stuff to our local storage
 		if realm.isInWriteTransaction {
 			realm.add(teamArray)
 			tournament.teamList.append(objectsIn: teamArray)
@@ -134,20 +183,89 @@ class TournamentParser {
 		didFetchData()
 	}
 	
-	func parseOnlineBracketMatchups(onlineBracketMatchupData: [[String:Any]], tournament: Tournament) {
+	func isTeamUnique(team: Team) -> Bool {
+		var count = 0
 		
+		if realm.isInWriteTransaction {
+			count = realm.objects(Team.self).filter("id = \(team.id) AND tournament_id = \(team.tournament_id)").count
+		} else {
+			try! realm.write {
+				count = realm.objects(Team.self).filter("id = \(team.id) AND tournament_id = \(team.tournament_id)").count
+			}
+		}
+		
+		return count == 0
+	}
+	
+	
+	
+	func parseOnlineBracketMatchups(onlineBracketMatchupData: [[String:Any]], tournament: Tournament) {
+		var matchupArray = [BracketMatchup]()
+		let teamsController = TeamsController()
+		
+		for obj in onlineBracketMatchupData {
+			let matchup = BracketMatchup()
+			
+			matchup.id = obj["id"] as! Int
+			matchup.division = obj["division"] as! String
+			matchup.isReported = obj["isReported"] as! Bool
+			matchup.round = obj["round"] as! Int
+			matchup.round_position = obj["round_position"] as! Int
+			matchup.teamOne = teamsController.getTeamById(id: obj["teamOneId"] as! Int, tournamentId: obj["tournament_id"] as! Int)
+			matchup.teamTwo = teamsController.getTeamById(id: obj["teamTwoId"] as! Int, tournamentId: obj["tournament_id"] as! Int)
+			matchup.tournament_id = obj["tournament_id"] as! Int
+		
+			let teamOneScores = obj["teamOneScores"] as! [Int]
+			let teamTwoScores = obj["teamTwoScores"] as! [Int]
+			
+			for score in teamOneScores {
+				matchup.teamOneScores.append(score)
+			}
+			
+			for score in teamTwoScores {
+				matchup.teamTwoScores.append(score)
+			}
+			
+			if isBracketMatchupUnique(bracketMatchup: matchup) {
+				matchupArray.append(matchup)
+			}
+		}
+		
+		// add stuff to our local storage
+		if realm.isInWriteTransaction {
+			realm.add(matchupArray)
+			tournament.matchupList.append(objectsIn: matchupArray)
+		} else {
+			try! realm.write {
+				realm.add(matchupArray)
+				tournament.matchupList.append(objectsIn: matchupArray)
+			}
+		}
 		
 		
 		isBracketMatchupsFinished = true
 		didFetchData()
 	}
 	
+	func isBracketMatchupUnique(bracketMatchup: BracketMatchup) -> Bool {
+		var count = 0
+		
+		if realm.isInWriteTransaction {
+			count = realm.objects(BracketMatchup.self).filter("id = \(bracketMatchup.id) AND tournament_id = \(bracketMatchup.tournament_id)").count
+		} else {
+			try! realm.write {
+				count = realm.objects(BracketMatchup.self).filter("id = \(bracketMatchup.id) AND tournament_id = \(bracketMatchup.tournament_id)").count
+			}
+		}
+		
+		return count == 0
+	}
+	
 	func didFetchData() {
 		if isTeamsFinished && isBracketMatchupsFinished {
 			delegate?.didParseTournamentData()
+			isTeamsFinished = false
+			isBracketMatchupsFinished = false
 		}
 	}
-	
-	
-	
 }

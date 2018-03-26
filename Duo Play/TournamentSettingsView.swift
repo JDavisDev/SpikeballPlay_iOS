@@ -9,6 +9,7 @@
 import UIKit
 import RealmSwift
 import Crashlytics
+
 // TODO : Disable settings if tournament has started!
 // Need some pool play settings to check where we are in tournament.
 // controlling flow between pool play and bracket or Bracket only.
@@ -83,6 +84,16 @@ class TournamentSettingsView: UIViewController {
 	}
 	
 	func deleteTournament() {
+		var count = 0
+		if realm.isInWriteTransaction {
+			count = realm.objects(Tournament.self).filter("id = \(tournament.id)").count
+		} else {
+			try! realm.write {
+				count = realm.objects(Tournament.self).filter("id = \(tournament.id)").count
+			}
+		}
+		
+		if count == 0 { return }
 		let tournamentDAO = TournamentDAO()
 		tournamentDAO.deleteOnlineTournament(tournament: tournament)
 		
