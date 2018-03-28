@@ -35,6 +35,25 @@ class BracketReporterViewController: UIViewController {
         	teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
 		}
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		if selectedMatchup.teamOne != nil && selectedMatchup.teamTwo != nil {
+			teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
+			teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
+		} else {
+			let alert = UIAlertController(title: "Matchup Error",
+										  message: "Failed to retrieve matchup.",
+										  preferredStyle: .alert)
+			
+			alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+				self.navigationController?.popViewController(animated: true)
+			}))
+			
+			present(alert, animated: true, completion: nil)
+		}
+	}
     
     /* SLIDER VALUE CHANGED TEAM ONE
      update score labels */
@@ -87,8 +106,7 @@ class BracketReporterViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
                 return
             }))
-            
-            
+			
             present(alert, animated: true, completion: nil)
         }
         

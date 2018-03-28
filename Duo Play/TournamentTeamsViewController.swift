@@ -37,18 +37,14 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 							   customAttributes: [:])
 	}
     
-    override func viewDidDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
 		if didTeamsChange {
         	let bracketController = BracketController()
         	bracketController.createBracket()
 			didTeamsChange = false
 		}
 		
-		super.viewDidDisappear(true)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+		super.viewWillDisappear(true)
     }
     
     // MARK: - Adding teams

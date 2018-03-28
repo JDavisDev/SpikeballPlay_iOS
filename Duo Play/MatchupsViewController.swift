@@ -8,6 +8,7 @@
 
 import UIKit
 import Crashlytics
+import Firebase
 
 class MatchupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -96,6 +97,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         let selectedMatchup = matchupList[indexPath.row]
 		Answers.logCustomEvent(withName: "Matchup List Tapped",
 							   customAttributes: [:])
+		Analytics.logEvent("Bracket_List_Tapped", parameters: nil)
         performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
     }
     

@@ -71,11 +71,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
         createBracketView()
         updateBracketView()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 	
 	// Pinch Controls
 	@objc func pinch(sender:UIPinchGestureRecognizer) {
@@ -425,6 +420,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @objc func matchTouched(sender:UITapGestureRecognizer) {
+		var matchupFound = false
         // open score entry page, or just select a winner. Maybe a dialog for quickness
 		// currently this is hitting with every touch AND sender.view is the entire view, not the cell
 		// Get the first touch and its location in this view controller's view coordinate system
@@ -448,11 +444,12 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 						if	!matchup.isReported && matchup.teamOne!.name == teamOneLabel.text &&
 							matchup.teamTwo!.name == teamTwoLabel.text {
 							selectedMatchup = matchup
+							matchupFound = true
 							break
 						}
 					}
 					
-					if !selectedMatchup.isReported && tournament.isQuickReport {
+					if matchupFound && !selectedMatchup.isReported && tournament.isQuickReport {
 						let alert = UIAlertController(title: "Select Winner",
 													  message: "", preferredStyle: .alert)
 						
@@ -476,10 +473,11 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 						}))
 						// Add delete in here. to maybe delete match ups and reset everything down stream...
 						present(alert, animated: true, completion: nil)
-					} else if !selectedMatchup.isReported {
+					} else if matchupFound && !selectedMatchup.isReported {
 						// not quick report. send to match reporter.
 						Answers.logCustomEvent(withName: "Bracket Match Tapped",
 											   customAttributes: [:])
+						Analytics.logEvent("Live_Bracket_Match_Tapped", parameters: nil)
 						performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
 					}
 				}

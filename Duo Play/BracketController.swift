@@ -457,59 +457,77 @@ class BracketController {
 				availableTeams.append(team)
 			}
 		}
-	
-        for team in availableTeams {
-			var canContinue = true
-			for matchup in tournament.matchupList {
-				if !matchup.isReported && matchup.teamOne?.seed == team.seed ||
-					matchup.teamTwo?.seed == team.seed {
-					canContinue = false
-					break
-				}
-			}
+		
+		// two teams left, grab them!
+		if availableTeams.count == 2 {
+			let team = availableTeams[0]
+			let teamTwo = availableTeams[1]
 			
-            for teamTwo in availableTeams {
-				// make sure the team isn't in another matchup
+			if  team.name != teamTwo.name && team.bracketRounds.last == teamTwo.bracketRounds.last &&
+				team.bracketVerticalPositions.last != nil &&
+				team.bracketVerticalPositions.last == teamTwo.bracketVerticalPositions.last {
+				
+				createBracketMatchup(team: team, teamTwo: teamTwo)
+			}
+		} else {
+			// more than two teams, let's find the right two
+			for team in availableTeams {
+				var canContinue = true
 				for matchup in tournament.matchupList {
-					if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
-						matchup.teamTwo?.seed == teamTwo.seed)) {
+					if !matchup.isReported && matchup.teamOne?.seed == team.seed ||
+						matchup.teamTwo?.seed == team.seed {
 						canContinue = false
 						break
 					}
 				}
 				
-                if canContinue &&
-					team.name != teamTwo.name && team.bracketRounds.last == teamTwo.bracketRounds.last &&
-                    team.bracketVerticalPositions.last != nil &&
-                    team.bracketVerticalPositions.last == teamTwo.bracketVerticalPositions.last {
-					
-                    // teams are in same spot! create a match up.
-					try! realm.write {
-						let game = BracketMatchup()
-						
-						let max = 2147483600
-						var id = Int(arc4random_uniform(UInt32(max)))
-						while !isBracketMatchupIdUnique(id: id) {
-							id = Int(arc4random_uniform(UInt32(max)))
+				for teamTwo in availableTeams {
+					// make sure the team isn't in another matchup
+					for matchup in tournament.matchupList {
+						if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
+							matchup.teamTwo?.seed == teamTwo.seed)) {
+							canContinue = false
+							break
 						}
-						
-						game.id = Int(id)
-						
-						game.tournament_id = tournament.id
-						// better seed is shown first.
-						game.teamOne = team.seed < teamTwo.seed ? team : teamTwo
-						game.teamTwo = team.seed < teamTwo.seed ? teamTwo : team
-						game.round = team.bracketRounds.last!
-						game.round_position = team.bracketVerticalPositions.last!
-						game.division = "Advanced"
-						realm.add(game)
-						tournament.matchupList.append(game)
-						tournamentDAO.addOnlineMatchup(matchup: game)
 					}
-                }
-            }
+					
+					if canContinue &&
+						team.name != teamTwo.name && team.bracketRounds.last == teamTwo.bracketRounds.last &&
+						team.bracketVerticalPositions.last != nil &&
+						team.bracketVerticalPositions.last == teamTwo.bracketVerticalPositions.last {
+						
+						// teams are in same spot! create a match up.
+						createBracketMatchup(team: team, teamTwo: teamTwo)
+					}
+				}
+			}
         }
     }
+	
+	func createBracketMatchup(team: Team, teamTwo: Team) {
+		try! realm.write {
+			let game = BracketMatchup()
+			
+			let max = 2147483600
+			var id = Int(arc4random_uniform(UInt32(max)))
+			while !isBracketMatchupIdUnique(id: id) {
+				id = Int(arc4random_uniform(UInt32(max)))
+			}
+			
+			game.id = Int(id)
+			
+			game.tournament_id = tournament.id
+			// better seed is shown first.
+			game.teamOne = team.seed < teamTwo.seed ? team : teamTwo
+			game.teamTwo = team.seed < teamTwo.seed ? teamTwo : team
+			game.round = team.bracketRounds.last!
+			game.round_position = team.bracketVerticalPositions.last!
+			game.division = "Advanced"
+			realm.add(game)
+			tournament.matchupList.append(game)
+			tournamentDAO.addOnlineMatchup(matchup: game)
+		}
+	}
 	
 	func isBracketMatchupIdUnique(id: Int) -> Bool {
 		var count = 0

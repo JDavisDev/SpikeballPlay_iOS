@@ -11,6 +11,7 @@ import Fabric
 import Crashlytics
 import Firebase
 import RealmSwift
+import FirebaseAuthUI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,12 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         #if !DEBUG
             Fabric.with([Crashlytics.self])
-			
         #endif
 		
 		FirebaseApp.configure()
-		
-		_ = Firestore.firestore()
+		let fireDB = Firestore.firestore()
 		Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
         return true
     }

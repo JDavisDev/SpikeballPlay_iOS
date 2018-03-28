@@ -19,6 +19,7 @@
 		47232F541F494D9600EED453 /* RPSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47232F531F494D9600EED453 /* RPSessionsView.swift */; };
 		472C8315204627490067B9C1 /* TournamentTeamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */; };
 		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
+		474F5E5A206AAC090027F57D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 474F5E59206AAC090027F57D /* GoogleService-Info.plist */; };
 		475FF2831FA96FEC0018BB63 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475FF2821FA96FEC0018BB63 /* Session.swift */; };
 		478388B21FBA5DF500D8052E /* PoolsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478388B11FBA5DF500D8052E /* PoolsController.swift */; };
 		478388B41FBB8BA000D8052E /* PoolsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478388B31FBB8BA000D8052E /* PoolsDetailView.swift */; };
@@ -29,7 +30,6 @@
 		47967CC61FF9F950007E67E4 /* BracketMatchup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47967CC51FF9F950007E67E4 /* BracketMatchup.swift */; };
 		47967CC81FFA1AB9007E67E4 /* MatchupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47967CC71FFA1AB9007E67E4 /* MatchupsViewController.swift */; };
 		47967CCA1FFA1AE7007E67E4 /* BracketReporterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47967CC91FFA1AE7007E67E4 /* BracketReporterViewController.swift */; };
-		47B5DF2B200E9920004DB444 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 47B5DF2A200E9920004DB444 /* GoogleService-Info.plist */; };
 		47BE733320507FF9003C100B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BE733220507FF9003C100B /* Node.swift */; };
 		47C13A532000275000CE886D /* LiveBracketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C13A522000275000CE886D /* LiveBracketViewController.swift */; };
 		47CA524C203B744E00781BC7 /* ChallongeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CA524B203B744E00781BC7 /* ChallongeAPI.swift */; };
@@ -70,7 +70,6 @@
 		47F9F8161F34B17C00C88DEA /* RPStatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */; };
 		47F9F8181F34B18800C88DEA /* RPHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47F9F8171F34B18800C88DEA /* RPHistoryView.swift */; };
 		47FA9E321FB3AA86008E7D74 /* Net.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FA9E311FB3AA86008E7D74 /* Net.swift */; };
-		47FF2D772068055600712D83 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 47FF2D762068055500712D83 /* GoogleService-Info.plist */; };
 		47FF2D79206810B200712D83 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47FF2D78206810B100712D83 /* AdSupport.framework */; };
 		47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FF2D7A2068A14700712D83 /* TournamentParser.swift */; };
 		47FF2D7D2068A39500712D83 /* TournamentParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */; };
@@ -114,6 +113,8 @@
 		47232F531F494D9600EED453 /* RPSessionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPSessionsView.swift; sourceTree = "<group>"; };
 		472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentTeamsViewController.swift; sourceTree = "<group>"; };
 		473689651F40240700C04FD4 /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Division.swift; sourceTree = "<group>"; };
+		474F5E58206A849B0027F57D /* Duo Play.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Duo Play.entitlements"; sourceTree = "<group>"; };
+		474F5E59206AAC090027F57D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		475FF2821FA96FEC0018BB63 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		478388B11FBA5DF500D8052E /* PoolsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolsController.swift; sourceTree = "<group>"; };
 		478388B31FBB8BA000D8052E /* PoolsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolsDetailView.swift; sourceTree = "<group>"; };
@@ -124,7 +125,6 @@
 		47967CC51FF9F950007E67E4 /* BracketMatchup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketMatchup.swift; sourceTree = "<group>"; };
 		47967CC71FFA1AB9007E67E4 /* MatchupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchupsViewController.swift; sourceTree = "<group>"; };
 		47967CC91FFA1AE7007E67E4 /* BracketReporterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketReporterViewController.swift; sourceTree = "<group>"; };
-		47B5DF2A200E9920004DB444 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		47BE733220507FF9003C100B /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		47C13A522000275000CE886D /* LiveBracketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBracketViewController.swift; sourceTree = "<group>"; };
 		47CA524B203B744E00781BC7 /* ChallongeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallongeAPI.swift; sourceTree = "<group>"; };
@@ -169,7 +169,6 @@
 		47F9F8151F34B17C00C88DEA /* RPStatisticsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPStatisticsView.swift; sourceTree = "<group>"; };
 		47F9F8171F34B18800C88DEA /* RPHistoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPHistoryView.swift; sourceTree = "<group>"; };
 		47FA9E311FB3AA86008E7D74 /* Net.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Net.swift; sourceTree = "<group>"; };
-		47FF2D762068055500712D83 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		47FF2D78206810B100712D83 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		47FF2D7A2068A14700712D83 /* TournamentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentParser.swift; sourceTree = "<group>"; };
 		47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentParserDelegate.swift; sourceTree = "<group>"; };
@@ -434,6 +433,7 @@
 		47F9F7E11F32814900C88DEA /* Duo Play */ = {
 			isa = PBXGroup;
 			children = (
+				474F5E58206A849B0027F57D /* Duo Play.entitlements */,
 				47E894B52056D2F800F9CEE8 /* TeamGenerator */,
 				47232F5C1F4971D200EED453 /* DataModel */,
 				47E9323D1F350B2F00145E28 /* Rules */,
@@ -444,8 +444,8 @@
 				47F9F7E61F32814900C88DEA /* Main.storyboard */,
 				47F9F7E91F32814900C88DEA /* Assets.xcassets */,
 				47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */,
+				474F5E59206AAC090027F57D /* GoogleService-Info.plist */,
 				47F9F7EE1F32814900C88DEA /* Info.plist */,
-				47FF2D762068055500712D83 /* GoogleService-Info.plist */,
 			);
 			path = "Duo Play";
 			sourceTree = "<group>";
@@ -455,7 +455,6 @@
 			children = (
 				47F9F7F71F32814900C88DEA /* DuoPlayTests.swift */,
 				47F9F7F91F32814900C88DEA /* Info.plist */,
-				47B5DF2A200E9920004DB444 /* GoogleService-Info.plist */,
 			);
 			name = "Duo Play Tests";
 			path = SpikeballPlayTests;
@@ -586,6 +585,11 @@
 						DevelopmentTeam = XCMCLK6E4Y;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					47F9F7F21F32814900C88DEA = {
 						CreatedOnToolsVersion = 8.3.3;
@@ -620,8 +624,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				47F9F7ED1F32814900C88DEA /* LaunchScreen.storyboard in Resources */,
-				47B5DF2B200E9920004DB444 /* GoogleService-Info.plist in Resources */,
-				47FF2D772068055600712D83 /* GoogleService-Info.plist in Resources */,
+				474F5E5A206AAC090027F57D /* GoogleService-Info.plist in Resources */,
 				47F9F7EA1F32814900C88DEA /* Assets.xcassets in Resources */,
 				47F9F7E81F32814900C88DEA /* Main.storyboard in Resources */,
 			);
@@ -643,9 +646,26 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Duo Play/Pods-Duo Play-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseFacebookAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseGoogleAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebasePhoneAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseTwitterAuthUI.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterShareExtensionUIResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseFacebookAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseGoogleAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebasePhoneAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseTwitterAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterShareExtensionUIResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -659,11 +679,19 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Duo Play/Pods-Duo Play-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
 				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
@@ -673,11 +701,19 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
@@ -993,6 +1029,7 @@
 			baseConfigurationReference = 73FBDF7AFC1BAA1AF7B657FB /* Pods-Duo Play.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Duo Play/Duo Play.entitlements";
 				DEVELOPMENT_TEAM = XCMCLK6E4Y;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1014,6 +1051,7 @@
 			baseConfigurationReference = 457A7B5661BBBF05F3BC23B4 /* Pods-Duo Play.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Duo Play/Duo Play.entitlements";
 				DEVELOPMENT_TEAM = XCMCLK6E4Y;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

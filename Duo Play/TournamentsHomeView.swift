@@ -10,6 +10,7 @@ import UIKit
 import RealmSwift
 import Crashlytics
 import Firebase
+import FirebaseAuthUI
 
 class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate, TournamentParserDelegate {
 
@@ -22,12 +23,13 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	let tournamentDao = TournamentDAO()
 	let fireDB = Firestore.firestore()
 	let tournamentParser = TournamentParser()
-	
+	var handle: AuthStateDidChangeListenerHandle?
 	var onlineTournamentList = [[String:Any]]()
+	
 	
     @IBOutlet weak var tournamentNameTextField: UITextField!
     @IBOutlet weak var tournamentTableView: UITableView!
-        
+	
     override func viewDidLoad() {
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
@@ -35,20 +37,84 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		
 		super.viewDidLoad()
     }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		activityIndicator.startAnimating()
+		tournamentList.removeAll()
+		
+//		handle = Auth.auth().addStateDidChangeListener { (auth, user) in
+//			self.showAlertMessage(message: "listener: " + String(describing: auth.currentUser?.email))
+//		}
+		
+		// need a sign in page.
+		
+		if Auth.auth().currentUser == nil {
+			Auth.auth().signIn(withEmail: "jdevfeedback@gmail.com", password: "testpw") { (user, error) in
+				if error != nil {
+					
+					Auth.auth().createUser(withEmail: "jdevfeedback@gmail.com", password: "testpw"){ (user, error) in
+						if error != nil {
+							// show error
+							self.showAlertMessage(message: "Error : Some online features may be disabled.")
+							self.activityIndicator.stopAnimating()
+						}
+					}
+					
+					return
+				} else if error == nil {
+					if user != nil {
+						self.getOnlineTournaments()
+					}
+				}
+			}
+		} else {
+			self.getOnlineTournaments()
+		}
+	}
     
     override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(true)
-		activityIndicator.startAnimating()
 		Answers.logContentView(withName: "Tournaments Page View",
 							   contentType: "Tournaments Page View",
 							   contentId: "8",
 							   customAttributes: [:])
 		
-		tournamentList.removeAll()
+		
 		updateLocalTournamentList()
-		getOnlineTournaments()
-		//activityIndicator.stopAnimating()
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		// [START remove_auth_listener]
+		if let handle = handle {
+			Auth.auth().removeStateDidChangeListener(handle)
+		}
+		// [END remove_auth_listener]
+	}
+	
+	func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+		// handle user and error as necessary
+//		if let error = error {
+//			showAlertMessage(message: "authUI : " + error.localizedDescription)
+//		}
+//
+//		if let user = user {
+//			showAlertMessage(message: "authUI : " + user.email!)
+//		}
+	}
+	
+	func showAlertMessage(message: String) {
+		let alert = UIAlertController(title: "Hey!",
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
 	
 	// ADD Tournament Button clicked
 	
@@ -226,8 +292,9 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			}
 		}
 		
-		updateTournamentList()
 		activityIndicator.stopAnimating()
+		updateTournamentList()
+		
 	}
 	
 	// END DELEGATION METHODS

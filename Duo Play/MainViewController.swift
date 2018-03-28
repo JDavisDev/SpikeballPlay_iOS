@@ -11,6 +11,7 @@ import MessageUI
 import RealmSwift
 import Crashlytics
 import StoreKit
+import Firebase
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
@@ -27,11 +28,39 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         
         initButtonStyles()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		if Auth.auth().currentUser == nil {
+			Auth.auth().signIn(withEmail: "jdevfeedback@gmail.com", password: "testpw") { (user, error) in
+				if error != nil {
+					// show error
+					
+					Auth.auth().createUser(withEmail: "jdevfeedback@gmail.com", password: "testpw"){ (user, error) in
+						if error != nil {
+							// show error
+							self.showAlertMessage(message: "Error : Some online features may be disabled.")
+						}
+					}
+					
+					return
+				}
+			}
+		}
+	}
+	
+	func showAlertMessage(message: String) {
+		let alert = UIAlertController(title: "Hey!",
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
     
     func initButtonStyles() {
         tournamentButton.layer.cornerRadius = 20

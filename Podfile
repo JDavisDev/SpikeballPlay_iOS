@@ -10,6 +10,7 @@ target 'Duo Play' do
   pod 'Crashlytics', '~> 3.9'
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
+  pod 'FirebaseUI'
   
   target 'Duo Play Tests' do
     inherit! :search_paths
