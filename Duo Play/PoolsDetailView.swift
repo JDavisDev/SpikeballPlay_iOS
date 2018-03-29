@@ -42,7 +42,7 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
             return results
         }
         
-        var pool = Pool()
+        let pool = Pool()
         pool.name = "nil"
         return pool
     }

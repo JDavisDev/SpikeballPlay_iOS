@@ -9,6 +9,6 @@
 import Foundation
 
 protocol TournamentParserDelegate {
-	func didGetOnlineTournaments(onlineTournamentList: [Tournament])
-	func didParseTournamentData()
+	func didParseTournaments(tournamentList: [Tournament])
+	func didParseTouramentData()
 }

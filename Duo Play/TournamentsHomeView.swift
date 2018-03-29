@@ -12,7 +12,7 @@ import Crashlytics
 import Firebase
 import FirebaseAuthUI
 
-class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate, TournamentParserDelegate {
+class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate, TournamentDAODelegate {
 
 	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	
@@ -22,7 +22,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     let challongeConnector = ChallongeAPI()
 	let tournamentDao = TournamentDAO()
 	let fireDB = Firestore.firestore()
-	let tournamentParser = TournamentParser()
 	var handle: AuthStateDidChangeListenerHandle?
 	var onlineTournamentList = [[String:Any]]()
 	
@@ -33,44 +32,17 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
-		tournamentParser.delegate = self
-		
+		tournamentDao.delegate = self
 		super.viewDidLoad()
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
-		activityIndicator.startAnimating()
 		tournamentList.removeAll()
-		
+		updateLocalTournamentList()
 //		handle = Auth.auth().addStateDidChangeListener { (auth, user) in
 //			self.showAlertMessage(message: "listener: " + String(describing: auth.currentUser?.email))
 //		}
-		
-		// need a sign in page.
-		
-		if Auth.auth().currentUser == nil {
-			Auth.auth().signIn(withEmail: "jdevfeedback@gmail.com", password: "testpw") { (user, error) in
-				if error != nil {
-					
-					Auth.auth().createUser(withEmail: "jdevfeedback@gmail.com", password: "testpw"){ (user, error) in
-						if error != nil {
-							// show error
-							self.showAlertMessage(message: "Error : Some online features may be disabled.")
-							self.activityIndicator.stopAnimating()
-						}
-					}
-					
-					return
-				} else if error == nil {
-					if user != nil {
-						self.getOnlineTournaments()
-					}
-				}
-			}
-		} else {
-			self.getOnlineTournaments()
-		}
 	}
     
     override func viewDidAppear(_ animated: Bool) {
@@ -79,9 +51,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 							   contentType: "Tournaments Page View",
 							   contentId: "8",
 							   customAttributes: [:])
-		
-		
-		updateLocalTournamentList()
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -104,8 +73,8 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 //		}
 	}
 	
-	func showAlertMessage(message: String) {
-		let alert = UIAlertController(title: "Hey!",
+	func showAlertMessage(title: String, message: String) {
+		let alert = UIAlertController(title: title,
 									  message: message, preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -173,8 +142,9 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournament.id = Int(id)
 		tournament.poolList = List<Pool>()
 		tournament.teamList = List<Team>()
-		tournament.userID = Analytics.appInstanceID()
+		tournament.userID = Auth.auth().currentUser?.uid ?? Analytics.appInstanceID()
 		tournament.created_date = Date()
+		tournament.creatorUserName = Auth.auth().currentUser?.displayName ?? ""
 		
 		try! self.realm.write {
 			self.realm.add(tournament)
@@ -183,7 +153,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		
 		Analytics.logEvent("Tournament_Created", parameters: [
 			"id": id ])
-		
 		
 		TournamentController.setTournamentId(id: id)
 	}
@@ -197,10 +166,17 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         return count == 0
     }
     
-//    @IBAction func getOnlineTournamentButtonClicked(_ sender: UIButton) {
-//        parseOnlineTournaments()
-//    }
-//
+    @IBAction func getOnlineTournamentButtonClicked(_ sender: UIButton) {
+		self.activityIndicator.startAnimating()
+	
+		if Auth.auth().currentUser == nil {
+			loginOrSignUp(name: "beta", email: "jdevfeedback@gmail.com", pw: "testpw")
+		} else {
+			self.getOnlineTournaments()
+		}
+    }
+
+	// CHALLONGE STUFF
 //    func parseOnlineTournaments() {
 //        challongeConnector.getTournaments()
 //        let onlineTournaments = challongeConnector.tournamentList
@@ -232,13 +208,19 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 //        updateTournamentList()
 //
 //    }
+// END CHALLONGE STUFF
 	
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tournamentButtonCell")
         let button = cell?.contentView.subviews[0] as! UIButton
+		let progress_label = cell?.contentView.subviews[1] as! UILabel
+		
         if tournamentList.count > 0 {
-            button.setTitle(tournamentList[indexPath.row].value(forKeyPath: "name") as? String,
+			button.setTitle((tournamentList[indexPath.row].value(forKeyPath: "name") as? String)!,
                         for: .normal)
+			
+			let progressText = String(tournamentList[indexPath.row].progress_meter) + "%"
+			progress_label.text = progressText
         
             button.addTarget(self,
                          action: #selector(tournamentButton_Clicked),
@@ -268,11 +250,11 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
 	
 	func getOnlineTournaments() {
-		tournamentParser.getOnlineTournaments()
+		tournamentDao.getOnlineTournaments()
 	}
 	
 	// DELEGATION METHODS
-	func didParseTournamentData() {
+	func didGetOnlineTournamentData() {
 		activityIndicator.stopAnimating()
 		performSegue(withIdentifier: "tournamentSelectedSegue", sender: self)
 	}
@@ -289,12 +271,14 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 				}
 				
 				tournamentList.append(tournament)
+			} else {
+				// not unique.. let's... overwrite it?
+				overwriteTournamentInRealm(newTournament: tournament)
 			}
 		}
 		
-		activityIndicator.stopAnimating()
 		updateTournamentList()
-		
+		activityIndicator.stopAnimating()
 	}
 	
 	// END DELEGATION METHODS
@@ -306,6 +290,19 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		}
 		
 		return count == 0
+	}
+	
+	func overwriteTournamentInRealm(newTournament: Tournament) {
+		let tournaments = realm.objects(Tournament.self).filter("id = \(newTournament.id)")
+		
+		// grab tournament that matches the online tournament
+		// set the local Realm tournament to match the online one.
+		
+		if var tObj = tournaments.first {
+			try! realm.write {
+				tObj = newTournament
+			}
+		}
 	}
 	
 	func updateTournamentList() {
@@ -330,11 +327,14 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 						} else {
 							// we are online, but it's public, fetch the data.
 							activityIndicator.startAnimating()
-							tournamentParser.getTournamentData(tournament: tournament)
+							
+							// let's go tournamentDAO.getTournamentData. the fetch will call parse
+							// parse calls back to DAO, DAO finishes and passses back to this view.
+							tournamentDao.getTournamentData(tournament: tournament)
 						}
 					} else {
 						// didn't need to download data, just move forward like normal
-						didParseTournamentData()
+						didGetOnlineTournamentData()
 					}
                 }
             }
@@ -357,7 +357,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 				}
 				
 				self.activityIndicator.startAnimating()
-				self.tournamentParser.getTournamentData(tournament: tournament)
+				self.tournamentDao.getTournamentData(tournament: tournament)
 			} else {
 				self.showPasswordResultAlert(isSuccess: false)
 			}
@@ -372,14 +372,13 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			}
 			
 			self.activityIndicator.startAnimating()
-			self.tournamentParser.getTournamentData(tournament: tournament)
+			self.tournamentDao.getTournamentData(tournament: tournament)
 		}))
 		
 		alert.addTextField { (textField) in
 			textField.placeholder = "Tournament Password"
 			textField.borderStyle = UITextBorderStyle.roundedRect
 		}
-		
 		
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
 			// cancel
@@ -400,5 +399,28 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		}))
 		
 		present(alert, animated: true, completion: nil)
+	}
+	
+	func loginOrSignUp(name: String, email: String, pw: String) {
+		Auth.auth().signIn(withEmail: email, password: pw) { (user, error) in
+			if error != nil {
+				
+				Auth.auth().createUser(withEmail: email, password: pw){ (user, error) in
+					if error != nil {
+						// show error
+						self.showAlertMessage(title: "Fetch Error", message: "Some online features may be disabled.")
+						self.activityIndicator.stopAnimating()
+						user?.createProfileChangeRequest().displayName = name
+					}
+				}
+				
+				return
+			} else if error == nil {
+				if user != nil {
+					self.getOnlineTournaments()
+					user?.createProfileChangeRequest().displayName = name
+				}
+			}
+		}
 	}
 }
