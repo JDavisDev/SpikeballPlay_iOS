@@ -19,7 +19,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()
-    let challongeConnector = ChallongeAPI()
 	let tournamentDao = TournamentDAO()
 	let fireDB = Firestore.firestore()
 	var handle: AuthStateDidChangeListenerHandle?
@@ -35,15 +34,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournamentDao.delegate = self
 		super.viewDidLoad()
     }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(true)
-		tournamentList.removeAll()
-		updateLocalTournamentList()
-//		handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-//			self.showAlertMessage(message: "listener: " + String(describing: auth.currentUser?.email))
-//		}
-	}
     
     override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(true)
@@ -51,6 +41,9 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 							   contentType: "Tournaments Page View",
 							   contentId: "8",
 							   customAttributes: [:])
+		
+		tournamentList.removeAll()
+		updateLocalTournamentList()
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -256,7 +249,12 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	// DELEGATION METHODS
 	func didGetOnlineTournamentData() {
 		activityIndicator.stopAnimating()
-		performSegue(withIdentifier: "tournamentSelectedSegue", sender: self)
+		
+		if(TournamentController.getCurrentTournament().isReadOnly) {
+			performSegue(withIdentifier: "readOnlyTournamentSelectedSegue", sender: self)
+		} else {
+			performSegue(withIdentifier: "tournamentSelectedSegue", sender: self)
+		}
 	}
 	
 	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
@@ -303,6 +301,8 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 				tObj = newTournament
 			}
 		}
+		
+		updateTournamentList()
 	}
 	
 	func updateTournamentList() {

@@ -42,7 +42,7 @@ class TeamsController {
 		var count = tournament.teamList.count
 		var countString = String(count)
 		
-		for _ in 1...tournament.teamList.count {
+		for _ in 1...tournament.teamList.count + 1 {
 			if getTeamByName(name: "Team #" + countString, tournamentId: tournament.id).name == "Team #" + countString {
 				// we've found a match, try another number
 				count += 1
