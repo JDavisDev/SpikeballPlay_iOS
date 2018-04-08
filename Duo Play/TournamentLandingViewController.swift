@@ -19,6 +19,7 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate {
 	let tournamentDao = TournamentDAO()
 	let realm = try! Realm()
 	var tournament = Tournament()
+	let bracketController = BracketController()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,8 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate {
 		tournamentDao.delegate = self
 		updateButtons()
 		updateView()
+	
+		bracketController.updateTournamentProgress()
     }
 	
 	override func viewDidAppear(_ animated: Bool) {

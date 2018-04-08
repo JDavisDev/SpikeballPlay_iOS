@@ -80,7 +80,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 	}
 		
     func getMaxBracketWidth() -> Int {
-        var returnInt = 50
+        var returnInt = 70
         
         if tournament.teamList.count > 0 {
             for team in tournament.teamList {
