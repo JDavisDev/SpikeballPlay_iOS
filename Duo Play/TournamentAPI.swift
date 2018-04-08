@@ -96,4 +96,5 @@ struct tournaments {
  "team_convertable": false,
  "group_stages_were_started": false
  }
+git test
  */
