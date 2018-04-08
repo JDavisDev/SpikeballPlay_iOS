@@ -39,17 +39,17 @@ class BracketController {
     func createBracket() {
         if tournament.teamList.count > 0 {
             seedTeams()
-            
+			
             if tournamentProgress <= 0 {
                 createAndOrderMatchups()
 			} else {
 				try! realm.write {
 					for team in tournament.teamList {
-						resetTeamValues(team: team)
+						//resetTeamValues(team: team)
 					}
 				}
 				
-				createAndOrderMatchups()
+				//createAndOrderMatchups()
 			}
 			
 			updateTournamentProgress()
@@ -150,25 +150,29 @@ class BracketController {
         try! realm.write {
             var array = Array(tournament.teamList)
             tournament.teamList.removeAll()
-            
+			
+			array.sort {
+				return $0.seed < $1.seed
+			}
+			
             // seed the teams here based on wins, then point diff, then name
-            array.sort {
-                if $0.wins == $1.wins {
-					// if tournament has started, sort by wins, then seed.
-					if tournament.progress_meter <= 0 {
-                    	if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
-                        	return $0.seed < $1.seed
-                    	} else {
-                        	return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
-                    	}
-					} else {
-						return $0.seed < $1.seed
-					}
-                } else {
-                    return $0.wins > $1.wins
-                }
-            }
-            
+//            array.sort {
+//                if $0.wins == $1.wins {
+//					// if tournament has started, sort by wins, then seed.
+//					if tournament.progress_meter <= 0 {
+//                    	if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
+//                        	return $0.seed < $1.seed
+//                    	} else {
+//                        	return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
+//                    	}
+//					} else {
+//						return $0.seed < $1.seed
+//					}
+//                } else {
+//                    return $0.wins > $1.wins
+//                }
+//            }
+			
             // we've sorted/seeded, now re-add
             var seed = 1
             for team in array {
@@ -202,6 +206,8 @@ class BracketController {
 	
 	// if pool play, check the pool matches
 	// else just check bracket matchups.
+	// calculate tourney size and how much each match is worth
+	// then add them up, not including byes!
     func updateTournamentProgress() {
         if tournament.teamList.count > 0 {
 			var currentPoints = Float(0)
@@ -236,7 +242,7 @@ class BracketController {
 			// BYE matchups are counted as reported.
 			// if we ONLY have byes reported, set to zero
 			// when another is reported, we can count them in the progress
-			if getByeCount() == Int(currentPoints/pointsPerMatchup) {
+			if getByeCount() == Int(round(currentPoints/pointsPerMatchup)) {
 				tournamentProgress = 0
 			} else {
 				let progress = Int(round(currentPoints))
@@ -250,7 +256,7 @@ class BracketController {
 			tournament.progress_meter = tournamentProgress
 		}
 		
-		tournamentDAO.updateOnlineTournament(tournament: tournament)
+		tournamentDAO.addOnlineTournament(tournament: tournament)
     }
     
     // Setting up the bracket matchups
@@ -433,11 +439,21 @@ class BracketController {
 	}
 	
 	func resetTeamValues(team: Team) {
-		team.wins = 0
-		team.losses = 0
-		team.bracketRounds.removeAll()
-		team.bracketRounds.append(1)
-		team.bracketVerticalPositions.removeAll()
+		if !realm.isInWriteTransaction {
+			try! realm.write {
+				team.wins = 0
+				team.losses = 0
+				team.bracketRounds.removeAll()
+				team.bracketRounds.append(1)
+				team.bracketVerticalPositions.removeAll()
+			}
+		} else {
+			team.wins = 0
+			team.losses = 0
+			team.bracketRounds.removeAll()
+			team.bracketRounds.append(1)
+			team.bracketVerticalPositions.removeAll()
+		}
 	}
     
     // called from within a realm.write
@@ -482,16 +498,17 @@ class BracketController {
 				}
 				
 				for teamTwo in availableTeams {
+					var canContinueTwo = true
 					// make sure the team isn't in another matchup
 					for matchup in tournament.matchupList {
 						if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
 							matchup.teamTwo?.seed == teamTwo.seed)) {
-							canContinue = false
+							canContinueTwo = false
 							break
 						}
 					}
 					
-					if canContinue &&
+					if canContinue && canContinueTwo &&
 						team.name != teamTwo.name && team.bracketRounds.last == teamTwo.bracketRounds.last &&
 						team.bracketVerticalPositions.last != nil &&
 						team.bracketVerticalPositions.last == teamTwo.bracketVerticalPositions.last {

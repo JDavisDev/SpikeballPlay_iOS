@@ -23,7 +23,7 @@ class TGPlayersViewController: UIViewController, UIPickerViewDelegate, UIPickerV
 		
         // Do any additional setup after loading the view.
 		teamSizePickerView.delegate = self
-		teamSizePickerView.dataSource = self as? UIPickerViewDataSource
+		teamSizePickerView.dataSource = self as UIPickerViewDataSource
 		
 		playersTableView.delegate = self
 		playersTableView.dataSource = self

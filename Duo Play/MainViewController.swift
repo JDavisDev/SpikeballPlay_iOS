@@ -40,7 +40,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 					Auth.auth().createUser(withEmail: "jdevfeedback@gmail.com", password: "testpw"){ (user, error) in
 						if error != nil {
 							// show error
-							self.showAlertMessage(message: "Error : Some online features may be disabled.")
+							self.showAlertMessage(title: "Sign In", message: "Error : Some online features may be disabled.")
 						}
 					}
 					
@@ -48,10 +48,32 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 				}
 			}
 		}
+		
+		getAnnouncements()
+		
 	}
 	
-	func showAlertMessage(message: String) {
-		let alert = UIAlertController(title: "Hey!",
+	func getAnnouncements() {
+		let fireDB = Firestore.firestore()
+		fireDB.collection("announcements").getDocuments { (querySnapshot, err) in
+			if let err = err {
+				print("Error getting announcements \(err)")
+			} else {
+				let obj = querySnapshot!.documents.first?.data()
+				if((obj) != nil) {
+					let title = obj!["title"] as! String
+					let message = obj!["message"] as! String
+					
+					if title.count > 0 && message.count > 0 {
+						self.showAlertMessage(title: title, message: message)
+					}
+				}
+			}
+		}
+	}
+	
+	func showAlertMessage(title: String, message: String) {
+		let alert = UIAlertController(title: title,
 									  message: message, preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in

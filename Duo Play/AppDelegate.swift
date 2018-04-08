@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
 		
 		FirebaseApp.configure()
-		let fireDB = Firestore.firestore()
+		let _ = Firestore.firestore()
 		Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
         return true
     }

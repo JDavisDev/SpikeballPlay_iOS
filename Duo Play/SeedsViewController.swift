@@ -32,17 +32,17 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 							   contentId: "12",
 							   customAttributes: [:])
 		
-        updateTeamSeedsList()
-		updateTitle()
+//        updateTeamSeedsList()
+//		updateTitle()
     }
 	
 	func updateTitle() {
 		if tournament.progress_meter > 0 {
 			tabBarItem.title = "Standings"
 			editSeedsButton.isHidden = true
-		} else {
+		} else if tournament.isReadOnly {
 			tabBarItem.title = "Seeds"
-			editSeedsButton.isHidden = false
+			editSeedsButton.isHidden = true
 		}
 	}
     

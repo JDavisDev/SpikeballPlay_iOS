@@ -39,8 +39,13 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     override func viewWillDisappear(_ animated: Bool) {
 		if didTeamsChange {
-        	let bracketController = BracketController()
-        	bracketController.createBracket()
+			let bracketController = BracketController()
+			
+			for team in tournament.teamList {
+				bracketController.resetTeamValues(team: team)
+			}
+			
+			bracketController.createBracket()
 			didTeamsChange = false
 		}
 		
@@ -52,7 +57,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 	@IBAction func addTeamsInBulk(_ sender: UIButton) {
 		// debug only for now
 		// add a ton of teams to see what happens
-		if tournament.progress_meter <= 0 {
+		if tournament.progress_meter <= 0 && !tournament.isReadOnly {
 			for _ in 1...2 {
 				let team = Team()
 				
@@ -79,7 +84,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     @IBAction func addTeam(_ sender: UIButton) {
         // check if tournament has started, only add teams if it has not.
-        if tournament.progress_meter <= 0 {
+        if tournament.progress_meter <= 0 && !tournament.isReadOnly {
             teamsTableView.setEditing(false, animated: true)
             // let's present an alert to enter a team. cleaner ui
             let alert = UIAlertController(title: "Add Team",
@@ -88,21 +93,28 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
             let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
                 _ = alert.textFields![0] as UITextField
                 let newName = alert.textFields![0].text!
-                let team = Team()
-                
-                try! self.realm.write() {
-                    team.name = newName
-                    team.division = "Advanced"
-                    team.bracketRounds.append(1)
-                    team.id = self.tournament.teamList.count + 1
-                    self.tournament.teamList.append(team)
-                    team.tournament_id = self.tournament.id
-                }
 				
-				self.tournamentDAO.addOnlineTournamentTeam(team: team)
-				self.didTeamsChange = true
-                self.teamsController.addTeam(team: team)
-                self.teamsTableView.reloadData()
+				//make sure they entered a name!
+				if newName.count > 0 {
+					let team = Team()
+					
+					try! self.realm.write() {
+						team.name = newName
+						team.division = "Advanced"
+						team.bracketRounds.append(1)
+						team.id = self.tournament.teamList.count + 1
+						team.seed = team.id
+						self.tournament.teamList.append(team)
+						team.tournament_id = self.tournament.id
+					}
+					
+					self.tournamentDAO.addOnlineTournamentTeam(team: team)
+					self.didTeamsChange = true
+					self.teamsController.addTeam(team: team)
+					self.teamsTableView.reloadData()
+				} else {
+					self.presentEmptyTeamNameAlert()
+				}
             }
             
             alert.addTextField { (textField) in
@@ -125,6 +137,32 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 	func presentTournamentStartedAlert() {
 		let alert = UIAlertController(title: "Tournament Started",
 									  message: "The tournament has already begun, teams may not be changed.",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			// ok / dismiss
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func presentEmptyTeamNameAlert() {
+		let alert = UIAlertController(title: "Error",
+									  message: "Must enter a team name",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			// ok / dismiss
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func presentTournamentReadOnlyAlert() {
+		let alert = UIAlertController(title: "Read Only",
+									  message: "The tournament is locked and cannot be edited.",
 									  preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
@@ -157,7 +195,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     @objc func longPress(_ sender: UILongPressGestureRecognizer) {
         var selectedTeam = Team()
 		
-		if tournament.progress_meter <= 0 {
+		if tournament.progress_meter <= 0 && !tournament.isReadOnly {
 			if let button = sender.view as? UIButton {
 				let name = button.currentTitle
 				selectedTeam = getTeamByName(name: name!)

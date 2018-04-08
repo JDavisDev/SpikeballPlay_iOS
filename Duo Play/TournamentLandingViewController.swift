@@ -9,13 +9,14 @@
 import UIKit
 import RealmSwift
 
-class TournamentLandingViewController: UIViewController {
-
+class TournamentLandingViewController: UIViewController, TournamentDAODelegate {
 	@IBOutlet weak var poolPlayButton: UIButton!
 	
 	@IBOutlet weak var tournamentNameLabel: UILabel!
 	@IBOutlet weak var bracketButton: UIButton!
+	@IBOutlet weak var refreshButton: UIButton!
 	
+	let tournamentDao = TournamentDAO()
 	let realm = try! Realm()
 	var tournament = Tournament()
 	
@@ -23,6 +24,7 @@ class TournamentLandingViewController: UIViewController {
         super.viewDidLoad()
 
         tournament = TournamentController.getCurrentTournament()
+		tournamentDao.delegate = self
 		updateButtons()
 		updateView()
     }
@@ -30,6 +32,27 @@ class TournamentLandingViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(true)
 	}
+	
+	@IBAction func refreshButtonClicked(_ sender: UIButton) {
+		// refresh tournament data and reload.
+		tournamentDao.getOnlineTournamentById(id: tournament.id)
+	}
+	
+	// DAO DELEGATION METHODS
+	
+	// we got the tournament
+	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
+		if let tournament = onlineTournamentList.first {
+			tournamentDao.getTournamentData(tournament: tournament)
+		}
+	}
+	
+	// we got the tournament data!
+	func didGetOnlineTournamentData() {
+		showAlertMessage(title: "Success", message: "Tournament Updated!")
+	}
+	
+	// END DELEGATION
 	
 	func updateButtons() {
 		poolPlayButton.layer.cornerRadius = 20
@@ -55,5 +78,17 @@ class TournamentLandingViewController: UIViewController {
 		} else {
 			bracketButton.isHidden = true
 		}
+	}
+	
+	func showAlertMessage(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
 	}
 }

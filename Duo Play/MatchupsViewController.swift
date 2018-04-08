@@ -94,11 +94,14 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedMatchup = matchupList[indexPath.row]
-		Answers.logCustomEvent(withName: "Matchup List Tapped",
+		// only allow selection if tournament is editable.
+		if !tournament.isReadOnly {
+        	let selectedMatchup = matchupList[indexPath.row]
+			Answers.logCustomEvent(withName: "Matchup List Tapped",
 							   customAttributes: [:])
-		Analytics.logEvent("Bracket_List_Tapped", parameters: nil)
-        performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
+			Analytics.logEvent("Bracket_List_Tapped", parameters: nil)
+        	performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
+		}
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

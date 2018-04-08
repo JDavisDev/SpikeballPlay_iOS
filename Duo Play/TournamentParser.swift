@@ -23,55 +23,6 @@ class TournamentParser {
 	
 	var delegate: TournamentParserDelegate?
 	
-	func getOnlineTournaments() {
-		var list = [[String: Any]]()
-		fireDB.collection("tournaments").getDocuments { (querySnapshot, err) in
-			if let err = err {
-				print("Error getting tournaments \(err)")
-			} else {
-				for document in querySnapshot!.documents {
-					list.append(document.data())
-				}
-				
-				self.parseOnlineTournaments(onlineTournamentData: list)
-			}
-		}
-	}
-	
-	func getOnlineTournamentByName(name: String) {
-		var list = [[String: Any]]()
-		fireDB.collection("tournaments")
-			.whereField("name", isEqualTo: name)
-			.getDocuments { (querySnapshot, err) in
-			if let err = err {
-				print("Error getting tournaments \(err)")
-			} else {
-				for document in querySnapshot!.documents {
-					list.append(document.data())
-				}
-				
-				self.parseOnlineTournaments(onlineTournamentData: list)
-			}
-		}
-	}
-	
-	func getOnlineTournamentById(id: String) {
-		var list = [[String: Any]]()
-		fireDB.collection("tournaments")
-			.whereField("id", isEqualTo: id)
-			.getDocuments { (querySnapshot, err) in
-				if let err = err {
-					print("Error getting tournaments \(err)")
-				} else {
-					for document in querySnapshot!.documents {
-						list.append(document.data())
-					}
-					
-					self.parseOnlineTournaments(onlineTournamentData: list)
-				}
-		}
-	}
-	
 	func parseOnlineTournaments(onlineTournamentData: [[String: Any]]) {
 		var tournamentArray = [Tournament]()
 		
@@ -92,45 +43,32 @@ class TournamentParser {
 			tournament.isPoolPlayFinished = obj["isPoolPlayFinished"] as! Bool
 			tournament.playersPerPool = obj["playersPerPool"] as! Int
 			
-			tournamentArray.append(tournament)
-		}
-		
-		delegate?.didGetOnlineTournaments(onlineTournamentList: tournamentArray)
-	}
-	
-	func getTournamentData(tournament: Tournament) {
-		
-		fireDB.collection("teams")
-			.whereField("tournament_id", isEqualTo: tournament.id).getDocuments { (querySnapshot, err) in
-			if let err = err {
-				print("Error getting teams \(err)")
-			} else {
-				var list = [[String: Any]]()
-				for document in querySnapshot!.documents {
-					list.append(document.data())
-				}
-				
-				self.parseOnlineTeams(onlineTeamsData: list, tournament: tournament)
+			// if tournament is public, add it.
+			// if private, only add if the tournament was created by this user.
+			// not sure if this will work perfectly.
+			if !tournament.isPrivate || tournament.userID == Auth.auth().currentUser?.uid ||
+				tournament.userID == Analytics.appInstanceID() {
+				tournamentArray.append(tournament)
 			}
 		}
 		
-		fireDB.collection("bracket_matchups")
-			.whereField("tournament_id", isEqualTo: tournament.id).getDocuments { (querySnapshot, err) in
-				if let err = err {
-					print("Error getting bracket matchups \(err)")
-				} else {
-					var list = [[String: Any]]()
-					for document in querySnapshot!.documents {
-						list.append(document.data())
-					}
-					
-					self.parseOnlineBracketMatchups(onlineBracketMatchupData: list, tournament: tournament)
-				}
-		}
+		delegate?.didParseTournaments(tournamentList: tournamentArray)
 	}
 	
 	func parseOnlineTeams(onlineTeamsData: [[String: Any]], tournament: Tournament) {
 		var teamArray = [Team]()
+		
+//		// wipe out realm data and insert the new stuff.
+//		if realm.isInWriteTransaction {
+//			tournament.matchupList.removeAll()
+//			let objs = realm.objects(Team.self).filter("tournament_id = \(tournament.id)")
+//			realm.delete(objs)
+//		} else {
+//			try! realm.write {
+//				let objs = realm.objects(Team.self).filter("tournament_id = \(tournament.id)")
+//				realm.delete(objs)
+//			}
+//		}
 		
 		for obj in onlineTeamsData {
 			let team = Team()
@@ -162,7 +100,6 @@ class TournamentParser {
 			}
 			
 			// check for duplicates and this should be good!
-			// then do the same for bracket match ups!!!!
 			if isTeamUnique(team: team) {
 				teamArray.append(team)
 			}
@@ -202,6 +139,18 @@ class TournamentParser {
 	func parseOnlineBracketMatchups(onlineBracketMatchupData: [[String:Any]], tournament: Tournament) {
 		var matchupArray = [BracketMatchup]()
 		let teamsController = TeamsController()
+		
+		// wipe out realm data and insert the new stuff.
+		if realm.isInWriteTransaction {
+			tournament.matchupList.removeAll()
+			let objs = realm.objects(BracketMatchup.self).filter("tournament_id = \(tournament.id)")
+			realm.delete(objs)
+		} else {
+			try! realm.write {
+				let objs = realm.objects(BracketMatchup.self).filter("tournament_id = \(tournament.id)")
+				realm.delete(objs)
+			}
+		}
 		
 		for obj in onlineBracketMatchupData {
 			let matchup = BracketMatchup()
@@ -263,7 +212,7 @@ class TournamentParser {
 	
 	func didFetchData() {
 		if isTeamsFinished && isBracketMatchupsFinished {
-			delegate?.didParseTournamentData()
+			delegate?.didParseTouramentData()
 			isTeamsFinished = false
 			isBracketMatchupsFinished = false
 		}

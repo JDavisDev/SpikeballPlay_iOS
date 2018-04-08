@@ -69,7 +69,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
         byeCount = bracketController.getByeCount()
 		//bracketController.createBracket()
         createBracketView()
-        updateBracketView()
     }
 	
 	// Pinch Controls
@@ -129,7 +128,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 		
 		createFirstRoundBracketCells()
 		createAdditionalBracketCells()
-
     }
 	
 	// reset wins/losses for each team so we can truly reset the bracket positions.
@@ -178,7 +176,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 						
                         teamOneLabel.text = teamOne?.name
 						
-                        if teamTwo == nil {
+                        if teamTwo == nil || teamTwo?.name == "nil" || teamTwo?.name == nil {
                             teamTwoLabel.text = "BYE"
                             teamTwoLabel.textColor = UIColor.black
                         } else {
@@ -195,8 +193,11 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
                 }
                 
                 // tap recognizer
-                let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
-                self.view.addGestureRecognizer(gesture)
+				// only set up if user can edit
+				if !tournament.isReadOnly {
+                	let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
+                	self.view.addGestureRecognizer(gesture)
+				}
             }
         }
 	
@@ -312,6 +313,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 			teamOneLabel.text = "TBD"
 			teamOneLabel.textColor = UIColor.black
 			
+			
+			updateBracketView()
 			//grab bracketCells.last OR this one cell to get the first RIGHT a bracket should be.
 			//let height = bracketCell.frame.maxX + 50
 			//scrollView.contentSize = CGSize(width: frameWidth, height: height)
@@ -402,6 +405,13 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
         } else {
             // if first round, teams with higher seeds are always on top
             // so higher seed will be the teams lower than half the count of teams.
+//			if team.seed <= byeCount() return false?
+//			if team.seed <= bracketController.baseBracketSize/2 {
+//				return false
+//			} else {
+//				return true
+//			}
+			
 			if tournament.teamList.count % 2 == 1 {
 				// odd number
 				// need a new calc method here..
@@ -441,7 +451,10 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 					teamOneLabel.text != teamTwoLabel.text {
 					
 					for matchup in tournament.matchupList {
-						if	!matchup.isReported && matchup.teamOne!.name == teamOneLabel.text &&
+						if	!matchup.isReported &&
+							matchup.teamOne != nil &&
+							matchup.teamTwo != nil &&
+							matchup.teamOne!.name == teamOneLabel.text &&
 							matchup.teamTwo!.name == teamTwoLabel.text {
 							selectedMatchup = matchup
 							matchupFound = true
@@ -473,7 +486,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 						}))
 						// Add delete in here. to maybe delete match ups and reset everything down stream...
 						present(alert, animated: true, completion: nil)
-					} else if matchupFound && !selectedMatchup.isReported {
+					} else if matchupFound && !selectedMatchup.isReported && !tournament.isReadOnly {
 						// not quick report. send to match reporter.
 						Answers.logCustomEvent(withName: "Bracket Match Tapped",
 											   customAttributes: [:])
