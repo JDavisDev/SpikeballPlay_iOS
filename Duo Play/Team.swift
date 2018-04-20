@@ -23,6 +23,10 @@ public class Team : Object {
     @objc dynamic public var division = ""
     @objc dynamic public var isEliminated = false
     @objc dynamic public var tournament_id: Int = 0
+	@objc dynamic public var challonge_tournament_id: Int = 0
+	@objc dynamic public var final_rank: Int = 0
+	@objc dynamic public var challonge_group_id: Int = 0
+	@objc dynamic public var challonge_participant_id: Int = 0
     var bracketRounds = List<Int>()
     var bracketVerticalPositions = List<Int>()
     var poolPlayGameList = List<PoolPlayMatchup>()

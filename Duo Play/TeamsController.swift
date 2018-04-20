@@ -20,8 +20,8 @@ class TeamsController {
     func addTeam(team: Team) {
         let newPool = getAvailablePool()
         let tournament = TournamentController.getCurrentTournament()
-		
-        try! realm.write() {
+
+		try! realm.write() {
             if team.name.count == 0 {
 				team.name = "Team #" + getNextTeamNameId(tournament: tournament)
             }
@@ -94,6 +94,7 @@ class TeamsController {
         let poolCount = tournament.poolList.count
         let name = "Pool " + String(format: "%c", poolCount + 65) as String
         let pool = Pool()
+		pool.tournament_id = tournament.id
         pool.name = name
         pool.teamList = List<Team>()
         pool.division = "Advanced"

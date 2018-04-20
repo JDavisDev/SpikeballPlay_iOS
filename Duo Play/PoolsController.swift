@@ -10,11 +10,32 @@ import Foundation
 import RealmSwift
 
 class PoolsController {
+	static public var selectedPoolName = ""
+	
     let realm = try! Realm()
 	var tournament = Tournament()
 	
 	init() {
 		tournament = TournamentController.getCurrentTournament()
+	}
+	
+	static func getSelectedPool() -> Pool {
+		let realm = try! Realm()
+		let poolName = PoolsController.getSelectedPoolName()
+		let tournament = TournamentController.getCurrentTournament()
+		if let results = realm.objects(Pool.self).filter("name = '\(poolName)' AND tournament_id = \(tournament.id)").first {
+			return results
+		}
+		
+		return Pool()
+	}
+	
+	static func setSelectedPoolName(name: String) {
+		PoolsController.selectedPoolName = name
+	}
+	
+	static func getSelectedPoolName() -> String {
+		return PoolsController.selectedPoolName
 	}
 	
     func addTeamToPool(pool: Pool, team: Team) {
@@ -23,6 +44,24 @@ class PoolsController {
             pool.teamList.append(team)
         }
     }
+	
+	// add blank new pool
+	func addNewPool() {
+		try! realm.write {
+			let poolCount = tournament.poolList.count
+			let name = "Pool " + String(format: "%c", poolCount + 65) as String
+			let pool = Pool()
+			pool.tournament_id = tournament.id
+			pool.name = name
+			pool.teamList = List<Team>()
+			pool.division = "Advanced"
+			pool.isPowerPool = false
+			pool.matchupList = List<PoolPlayMatchup>()
+			
+			realm.add(pool)
+			tournament.poolList.append(pool)
+		}
+	}
 	
 	func getProgressOfPool(pool: Pool) -> Float {
 		for poolTest in tournament.poolList {
@@ -119,7 +158,8 @@ class PoolsController {
 		tournament.isPoolPlayFinished = true
 		seedTeams()
 	}
-    
+	
+	// finish all match ups for the pool and close it out
 	func finishPoolMatchups(pool: Pool) {
 		try! realm.write {
 			for matchup in pool.matchupList {

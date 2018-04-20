@@ -217,4 +217,8 @@ class TournamentParser {
 			isBracketMatchupsFinished = false
 		}
 	}
+	
+	func parseChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament) {
+		
+	}
 }

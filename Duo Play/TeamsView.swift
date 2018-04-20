@@ -120,39 +120,23 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     
     // Dragging teams around
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movedObject = tournament.teamList[sourceIndexPath.row]
+		// get the pool to match with the corresponding section
+		let sourcePool = tournament.poolList[sourceIndexPath.section]
+		let movedObject = sourcePool.teamList[sourceIndexPath.row]
+		
+		let destPool = tournament.poolList[destinationIndexPath.section]
+		
 		try! realm.write {
-			tournament.teamList.remove(at: sourceIndexPath.row)
+			tournament.teamList.remove(at: tournament.teamList.index(of: movedObject)!)
 			tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
+			sourcePool.teamList.remove(at: sourceIndexPath.row)
+			destPool.teamList.append(movedObject)
 		}
 		
-		resetPoolTeams()
         self.teamsTableView.reloadData()
 		
     }
-    
-    func resetPoolTeams() {
-        // teams were moved around, reset which pool they belong to
-		
-		try! realm.write {
-			for pool in tournament.poolList {
-				pool.teamList.removeAll()
-			}
-		}
-		
-			
-			var poolIndex = 0
-			for index in 1...tournament.teamList.count {
-				if index % tournament.playersPerPool == 0 {
-					poolIndex += 1
-				}
-				
-				if tournament.poolList.count > poolIndex && tournament.teamList.count > index - 1 {
-					poolsController.addTeamToPool(pool: tournament.poolList[poolIndex], team: tournament.teamList[index - 1])
-				}
-		}
-    }
-    
+	
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
     }
@@ -165,13 +149,14 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     // Just need help accessing each row in each section.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
-        
-        // hacky modifier.. 
-        let modifier = indexPath.section * tournament.teamList.count - 1 > 0 ? (indexPath.section * tournament.playersPerPool) : 0
 		
-		if tournament.teamList.count > indexPath.row + modifier {
-        	cell!.textLabel?.text = tournament.teamList[indexPath.row + modifier].name
-        	cell?.detailTextLabel?.text = String(describing: tournament.teamList[indexPath.row].division)
+		// get the pool to match with the corresponding section
+        let pool = tournament.poolList[indexPath.section]
+		let team = pool.teamList[indexPath.row]
+		
+		if tournament.teamList.count > 0 {
+        	cell!.textLabel?.text = team.name
+        	cell?.detailTextLabel?.text = team.division
 		}
         return cell!
     }
@@ -181,8 +166,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			// turn editing off
 			self.teamsTableView.setEditing(false, animated: true)
 			editTeamsButton.setTitle("Edit", for: .normal)
-			//bracketController.updateSeeds(teamList: teamList)
 		} else {
+			// turn editing on
 			self.teamsTableView.setEditing(true, animated: true)
 			editTeamsButton.setTitle("Save", for: .normal)
 		}

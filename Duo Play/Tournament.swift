@@ -34,6 +34,7 @@ class Tournament : Object {
 	@objc dynamic public var created_date = Date()
 	@objc dynamic public var updated_date = Date()
 	@objc dynamic public var creatorUserName = ""
+	@objc dynamic public var challonge_tournament_id: Int = 0
     var poolList = List<Pool>()
     var teamList = List<Team>()
     var matchupList = List<BracketMatchup>()

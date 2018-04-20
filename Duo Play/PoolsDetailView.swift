@@ -17,35 +17,21 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     let generator = PoolPlayMatchGenerator()
     
     var pool = Pool()
-    var poolName = "Pool A"
     var tournament = TournamentController.getCurrentTournament()
     var matchupList = [PoolPlayMatchup]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+		
         matchupTableView.delegate = self
         matchupTableView.dataSource = self
         pool = getCurrentPool()
         generateMatchupList()
-        // need to get current pool by passing in clicked ID or something
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        updateMatchupList()
-    }
-    
-    func getCurrentPool() -> Pool {
-        let realm = try! Realm()
-        if let results = realm.objects(Pool.self).filter("name = '" + poolName + "'").first {
-            return results
-        }
-        
-        let pool = Pool()
-        pool.name = "nil"
-        return pool
-    }
+	func getCurrentPool() -> Pool {
+		return PoolsController.getSelectedPool()
+	}
     
     func updateMatchupList() {
         self.matchupList.removeAll()
@@ -63,11 +49,9 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func generateMatchupList() {
-        if pool.matchupList.count == 0 {
             // this will generate and add matchups to pool object
-            generator.generatePoolPlayGames(pool: pool)
-        }
-        
+		generator.generatePoolPlayGames(pool: pool)
+		
         updateMatchupList()
     }
     

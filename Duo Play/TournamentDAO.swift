@@ -150,7 +150,8 @@ class TournamentDAO : TournamentParserDelegate {
 				"state" : tournament.state,
 				"isOnline": true, // tournament.isOnline,
 				"tournament_type" : tournament.tournament_type,
-				"participants_count" : tournament.teamList.count
+				"participants_count" : tournament.teamList.count,
+				"url": tournament.url
 			])
 		}
 	}

@@ -9,12 +9,14 @@
 import UIKit
 import RealmSwift
 
-class TournamentLandingViewController: UIViewController, TournamentDAODelegate {
+class TournamentLandingViewController: UIViewController, TournamentDAODelegate, UITextFieldDelegate {
 	@IBOutlet weak var poolPlayButton: UIButton!
 	
+	@IBOutlet weak var settingsButton: UIButton!
 	@IBOutlet weak var tournamentNameLabel: UILabel!
 	@IBOutlet weak var bracketButton: UIButton!
 	@IBOutlet weak var refreshButton: UIButton!
+	@IBOutlet weak var challongeLinkLabel: UITextField!
 	
 	let tournamentDao = TournamentDAO()
 	let realm = try! Realm()
@@ -34,11 +36,50 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate {
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(true)
+		
+		// could make this a button... a click takes them to the page.
+		challongeLinkLabel.delegate = self
+		challongeLinkLabel.text = "www.challonge.com/" + tournament.url
+	}
+	
+	// make it so user can't change the text, it just allows copying!
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+		return false
 	}
 	
 	@IBAction func refreshButtonClicked(_ sender: UIButton) {
 		// refresh tournament data and reload.
 		tournamentDao.getOnlineTournamentById(id: tournament.id)
+	}
+	
+	func updateButtons() {
+		poolPlayButton.layer.cornerRadius = 20
+		poolPlayButton.layer.borderColor = UIColor.white.cgColor
+		poolPlayButton.layer.borderWidth = 1
+		
+		bracketButton.layer.cornerRadius = 20
+		bracketButton.layer.borderColor = UIColor.white.cgColor
+		bracketButton.layer.borderWidth = 1
+		
+		settingsButton.layer.cornerRadius = 20
+		settingsButton.layer.borderColor = UIColor.white.cgColor
+		settingsButton.layer.borderWidth = 1
+	}
+	
+	func updateView() {
+		tournamentNameLabel.text = tournament.name
+		
+		if tournament.isPoolPlay && !tournament.isPoolPlayFinished {
+			poolPlayButton.isHidden = false
+		} else {
+			poolPlayButton.isHidden = true
+		}
+		
+		if !tournament.isPoolPlay || tournament.isPoolPlayFinished {
+			bracketButton.isHidden = false
+		} else {
+			bracketButton.isHidden = true
+		}
 	}
 	
 	// DAO DELEGATION METHODS
@@ -56,32 +97,6 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate {
 	}
 	
 	// END DELEGATION
-	
-	func updateButtons() {
-		poolPlayButton.layer.cornerRadius = 20
-		poolPlayButton.layer.borderColor = UIColor.white.cgColor
-		poolPlayButton.layer.borderWidth = 1
-		
-		bracketButton.layer.cornerRadius = 20
-		bracketButton.layer.borderColor = UIColor.white.cgColor
-		bracketButton.layer.borderWidth = 1
-	}
-	
-	func updateView() {
-		if tournament.isPoolPlay && !tournament.isPoolPlayFinished {
-			poolPlayButton.isHidden = false
-		} else {
-			poolPlayButton.isHidden = true
-		}
-		
-		tournamentNameLabel.text = tournament.name
-		
-		if !tournament.isPoolPlay || tournament.isPoolPlayFinished {
-			bracketButton.isHidden = false
-		} else {
-			bracketButton.isHidden = true
-		}
-	}
 	
 	func showAlertMessage(title: String, message: String) {
 		let alert = UIAlertController(title: title,

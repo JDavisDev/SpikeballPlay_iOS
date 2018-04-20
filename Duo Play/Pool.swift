@@ -13,6 +13,7 @@ public class Pool : Object {
     @objc dynamic public var name = ""
     @objc dynamic var division = ""
     @objc dynamic var isPowerPool = false
+	@objc dynamic var tournament_id: Int = 0
     var matchupList = List<PoolPlayMatchup>()
 	var teamList = List<Team>()
 }

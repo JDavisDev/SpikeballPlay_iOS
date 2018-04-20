@@ -135,6 +135,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournament.id = Int(id)
 		tournament.poolList = List<Pool>()
 		tournament.teamList = List<Team>()
+		tournament.url = getRandomStringForUrl(length: 12)
 		tournament.userID = Auth.auth().currentUser?.uid ?? Analytics.appInstanceID()
 		tournament.created_date = Date()
 		tournament.creatorUserName = Auth.auth().currentUser?.displayName ?? ""
@@ -148,6 +149,29 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			"id": id ])
 		
 		TournamentController.setTournamentId(id: id)
+		
+		// do online saving
+//		let challongeAPI = ChallongeTournamentAPI()
+//		challongeAPI.delegate = self
+//		challongeAPI.createChallongeTournament(tournament: tournament)
+		
+		let tournamentDao = TournamentDAO()
+		tournamentDao.addOnlineTournament(tournament: tournament)
+	}
+	
+	func getRandomStringForUrl(length: Int) -> String {
+		let letters : NSString = "abcdefghijklmnopqrstuvwxyz_0123456789"
+		let len = UInt32(letters.length)
+		
+		var randomString = ""
+		
+		for _ in 0 ..< length {
+			let rand = arc4random_uniform(len)
+			var nextChar = letters.character(at: Int(rand))
+			randomString += NSString(characters: &nextChar, length: 1) as String
+		}
+		
+		return randomString
 	}
     
     func isIdUnique(id: Int) -> Bool {

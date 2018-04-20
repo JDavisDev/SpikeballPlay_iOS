@@ -14,8 +14,19 @@ import Crashlytics
 // Need some pool play settings to check where we are in tournament.
 // controlling flow between pool play and bracket or Bracket only.
 class TournamentSettingsView: UIViewController {
-    
-	@IBOutlet weak var challongeLinkLabel: UILabel!
+	
+//	func didGetChallongeTournamentData(onlineTournament: [String : Any], localTournament: Tournament) {
+//			localTournament.id = onlineTournament["id"] as! Int
+//			localTournament.full_challonge_url = onlineTournament["full_challonge_url"] as! String
+//			localTournament.isPrivate = onlineTournament["private"] as! Bool
+//			localTournament.live_image_url = onlineTournament["live_image_url"]as! String
+//			localTournament.participants_count = onlineTournament["participants_count"] as! Int
+//			localTournament.progress_meter = onlineTournament["progress_meter"] as! Int
+//			localTournament.state = onlineTournament["state"] as! String
+//			localTournament.url = onlineTournament["url"] as! String
+//			localTournament.tournament_type = onlineTournament["tournament_type"] as! String
+//	}
+	
 	@IBOutlet weak var isPublicSwitch: UISwitch!
 	@IBOutlet weak var isOnlineSwitch: UISwitch!
 	@IBOutlet weak var tournamentNameTextField: UITextField!
@@ -29,15 +40,14 @@ class TournamentSettingsView: UIViewController {
 	@IBOutlet weak var bracketOnlyButton: UIButton!
 	
 	let bracketController = BracketController()
-    let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		if tournament.isPoolPlay {
-			playersPerPoolSegementedControl.isHidden = true
-			playersPerPoolLabel.isHidden = true
+			playersPerPoolSegementedControl.isHidden = false
+			playersPerPoolLabel.isHidden = false
 			
 			// bracket AND Pool Play
 			poolPlayAndBracketButton.setTitleColor(UIColor.yellow, for: .normal)
@@ -61,19 +71,24 @@ class TournamentSettingsView: UIViewController {
 			// maybe show a message as to why everything is disabled.
 		}
 		
-		tournamentNameTextField.text = tournament.name
-		challongeLinkLabel.text = "Challonge Link : " + tournament.full_challonge_url
+		
 		
 		// tournament is read only, let's hide everything!
 		if tournament.isReadOnly {
 			bracketOnlyButton.isHidden = true
 			poolPlayAndBracketButton.isHidden = true
 			isOnlineSwitch.isHidden = true
+		
 			isPublicSwitch.isHidden = true
 			tournamentNameTextField.isEnabled = false
 			advanceButton.setTitle("Next", for: .normal)
 		}
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		tournamentNameTextField.text = tournament.name
+	}
 	
 	@IBAction func deleteButton(_ sender: UIButton) {
 		// show safety dialog first.
@@ -102,6 +117,8 @@ class TournamentSettingsView: UIViewController {
 	
 	func deleteTournament(deleteOnline: Bool) {
 		var count = 0
+		let realm = try! Realm()
+		
 		if realm.isInWriteTransaction {
 			count = realm.objects(Tournament.self).filter("id = \(tournament.id)").count
 		} else {
@@ -194,6 +211,7 @@ class TournamentSettingsView: UIViewController {
 	}
 	
 	@IBAction func poolPlayAndBracketButton(_ sender: UIButton) {
+		let realm = try! Realm()
 		try! realm.write {
 			tournament.isPoolPlay = true
 		}
@@ -206,6 +224,7 @@ class TournamentSettingsView: UIViewController {
 	}
 	
 	@IBAction func bracketOnlyButton(_ sender: UIButton) {
+		let realm = try! Realm()
 		try! realm.write {
 			tournament.isPoolPlay = false
 		}
@@ -218,10 +237,11 @@ class TournamentSettingsView: UIViewController {
 	}
     
     @IBAction func saveSettings(_ sender: UIButton) {
+		let realm = try! Realm()
         TournamentController.IS_QUICK_REPORT = false //isQuickReportSwitch.isOn
-        
-        try! realm.write {
-			if !tournament.isReadOnly {
+		// set a param here to ONLY send up a tournament once, otherwise update the tournament
+		if !tournament.isReadOnly {
+        	try! realm.write {
 				tournament.isOnline = isOnlineSwitch.isOn
 				tournament.isPrivate = !isPublicSwitch.isOn
 				tournament.isQuickReport = false //isQuickReportSwitch.isOn
@@ -229,12 +249,6 @@ class TournamentSettingsView: UIViewController {
 				tournament.name = (tournamentNameTextField.text?.count.magnitude)! > 0 ?
 					tournamentNameTextField.text! :
 					tournament.name
-				
-				let tournamentDao = TournamentDAO()
-				tournamentDao.addOnlineTournament(tournament: tournament)
-				
-				//		let challongeAPI = ChallongeAPI()
-				//		challongeAPI.createTournament(tournament: tournament)
 			}
         }
 		

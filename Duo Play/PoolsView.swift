@@ -12,7 +12,8 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var poolsTableView: UITableView!
     var tournament = TournamentController.getCurrentTournament()
-    
+    var poolsController = PoolsController()
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         poolsTableView.delegate = self
@@ -29,13 +30,19 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidAppear(true)
     }
     
-    // MARK: - Navigation
+	@IBAction func addPoolButtonClick(_ sender: UIButton) {
+		poolsController.addNewPool()
+		poolsTableView.reloadData()
+	}
+	
+	// MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // this will handle pool cell click
         // send pool
         let indexPath = poolsTableView.indexPathForSelectedRow
         let pool = tournament.poolList[(indexPath?.row)!]
+		PoolsController.setSelectedPoolName(name: pool.name)
         let controller = segue.destination as? PoolsDetailView
         controller?.pool = pool
     }
