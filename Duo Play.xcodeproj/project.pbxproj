@@ -32,6 +32,10 @@
 		47967CC61FF9F950007E67E4 /* BracketMatchup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47967CC51FF9F950007E67E4 /* BracketMatchup.swift */; };
 		47967CC81FFA1AB9007E67E4 /* MatchupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47967CC71FFA1AB9007E67E4 /* MatchupsViewController.swift */; };
 		47967CCA1FFA1AE7007E67E4 /* BracketReporterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47967CC91FFA1AE7007E67E4 /* BracketReporterViewController.swift */; };
+		479BBCFF208A7AA400275A4E /* LiveBracketViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479BBCFE208A7AA400275A4E /* LiveBracketViewDelegate.swift */; };
+		479BBD02208AE03200275A4E /* ChallongeTeamsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479BBD01208AE03200275A4E /* ChallongeTeamsAPI.swift */; };
+		479BBD04208AF91B00275A4E /* ChallongeTeamsAPIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479BBD03208AF91B00275A4E /* ChallongeTeamsAPIDelegate.swift */; };
+		479BBD06208AF98500275A4E /* TeamParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479BBD05208AF98500275A4E /* TeamParser.swift */; };
 		47BE733320507FF9003C100B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BE733220507FF9003C100B /* Node.swift */; };
 		47C13A532000275000CE886D /* LiveBracketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C13A522000275000CE886D /* LiveBracketViewController.swift */; };
 		47CA524C203B744E00781BC7 /* ChallongeTournamentAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CA524B203B744E00781BC7 /* ChallongeTournamentAPI.swift */; };
@@ -133,6 +137,10 @@
 		47967CC51FF9F950007E67E4 /* BracketMatchup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketMatchup.swift; sourceTree = "<group>"; };
 		47967CC71FFA1AB9007E67E4 /* MatchupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchupsViewController.swift; sourceTree = "<group>"; };
 		47967CC91FFA1AE7007E67E4 /* BracketReporterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketReporterViewController.swift; sourceTree = "<group>"; };
+		479BBCFE208A7AA400275A4E /* LiveBracketViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBracketViewDelegate.swift; sourceTree = "<group>"; };
+		479BBD01208AE03200275A4E /* ChallongeTeamsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallongeTeamsAPI.swift; sourceTree = "<group>"; };
+		479BBD03208AF91B00275A4E /* ChallongeTeamsAPIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallongeTeamsAPIDelegate.swift; sourceTree = "<group>"; };
+		479BBD05208AF98500275A4E /* TeamParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamParser.swift; sourceTree = "<group>"; };
 		47BE733220507FF9003C100B /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		47C13A522000275000CE886D /* LiveBracketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBracketViewController.swift; sourceTree = "<group>"; };
 		47CA524B203B744E00781BC7 /* ChallongeTournamentAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallongeTournamentAPI.swift; sourceTree = "<group>"; };
@@ -280,6 +288,7 @@
 				47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */,
 				4733A912206C08BC00B25395 /* TournamentUtil.swift */,
 				47FB18602089093B00631AAA /* MatchupParser.swift */,
+				479BBD05208AF98500275A4E /* TeamParser.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -297,6 +306,7 @@
 		47967CBD1FF9E1E1007E67E4 /* Bracket Play */ = {
 			isa = PBXGroup;
 			children = (
+				479BBD00208A7AB800275A4E /* Delegates */,
 				47967CC01FF9E20B007E67E4 /* Views */,
 				47967CBF1FF9E200007E67E4 /* Controllers */,
 				47967CBE1FF9E1EA007E67E4 /* Models */,
@@ -336,6 +346,45 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		479BBCF9208A610300275A4E /* Swiss System */ = {
+			isa = PBXGroup;
+			children = (
+				479BBCFD208A613B00275A4E /* DataControllers */,
+				479BBCFC208A613100275A4E /* ViewControllers */,
+				479BBCFB208A611E00275A4E /* Models */,
+			);
+			name = "Swiss System";
+			sourceTree = "<group>";
+		};
+		479BBCFB208A611E00275A4E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		479BBCFC208A613100275A4E /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		479BBCFD208A613B00275A4E /* DataControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = DataControllers;
+			sourceTree = "<group>";
+		};
+		479BBD00208A7AB800275A4E /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				479BBCFE208A7AA400275A4E /* LiveBracketViewDelegate.swift */,
+			);
+			name = Delegates;
+			sourceTree = "<group>";
+		};
 		47CA524A203B742E00781BC7 /* ChallongeAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -343,6 +392,8 @@
 				47FB185A208903D000631AAA /* ChallongeTournamentAPIDelegate.swift */,
 				47FB185C2089042900631AAA /* ChallongeMatchupAPI.swift */,
 				47FB185E2089043900631AAA /* ChallongeMatchupAPIDelegate.swift */,
+				479BBD01208AE03200275A4E /* ChallongeTeamsAPI.swift */,
+				479BBD03208AF91B00275A4E /* ChallongeTeamsAPIDelegate.swift */,
 			);
 			name = ChallongeAPI;
 			sourceTree = "<group>";
@@ -499,6 +550,7 @@
 		47F9F8031F32D50C00C88DEA /* Tournaments */ = {
 			isa = PBXGroup;
 			children = (
+				479BBCF9208A610300275A4E /* Swiss System */,
 				4733A911206C07C000B25395 /* Util */,
 				47232F5C1F4971D200EED453 /* Server */,
 				47CA524A203B742E00781BC7 /* ChallongeAPI */,
@@ -851,8 +903,10 @@
 				47967CC81FFA1AB9007E67E4 /* MatchupsViewController.swift in Sources */,
 				47D6BB972047835C003AC6AB /* TournamentsTabBarViewController.swift in Sources */,
 				47E894BE2056D49800F9CEE8 /* TGGenerateTeams.swift in Sources */,
+				479BBD04208AF91B00275A4E /* ChallongeTeamsAPIDelegate.swift in Sources */,
 				472104001F5D568400CA76C3 /* PoolPlayMatchup.swift in Sources */,
 				472104061F62939A00CA76C3 /* PoolPlayMatchReporterController.swift in Sources */,
+				479BBD02208AE03200275A4E /* ChallongeTeamsAPI.swift in Sources */,
 				47DE963B1F3E3D5300F944F0 /* PoolsView.swift in Sources */,
 				47E894B4205626E500F9CEE8 /* TournamentLandingViewController.swift in Sources */,
 				472C8315204627490067B9C1 /* TournamentTeamsViewController.swift in Sources */,
@@ -867,6 +921,7 @@
 				475FF2831FA96FEC0018BB63 /* Session.swift in Sources */,
 				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
 				47CA524E203BA86E00781BC7 /* TournamentAPI.swift in Sources */,
+				479BBD06208AF98500275A4E /* TeamParser.swift in Sources */,
 				478388B21FBA5DF500D8052E /* PoolsController.swift in Sources */,
 				47FF2D7D2068A39500712D83 /* TournamentParserDelegate.swift in Sources */,
 				47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */,
@@ -901,6 +956,7 @@
 				47DE963F1F3E425700F944F0 /* TournamentSettingsView.swift in Sources */,
 				47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */,
 				47F9F8101F33B51400C88DEA /* RPController.swift in Sources */,
+				479BBCFF208A7AA400275A4E /* LiveBracketViewDelegate.swift in Sources */,
 				47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */,
 				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
 				47E894BA2056D3EA00F9CEE8 /* TGPlayersViewController.swift in Sources */,

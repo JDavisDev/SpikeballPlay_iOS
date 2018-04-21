@@ -36,10 +36,39 @@ public class ChallongeTournamentAPI {
 //
 //        task.resume()
 //    }
+	
+	func startTournament(tournament: Tournament) {
+		let tournamentParser = TournamentParser()
+		let realm = try! Realm()
+		try! realm.write {
+			tournament.isStarted = true
+		}
+		
+		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY + "include_participants=1" + "include_matches=1"
+		
+		if let myURL = URL(string: urlString) {
+			var request = URLRequest(url: myURL)
+			request.httpMethod = "POST"
+			let session = URLSession.shared
+			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+				do {
+					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+						/* json[0] == key"tournament" and value: Any */
+						if let tournamentObject = json["tournament"] as? [String: Any] {
+							tournamentParser.parseStartedTournament(onlineTournament: tournamentObject, localTournament: tournament)
+						}
+					}
+				} catch {
+					print("create challonge tournament error")
+				}
+			})
+			
+			task.resume()
+		}
+	}
 
     // Takes tournament object passed in and sends it to Challonge
     func createChallongeTournament(tournament: Tournament) {
-		let tournamentParser = TournamentParser()
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
 		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
 		let tournamentName = tournament.name
@@ -75,7 +104,6 @@ public class ChallongeTournamentAPI {
 		let tournamentParser = TournamentParser()
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
 		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
-		let tournamentName = tournament.name
 		let finalString = baseUrl +
 			tournament.url + ".json?api_key=" + personalAPIKey +
 			""

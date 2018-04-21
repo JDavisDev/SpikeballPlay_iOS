@@ -27,6 +27,8 @@ class TournamentSettingsView: UIViewController {
 //			localTournament.tournament_type = onlineTournament["tournament_type"] as! String
 //	}
 	
+	
+	@IBOutlet weak var tournamentStylePicker: UIPickerView!
 	@IBOutlet weak var isPublicSwitch: UISwitch!
 	@IBOutlet weak var isOnlineSwitch: UISwitch!
 	@IBOutlet weak var tournamentNameTextField: UITextField!
@@ -35,9 +37,6 @@ class TournamentSettingsView: UIViewController {
     @IBOutlet weak var playersPerPoolSegementedControl: UISegmentedControl!
     @IBOutlet weak var advanceButton: UIButton!
     @IBOutlet weak var playersPerPoolLabel: UILabel!
-	
-	@IBOutlet weak var poolPlayAndBracketButton: UIButton!
-	@IBOutlet weak var bracketOnlyButton: UIButton!
 	
 	let bracketController = BracketController()
     let tournament = TournamentController.getCurrentTournament()
@@ -50,23 +49,17 @@ class TournamentSettingsView: UIViewController {
 			playersPerPoolLabel.isHidden = false
 			
 			// bracket AND Pool Play
-			poolPlayAndBracketButton.setTitleColor(UIColor.yellow, for: .normal)
-			bracketOnlyButton.setTitleColor(UIColor.white, for: .normal)
 			playersPerPoolSegementedControl.isHidden = false
 			playersPerPoolLabel.isHidden = false
 			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
 		} else {
 			// bracket only
-			poolPlayAndBracketButton.setTitleColor(UIColor.white, for: .normal)
-			bracketOnlyButton.setTitleColor(UIColor.yellow, for: .normal)
 			playersPerPoolSegementedControl.isHidden = true
 			playersPerPoolLabel.isHidden = true
 		}
 		
 		if tournament.progress_meter > 0 || tournament.isReadOnly {
 			// tournament has begun, don't let settings be editable
-			bracketOnlyButton.isEnabled = false
-			poolPlayAndBracketButton.isEnabled = false
 			playersPerPoolSegementedControl.isEnabled = false
 			// maybe show a message as to why everything is disabled.
 		}
@@ -75,8 +68,6 @@ class TournamentSettingsView: UIViewController {
 		
 		// tournament is read only, let's hide everything!
 		if tournament.isReadOnly {
-			bracketOnlyButton.isHidden = true
-			poolPlayAndBracketButton.isHidden = true
 			isOnlineSwitch.isHidden = true
 		
 			isPublicSwitch.isHidden = true
@@ -158,7 +149,8 @@ class TournamentSettingsView: UIViewController {
 		
 		Answers.logCustomEvent(withName: "Tournament Deleted",
 							   customAttributes: [:])
-		navigationController?.popViewController(animated: true)
+		// navigate to tournament home page.
+		
 	}
 	
 	func showPasswordAlert() {
@@ -217,8 +209,6 @@ class TournamentSettingsView: UIViewController {
 		}
 		
 		// bracket AND Pool Play
-		poolPlayAndBracketButton.setTitleColor(UIColor.yellow, for: .normal)
-		bracketOnlyButton.setTitleColor(UIColor.white, for: .normal)
 		playersPerPoolSegementedControl.isHidden = false
 		playersPerPoolLabel.isHidden = false
 	}
@@ -230,8 +220,6 @@ class TournamentSettingsView: UIViewController {
 		}
 		
 		// bracket only
-		poolPlayAndBracketButton.setTitleColor(UIColor.white, for: .normal)
-		bracketOnlyButton.setTitleColor(UIColor.yellow, for: .normal)
 		playersPerPoolSegementedControl.isHidden = true
 		playersPerPoolLabel.isHidden = true
 	}

@@ -12,6 +12,7 @@ import RealmSwift
 class TournamentLandingViewController: UIViewController, TournamentDAODelegate, UITextFieldDelegate {
 	@IBOutlet weak var poolPlayButton: UIButton!
 	
+	@IBOutlet weak var teamsButton: UIButton!
 	@IBOutlet weak var settingsButton: UIButton!
 	@IBOutlet weak var tournamentNameLabel: UILabel!
 	@IBOutlet weak var bracketButton: UIButton!
@@ -39,13 +40,20 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		
 		// could make this a button... a click takes them to the page.
 		challongeLinkLabel.delegate = self
-		challongeLinkLabel.text = "www.challonge.com/" + tournament.url
+//		if tournament != nil && tournament.url.count > 0 {
+//			challongeLinkLabel.text = "www.challonge.com/" + tournament.url
+//		}
 	}
 	
 	// make it so user can't change the text, it just allows copying!
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		return false
 	}
+	
+	@IBAction func teamsButtonClicked(_ sender: UIButton) {
+		// go to teams page.
+	}
+	
 	
 	@IBAction func refreshButtonClicked(_ sender: UIButton) {
 		// refresh tournament data and reload.
@@ -64,6 +72,10 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		settingsButton.layer.cornerRadius = 20
 		settingsButton.layer.borderColor = UIColor.white.cgColor
 		settingsButton.layer.borderWidth = 1
+		
+		teamsButton.layer.cornerRadius = 20
+		teamsButton.layer.borderColor = UIColor.white.cgColor
+		teamsButton.layer.borderWidth = 1
 	}
 	
 	func updateView() {

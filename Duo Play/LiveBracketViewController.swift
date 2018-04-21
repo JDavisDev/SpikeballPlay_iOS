@@ -11,11 +11,12 @@ import RealmSwift
 import Crashlytics
 import Firebase
 
-class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
+class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBracketViewDelegate {
 	var pinch = UIPinchGestureRecognizer()
 	
 	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 	let realm = try! Realm()
+	let challongeTournamentAPI = ChallongeTournamentAPI()
     var tournament = Tournament()
 	// used for quick report
 	var selectedMatchup = BracketMatchup()
@@ -38,6 +39,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 		
         self.view.backgroundColor = UIColor.black
         self.view.addSubview(scrollView)
+		bracketController.bracketViewDelegate = self
 		self.scrollView.delegate = self
 		self.scrollView.addGestureRecognizer(pinch)
 		pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.pinch(sender:)))
@@ -45,10 +47,16 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 		self.scrollView.maximumZoomScale = 10
 		self.scrollView.isUserInteractionEnabled = true
 		self.scrollView.contentSize = CGSize(width: 10000, height: 10000)
+		
+		try! realm.write() {
+			tournament = TournamentController.getCurrentTournament()
+		}
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+		clearView()
+		
 		activityIndicator.startAnimating()
 		
 		Answers.logContentView(withName: "Bracket Page View",
@@ -57,19 +65,30 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 							   customAttributes: [:])
 		
 		Analytics.logEvent("Live_Bracket_View_Viewed", parameters: nil)
-		
-        try! realm.write() {
-            tournament = TournamentController.getCurrentTournament()
-        }
-        
-        bracketCellWidth = getMaxBracketWidth()
-        teamCount = tournament.teamList.count
-        bracketMatchCount = getBracketMatchCount()
-        roundCount = bracketController.getRoundCount()
-        byeCount = bracketController.getByeCount()
-		//bracketController.createBracket()
-        createBracketView()
+	
+		// every view, let's refetch and redraw.
+		// make this less dependent on other functions updating things.
+		bracketController.createBracket()
     }
+	
+	func clearView() {
+		var views = scrollView.subviews
+		views.removeAll()
+		
+		for cell in bracketCells {
+			cell.removeFromSuperview()
+		}
+		
+		bracketCells.removeAll()
+		bracketDict.removeAll()
+	}
+	
+	// BRACKET DELEGATE
+	func bracketCreated() {
+		createBracketView()
+	}
+	
+	// END BRACKET DELEGATE
 	
 	// Pinch Controls
 	@objc func pinch(sender:UIPinchGestureRecognizer) {
@@ -116,24 +135,10 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 									   customAttributes: [
 										"Team Count": teamCount])
 		
-		var views = scrollView.subviews
-		views.removeAll()
-		
-		for cell in bracketCells {
-			cell.removeFromSuperview()
-		}
-		
-		bracketCells.removeAll()
-		bracketDict.removeAll()
 		
 		createFirstRoundBracketCells()
 		createAdditionalBracketCells()
     }
-	
-	// reset wins/losses for each team so we can truly reset the bracket positions.
-	func resetTeamStats() {
-		
-	}
     
     // create first round based on match counts
     func createFirstRoundBracketCells() {
@@ -432,10 +437,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
     @objc func matchTouched(sender:UITapGestureRecognizer) {
 		var matchupFound = false
         // open score entry page, or just select a winner. Maybe a dialog for quickness
-		// currently this is hitting with every touch AND sender.view is the entire view, not the cell
 		// Get the first touch and its location in this view controller's view coordinate system
 		let touchLocation = sender.location(ofTouch: 0, in: self.view)
-		//let touchLocation = touch.locationInView(self.view)
 		
 		for cell in bracketCells {
 			// Convert the location of the obstacle view to this view controller's view coordinate system
@@ -443,60 +446,83 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate {
 			
 			// Check if the touch is inside the obstacle view
 			if viewFrame.contains(touchLocation) && cell.subviews.count >= 2 {
-				let teamOneLabel = cell.subviews[0] as! UILabel
-				let teamTwoLabel = cell.subviews[1] as! UILabel
-				
-				if teamOneLabel.text != "BYE" && teamOneLabel.text != "TBD" &&
-					teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" &&
-					teamOneLabel.text != teamTwoLabel.text {
+				if(!tournament.isStarted) {
+					checkStartTournament()
+				} else {
+					let teamOneLabel = cell.subviews[0] as! UILabel
+					let teamTwoLabel = cell.subviews[1] as! UILabel
 					
-					for matchup in tournament.matchupList {
-						if	!matchup.isReported &&
-							matchup.teamOne != nil &&
-							matchup.teamTwo != nil &&
-							matchup.teamOne!.name == teamOneLabel.text &&
-							matchup.teamTwo!.name == teamTwoLabel.text {
-							selectedMatchup = matchup
-							matchupFound = true
-							break
+					if teamOneLabel.text != "BYE" && teamOneLabel.text != "TBD" &&
+						teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" &&
+						teamOneLabel.text != teamTwoLabel.text {
+						
+						for matchup in tournament.matchupList {
+							if	!matchup.isReported &&
+								matchup.teamOne != nil &&
+								matchup.teamTwo != nil &&
+								matchup.teamOne!.name == teamOneLabel.text &&
+								matchup.teamTwo!.name == teamTwoLabel.text {
+								selectedMatchup = matchup
+								matchupFound = true
+								break
+							}
 						}
-					}
-					
-					if matchupFound && !selectedMatchup.isReported && tournament.isQuickReport {
-						let alert = UIAlertController(title: "Select Winner",
-													  message: "", preferredStyle: .alert)
 						
-						alert.addAction(UIAlertAction(title: teamOneLabel.text, style: .default, handler: { (action: UIAlertAction!) in
-							// team one!
-							self.bracketController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: 1, teamOneScores: [1, 0, 0], teamTwoScores: [0, 0, 0])
+						if matchupFound && !selectedMatchup.isReported && tournament.isQuickReport {
+							let alert = UIAlertController(title: "Select Winner",
+														  message: "", preferredStyle: .alert)
 							
-							self.updateBracketView()
-						}))
-						
-						alert.addAction(UIAlertAction(title: teamTwoLabel.text, style: .default, handler: { (action: UIAlertAction!) in
-							// team two!
-							self.bracketController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: 1, teamOneScores: [0, 0, 0], teamTwoScores: [1, 0, 0])
+							alert.addAction(UIAlertAction(title: teamOneLabel.text, style: .default, handler: { (action: UIAlertAction!) in
+								// team one!
+								self.bracketController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: 1, teamOneScores: [1, 0, 0], teamTwoScores: [0, 0, 0])
+								
+								self.updateBracketView()
+							}))
 							
-							self.updateBracketView()
-						}))
-						
-						alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(action: UIAlertAction!) in
-							// cancel
-							return
-						}))
-						// Add delete in here. to maybe delete match ups and reset everything down stream...
-						present(alert, animated: true, completion: nil)
-					} else if matchupFound && !selectedMatchup.isReported && !tournament.isReadOnly {
-						// not quick report. send to match reporter.
-						Answers.logCustomEvent(withName: "Bracket Match Tapped",
-											   customAttributes: [:])
-						Analytics.logEvent("Live_Bracket_Match_Tapped", parameters: nil)
-						performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
+							alert.addAction(UIAlertAction(title: teamTwoLabel.text, style: .default, handler: { (action: UIAlertAction!) in
+								// team two!
+								self.bracketController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: 1, teamOneScores: [0, 0, 0], teamTwoScores: [1, 0, 0])
+								
+								self.updateBracketView()
+							}))
+							
+							alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(action: UIAlertAction!) in
+								// cancel
+								return
+							}))
+							// Add delete in here. to maybe delete match ups and reset everything down stream...
+							present(alert, animated: true, completion: nil)
+						} else if matchupFound && !selectedMatchup.isReported && !tournament.isReadOnly {
+							// not quick report. send to match reporter.
+							Answers.logCustomEvent(withName: "Bracket Match Tapped",
+												   customAttributes: [:])
+							Analytics.logEvent("Live_Bracket_Match_Tapped", parameters: nil)
+							performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
+						}
 					}
 				}
 			}
 		}
     }
+	
+	func checkStartTournament() {
+		// tournament has NOT began. check if they want to finalize and begin the tournament
+		let message = "Finalize participants and start tournament?"
+		
+		let alert = UIAlertController(title: "Start Tournament", message: message,
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+		}))
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "bracketReporterOnTouchSegue" {

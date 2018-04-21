@@ -15,8 +15,9 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     let tournament = TournamentController.getCurrentTournament()
     let teamsController = TeamsController()
 	let tournamentDAO = TournamentDAO()
-    @IBOutlet weak var teamsTableView: UITableView!
+	let challongeTeamsAPI = ChallongeTeamsAPI()
 	
+    @IBOutlet weak var teamsTableView: UITableView!
 	@IBOutlet weak var teamsSearchBar: UISearchBar!
 	
 	var didTeamsChange = false
@@ -38,16 +39,14 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 	}
     
     override func viewWillDisappear(_ animated: Bool) {
-		if didTeamsChange {
-			let bracketController = BracketController()
-			
-			for team in tournament.teamList {
-				bracketController.resetTeamValues(team: team)
-			}
-			
-			bracketController.createBracket()
-			didTeamsChange = false
-		}
+//		if didTeamsChange {
+//			let bracketController = BracketController()
+//			
+//			for team in tournament.teamList {
+//				bracketController.resetTeamValues(team: team)
+//			}
+//			didTeamsChange = false
+//		}
 		
 		super.viewWillDisappear(true)
     }
@@ -57,34 +56,34 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 	@IBAction func addTeamsInBulk(_ sender: UIButton) {
 		// debug only for now
 		// add a ton of teams to see what happens
-		if tournament.progress_meter <= 0 && !tournament.isReadOnly {
-			for _ in 1...2 {
-				let team = Team()
-				
-				try! self.realm.write() {
-					team.name = "Team #" + String(tournament.teamList.count + 1)
-					team.division = "Advanced"
-					team.bracketRounds.append(1)
-					team.id = self.tournament.teamList.count + 1
-					self.tournament.teamList.append(team)
-					team.tournament_id = self.tournament.id
-				}
-				
-				self.teamsController.addTeam(team: team)
-				self.tournamentDAO.addOnlineTournamentTeam(team: team)
-			}
-			
-			
-			self.didTeamsChange = true
-			self.teamsTableView.reloadData()
-		} else {
-			presentTournamentStartedAlert()
-		}
+//		if tournament.progress_meter <= 0 && !tournament.isReadOnly {
+//			for _ in 1...2 {
+//				let team = Team()
+//
+//				try! self.realm.write() {
+//					team.name = "Team #" + String(tournament.teamList.count + 1)
+//					team.division = "Advanced"
+//					team.bracketRounds.append(1)
+//					team.id = self.tournament.teamList.count + 1
+//					self.tournament.teamList.append(team)
+//					team.tournament_id = self.tournament.id
+//				}
+//
+//				self.teamsController.addTeam(team: team)
+//				self.tournamentDAO.addOnlineTournamentTeam(team: team)
+//			}
+//
+//
+//			self.didTeamsChange = true
+//			self.teamsTableView.reloadData()
+//		} else {
+//			presentTournamentStartedAlert()
+//		}
 	}
     
     @IBAction func addTeam(_ sender: UIButton) {
         // check if tournament has started, only add teams if it has not.
-        if tournament.progress_meter <= 0 && !tournament.isReadOnly {
+        if tournament.progress_meter <= 0 && !tournament.isReadOnly && !tournament.isStarted {
             teamsTableView.setEditing(false, animated: true)
             // let's present an alert to enter a team. cleaner ui
             let alert = UIAlertController(title: "Add Team",
@@ -96,21 +95,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 				
 				//make sure they entered a name!
 				if newName.count > 0 {
-					let team = Team()
-					
-					try! self.realm.write() {
-						team.name = newName
-						team.division = "Advanced"
-						team.bracketRounds.append(1)
-						team.id = self.tournament.teamList.count + 1
-						team.seed = team.id
-						self.tournament.teamList.append(team)
-						team.tournament_id = self.tournament.id
-					}
-					
-					self.tournamentDAO.addOnlineTournamentTeam(team: team)
-					self.didTeamsChange = true
-					self.teamsController.addTeam(team: team)
+					self.createNewTeam(newName: newName)
 					self.teamsTableView.reloadData()
 				} else {
 					self.presentEmptyTeamNameAlert()
@@ -133,6 +118,24 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 			presentTournamentStartedAlert()
         }
     }
+	
+	func createNewTeam(newName: String) {
+		let team = Team()
+		
+		try! self.realm.write() {
+			team.name = newName
+			team.division = "Advanced"
+			team.bracketRounds.append(1)
+			team.id = self.tournament.teamList.count + 1
+			team.seed = team.id
+			self.tournament.teamList.append(team)
+			team.tournament_id = self.tournament.id
+		}
+		
+		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
+		self.tournamentDAO.addOnlineTournamentTeam(team: team)
+		self.teamsController.addTeam(team: team)
+	}
 	
 	func presentTournamentStartedAlert() {
 		let alert = UIAlertController(title: "Tournament Started",

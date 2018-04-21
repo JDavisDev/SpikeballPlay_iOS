@@ -26,6 +26,7 @@ class BracketController {
     var baseBracketSize = 0
     var tournamentProgress = 0
 	
+	var bracketViewDelegate: LiveBracketViewDelegate?
 	
     init() {
         tournament = TournamentController.getCurrentTournament()
@@ -53,6 +54,9 @@ class BracketController {
 			}
 			
 			updateTournamentProgress()
+			if bracketViewDelegate != nil {
+				bracketViewDelegate?.bracketCreated()
+			}
         }
     }
     
@@ -278,7 +282,7 @@ class BracketController {
 			return
 		}
         
-        // 1/2 are always at the end, set that up now.
+        // 1+2 are always at the end, set that up now.
         let root = Node(value: [seedStringList[0], seedStringList[1]])
         seedStringList.removeFirst(2)
         nodeList.append(root)
@@ -314,6 +318,7 @@ class BracketController {
             addSeedToNode(nodes: halfNodesList, seedList: seedStringList)
             // check if counts match up to be the final round
             if isEnd {
+				isEnd = false
                 break
             }
         }

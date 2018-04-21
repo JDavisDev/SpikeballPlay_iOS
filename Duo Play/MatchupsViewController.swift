@@ -13,9 +13,12 @@ import Firebase
 class MatchupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var matchupsTableView: UITableView!
+	let tournament = TournamentController.getCurrentTournament()
+	let challongeTournamentAPI = ChallongeTournamentAPI()
+	
     var matchupList = [BracketMatchup]()
-    let tournament = TournamentController.getCurrentTournament()
     var roundCount = 3
+	
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +79,25 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         matchupsTableView.reloadData()
     }
+	
+	func checkStartTournament() {
+		// tournament has NOT began. check if they want to finalize and begin the tournament
+		let message = "Finalize participants and start tournament?"
+		
+		let alert = UIAlertController(title: "Start Tournament", message: message,
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+		}))
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
     
     // MARK: - Table View methods
     
@@ -95,7 +117,9 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// only allow selection if tournament is editable.
-		if !tournament.isReadOnly {
+		if(!tournament.isStarted) {
+			self.checkStartTournament()
+		} else if !tournament.isReadOnly {
         	let selectedMatchup = matchupList[indexPath.row]
 			Answers.logCustomEvent(withName: "Matchup List Tapped",
 							   customAttributes: [:])

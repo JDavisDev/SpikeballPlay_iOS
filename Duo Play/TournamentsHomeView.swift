@@ -90,6 +90,8 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			let pw = alert.textFields![1].text!
 			self.createNewTournament(newName: newName, password: pw)
 			self.updateTournamentList()
+			
+			self.performSegue(withIdentifier: "newTournamentSettingsSegue", sender: self)
 		}
 		
 		alert.addTextField { (textField) in
@@ -151,9 +153,8 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		TournamentController.setTournamentId(id: id)
 		
 		// do online saving
-//		let challongeAPI = ChallongeTournamentAPI()
-//		challongeAPI.delegate = self
-//		challongeAPI.createChallongeTournament(tournament: tournament)
+		let challongeAPI = ChallongeTournamentAPI()
+		challongeAPI.createChallongeTournament(tournament: tournament)
 		
 		let tournamentDao = TournamentDAO()
 		tournamentDao.addOnlineTournament(tournament: tournament)

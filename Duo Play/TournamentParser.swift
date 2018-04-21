@@ -221,4 +221,11 @@ class TournamentParser {
 	func parseChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament) {
 		
 	}
+	
+	// we should have a list of included matchups and participants
+	// map our teams to participants
+	// map
+	func parseStartedTournament(onlineTournament: [String: Any], localTournament: Tournament) {
+		
+	}
 }
