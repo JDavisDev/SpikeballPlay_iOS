@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+protocol ChallongeMatchupAPIDelegate {
+	func didPostChallongeMatchup(matchup: BracketMatchup, matchupObject: [String:Any])
+}

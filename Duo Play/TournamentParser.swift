@@ -10,7 +10,7 @@ import Foundation
 import Firebase
 import RealmSwift
 
-class TournamentParser {
+class TournamentParser : ChallongeTournamentAPIDelegate {
 	
 	let fireDB = Firestore.firestore()
 	let realm = try! Realm()
@@ -218,14 +218,36 @@ class TournamentParser {
 		}
 	}
 	
-	func parseChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament) {
-		
+	func didCreateChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament) {
+		Realm.asyncOpen() { realm, error in
+			if let realm = realm {
+				// Realm successfully opened
+				try! realm.write {
+					localTournament.id = onlineTournament["id"] as! Int
+					localTournament.full_challonge_url = onlineTournament["full_challonge_url"] as! String
+					localTournament.isPrivate = onlineTournament["private"] as! Bool
+					localTournament.live_image_url = onlineTournament["live_image_url"]as! String
+					localTournament.participants_count = onlineTournament["participants_count"] as! Int
+					localTournament.progress_meter = onlineTournament["progress_meter"] as! Int
+					localTournament.state = onlineTournament["state"] as! String
+					localTournament.url = onlineTournament["url"] as! String
+					localTournament.tournament_type = onlineTournament["tournament_type"] as! String
+				}
+			} else if error != nil {
+				// Handle error that occurred while opening the Realm
+			}
+		}
 	}
 	
 	// we should have a list of included matchups and participants
 	// map our teams to participants
 	// map
-	func parseStartedTournament(onlineTournament: [String: Any], localTournament: Tournament) {
+	func parseStartedTournament(onlineTournament: [String: Any], localTournament: Tournament, challongeMatchups: [[String:Any]]) {
+		didCreateChallongeTournament(onlineTournament: onlineTournament, localTournament: localTournament)
 		
+		let matchupParser = MatchupParser()
+		let teamParser = TeamParser()
+		
+		matchupParser.parseIncludedMatchups(tournament: localTournament, challongeMatchups: challongeMatchups)
 	}
 }

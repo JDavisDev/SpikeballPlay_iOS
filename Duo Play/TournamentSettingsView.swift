@@ -38,6 +38,7 @@ class TournamentSettingsView: UIViewController {
     @IBOutlet weak var advanceButton: UIButton!
     @IBOutlet weak var playersPerPoolLabel: UILabel!
 	
+	let challongeTournamentAPI = ChallongeTournamentAPI()
 	let bracketController = BracketController()
     let tournament = TournamentController.getCurrentTournament()
     
@@ -120,6 +121,9 @@ class TournamentSettingsView: UIViewController {
 		
 		if count == 0 { return }
 		
+		// delete challonge tournament
+		challongeTournamentAPI.deleteChallongeTournament(tournament: tournament)
+		
 		if deleteOnline {
 			let tournamentDAO = TournamentDAO()
 			tournamentDAO.deleteOnlineTournament(tournament: tournament)
@@ -150,7 +154,12 @@ class TournamentSettingsView: UIViewController {
 		Answers.logCustomEvent(withName: "Tournament Deleted",
 							   customAttributes: [:])
 		// navigate to tournament home page.
-		
+		for controller in self.navigationController!.viewControllers as Array {
+			if controller.isKind(of: TournamentsHomeView.self) {
+				self.navigationController!.popToViewController(controller, animated: true)
+				break
+			}
+		}
 	}
 	
 	func showPasswordAlert() {

@@ -44,7 +44,7 @@ public class ChallongeTournamentAPI {
 			tournament.isStarted = true
 		}
 		
-		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY + "include_participants=1" + "include_matches=1"
+		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY + "&include_participants=1" + "&include_matches=1"
 		
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
@@ -55,7 +55,9 @@ public class ChallongeTournamentAPI {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 						/* json[0] == key"tournament" and value: Any */
 						if let tournamentObject = json["tournament"] as? [String: Any] {
-							tournamentParser.parseStartedTournament(onlineTournament: tournamentObject, localTournament: tournament)
+							if let challongeMatchups = json["matchups"] as? [String:Any] {
+							tournamentParser.parseStartedTournament(onlineTournament: tournamentObject, localTournament: tournament, challongeMatchups: challongeMatchups)
+							}
 						}
 					}
 				} catch {
@@ -88,7 +90,7 @@ public class ChallongeTournamentAPI {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 						/* json[0] == key"tournament" and value: Any */
 						if let tournamentObject = json["tournament"] as? [String: Any] {
-							self.delegate?.didGetChallongeTournamentData(onlineTournament: tournamentObject, localTournament: tournament)
+							self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
 						}
 					}
 				} catch {
@@ -121,12 +123,33 @@ public class ChallongeTournamentAPI {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 						/* json[0] == key"tournament" and value: Any */
 						if let tournamentObject = json["tournament"] as? [String: Any] {
-							tournamentParser.parseChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
+							tournamentParser.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
 						}
 					}
 				} catch {
 					print("update challonge tournament error")
 				}
+			})
+			
+			task.resume()
+		}
+	}
+	
+	func deleteChallongeTournament(tournament: Tournament) {
+		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
+		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
+		let finalString = baseUrl + "tournaments/" +
+			tournament.url + ".json?api_key=" + personalAPIKey
+		
+		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
+		
+		let urlString = finalString.addingPercentEncoding(withAllowedCharacters: squareBracketSet)
+		if let myURL = URL(string: urlString!) {
+			var request = URLRequest(url: myURL)
+			request.httpMethod = "DELETE"
+			let session = URLSession.shared
+			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+				// eat the response?
 			})
 			
 			task.resume()

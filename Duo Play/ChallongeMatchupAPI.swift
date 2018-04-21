@@ -26,15 +26,47 @@ public class ChallongeMatchupAPI {
 			let session = URLSession.shared
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
-					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+					if let json = try JSONSerialization.jsonObject(with: data!) as? [[String: Any]] {
 						/* json[0] == key"tournament" and value: Any */
-						if let matchupList = json["match"] as? [[String: Any]] {
-							//matchupParser.parseChallongeMatchups(onlineMatchups: matchupList, localTournament: tournament)
+						for matchup in json {
+							//add each matchup["match"] to an array to send along
 						}
 					}
 				} catch {
 					print("create challonge tournament error")
 				}
+			})
+			
+			task.resume()
+		}
+	}
+	
+	/*
+match[scores_csv]	Comma separated set/game scores with player 1 score first (e.g. "1-3,3-0,3-2")
+match[winner_id]	The participant ID of the winner or "tie" if applicable (Round Robin and Swiss). NOTE: If you change the outcome of a completed match, all matches in the bracket that branch from the updated match will be reset.
+*/
+	func updateChallongeMatch(tournament: Tournament, match: BracketMatchup) {
+		let baseUrl = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/matches/" + String(match.id)
+		let apiUrl = ".json?api-key=" + ChallongeTournamentAPI.PERSONAL_API_KEY
+		let matchUrl = "&match[scores_csv]="
+		let scoreString = String(match.teamOneScores[0]) + "-" + String(match.teamTwoScores[0]) + String(match.teamOneScores[1]) + "-" + String(match.teamTwoScores[1]) + ", " + String(match.teamOneScores[2]) + "-" + String(match.teamTwoScores[2])
+		let urlString = baseUrl + apiUrl + matchUrl + scoreString
+		
+		if let myURL = URL(string: urlString) {
+			var request = URLRequest(url: myURL)
+			request.httpMethod = "PUT"
+			let session = URLSession.shared
+			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+//				do {
+//					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+//						/* json[0] == key"tournament" and value: Any */
+//						if let matchupList = json["match"] as? [[String: Any]] {
+//							//matchupParser.parseChallongeMatchups(onlineMatchups: matchupList, localTournament: tournament)
+//						}
+//					}
+//				} catch {
+//					print("create challonge tournament error")
+//				}
 			})
 			
 			task.resume()
