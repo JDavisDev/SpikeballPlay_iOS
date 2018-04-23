@@ -132,6 +132,8 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 			team.tournament_id = self.tournament.id
 		}
 		
+		let teamsParser = TeamParser()
+		self.challongeTeamsAPI.delegate = teamsParser
 		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
 		self.tournamentDAO.addOnlineTournamentTeam(team: team)
 		self.teamsController.addTeam(team: team)

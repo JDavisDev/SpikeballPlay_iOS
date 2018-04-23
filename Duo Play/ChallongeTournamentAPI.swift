@@ -51,14 +51,27 @@ public class ChallongeTournamentAPI {
 			request.httpMethod = "POST"
 			let session = URLSession.shared
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+				print(error ?? "No Error Here!")
+				print(response ?? "No response :(")
+				print(data ?? "No data")
 				do {
+					var challongeMatchups = [[String:Any]]()
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-						/* json[0] == key"tournament" and value: Any */
-						if let tournamentObject = json["tournament"] as? [String: Any] {
-							if let challongeMatchups = json["matchups"] as? [String:Any] {
-							tournamentParser.parseStartedTournament(onlineTournament: tournamentObject, localTournament: tournament, challongeMatchups: challongeMatchups)
+						if let jsonTournament = json["tournament"] as? [String:Any] {
+							if let matches = jsonTournament["matches"] as? NSArray {
+								for obj in matches {
+									if let match = obj as? [String:Any] {
+										if let match = match["match"] {
+											challongeMatchups.append(match as! [String : Any])
+										}
+									}
+								}
 							}
+						
+							tournamentParser.parseStartedTournament(localTournament: tournament, challongeParticipants: [[String:Any]](), challongeMatchups: challongeMatchups)
 						}
+					} else {
+						print("Failed to parse started tournament")
 					}
 				} catch {
 					print("create challonge tournament error")

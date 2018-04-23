@@ -18,13 +18,17 @@ class TeamParser : ChallongeTeamsAPIDelegate {
 				// Realm successfully opened
 				try! realm.write {
 					team.challonge_participant_id = teamObject["id"] as! Int
-					team.challonge_group_id = teamObject["group_id"] as! Int
+					//team.challonge_group_id = teamObject["group_id"] as! Int
 					team.challonge_tournament_id = teamObject["tournament_id"] as! Int
 				}
 			} else if error != nil {
 				// Handle error that occurred while opening the Realm
 			}
 		}
+	}
+	
+	func parseIncludedTeams(tournament: Tournament, challongeParticipants: [[String: Any]]) {
+		
 	}
 }
 

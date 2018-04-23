@@ -15,6 +15,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	var pinch = UIPinchGestureRecognizer()
 	
 	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+	let challongeMatchupAPI = ChallongeMatchupAPI()
 	let realm = try! Realm()
 	let challongeTournamentAPI = ChallongeTournamentAPI()
     var tournament = Tournament()
@@ -68,6 +69,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	
 		// every view, let's refetch and redraw.
 		// make this less dependent on other functions updating things.
+		challongeMatchupAPI.getMatchupsForTournament(tournament: tournament)
 		bracketController.createBracket()
     }
 	

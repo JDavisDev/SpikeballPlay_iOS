@@ -31,13 +31,20 @@ public class MatchupParser : ChallongeMatchupAPIDelegate {
 				try! realm.write {
 					for matchup in challongeMatchups {
 						for localMatchup in tournament.matchupList {
-							let playerOneId = matchup["player1_id"] as! Int
-							let playerTwoId = matchup["player2_id"] as! Int
-							if localMatchup.teamOne?.challonge_participant_id == playerOneId &&
-								localMatchup.teamTwo?.challonge_participant_id == playerTwoId {
-								// same match... parse!
-								localMatchup.id = matchup["id"] as! Int
-								localMatchup.tournament_id = matchup["tournament_id"] as! Int
+							if let playerOneId = matchup["player1_id"] as? Int {
+								if let playerTwoId = matchup["player2_id"] as? Int {
+									if let isOpen = matchup["state"] as? String {
+											if localMatchup.teamOne?.challonge_participant_id == playerOneId &&
+												localMatchup.teamTwo?.challonge_participant_id == playerTwoId &&
+												isOpen == "open" {
+												// same match... parse!
+												// basically, I'm reassigning the challonge IDs to overwrite these ids so they match
+												localMatchup.id = matchup["id"] as! Int
+												localMatchup.tournament_id = matchup["tournament_id"] as! Int
+											}
+										
+									}
+								}
 							}
 						}
 					}

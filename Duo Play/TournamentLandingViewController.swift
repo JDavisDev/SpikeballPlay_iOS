@@ -40,9 +40,9 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		
 		// could make this a button... a click takes them to the page.
 		challongeLinkLabel.delegate = self
-//		if tournament != nil && tournament.url.count > 0 {
-//			challongeLinkLabel.text = "www.challonge.com/" + tournament.url
-//		}
+		if tournament.url.count > 0 {
+			challongeLinkLabel.text = "www.challonge.com/" + tournament.url
+		}
 	}
 	
 	// make it so user can't change the text, it just allows copying!

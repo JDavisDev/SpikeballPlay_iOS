@@ -10,15 +10,16 @@ import Foundation
 
 public class ChallongeMatchupAPI {
 	static let challongeBaseUrl = "https://api.challonge.com/v1/"
-	static let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
+	let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
 	static let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
 	static let SPIKEBALL_API_KEY = ""
 	
 	let matchupParser = MatchupParser()
 	
 	func getMatchupsForTournament(tournament: Tournament) {
+		let matchParser = MatchupParser()
 		let urlString = ChallongeMatchupAPI.challongeBaseUrl + "tournaments/" +
-			tournament.url + "/matches.json?"
+			tournament.url + "/matches.json?" + "api_key=" + PERSONAL_API_KEY
 		
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
@@ -26,11 +27,17 @@ public class ChallongeMatchupAPI {
 			let session = URLSession.shared
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
-					if let json = try JSONSerialization.jsonObject(with: data!) as? [[String: Any]] {
-						/* json[0] == key"tournament" and value: Any */
-						for matchup in json {
-							//add each matchup["match"] to an array to send along
+					var challongeMatchups = [[String:Any]]()
+					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
+						for obj in json {
+							if let match = obj as? [String:Any] {
+								if let match = match["match"] {
+									challongeMatchups.append(match as! [String : Any])
+								}
+							}
 						}
+							
+						matchParser.parseIncludedMatchups(tournament: tournament, challongeMatchups: challongeMatchups)
 					}
 				} catch {
 					print("create challonge tournament error")
@@ -45,18 +52,25 @@ public class ChallongeMatchupAPI {
 match[scores_csv]	Comma separated set/game scores with player 1 score first (e.g. "1-3,3-0,3-2")
 match[winner_id]	The participant ID of the winner or "tie" if applicable (Round Robin and Swiss). NOTE: If you change the outcome of a completed match, all matches in the bracket that branch from the updated match will be reset.
 */
-	func updateChallongeMatch(tournament: Tournament, match: BracketMatchup) {
+	func updateChallongeMatch(tournament: Tournament, match: BracketMatchup, winnerId: Int) {
 		let baseUrl = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/matches/" + String(match.id)
-		let apiUrl = ".json?api-key=" + ChallongeTournamentAPI.PERSONAL_API_KEY
+		let apiUrl = ".json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY
 		let matchUrl = "&match[scores_csv]="
-		let scoreString = String(match.teamOneScores[0]) + "-" + String(match.teamTwoScores[0]) + String(match.teamOneScores[1]) + "-" + String(match.teamTwoScores[1]) + ", " + String(match.teamOneScores[2]) + "-" + String(match.teamTwoScores[2])
-		let urlString = baseUrl + apiUrl + matchUrl + scoreString
+		let scoreString = String(match.teamOneScores[0]) + "-" + String(match.teamTwoScores[0]) + "," + String(match.teamOneScores[1]) + "-" + String(match.teamTwoScores[1]) + "," + String(match.teamOneScores[2]) + "-" + String(match.teamTwoScores[2])
+		let winnerIdString = "&match[winner_id]=" + String(winnerId)
+		let finalString = baseUrl + apiUrl + matchUrl + scoreString + winnerIdString
+		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
 		
-		if let myURL = URL(string: urlString) {
+		let urlString = finalString.addingPercentEncoding(withAllowedCharacters: squareBracketSet)
+		
+		if let myURL = URL(string: urlString!) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "PUT"
 			let session = URLSession.shared
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+				print(error ?? "No Error Here!")
+				print(response ?? "No response :(")
+				print(data ?? "No data")
 //				do {
 //					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 //						/* json[0] == key"tournament" and value: Any */

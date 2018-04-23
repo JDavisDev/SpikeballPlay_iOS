@@ -41,7 +41,7 @@ class BracketController {
         if tournament.teamList.count > 0 {
             seedTeams()
 			
-            if tournamentProgress <= 0 {
+            if !tournament.isStarted {
                 createAndOrderMatchups()
 			} else {
 				try! realm.write {
@@ -603,8 +603,10 @@ class BracketController {
     
     func reportMatch(selectedMatchup: BracketMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
         // save the match!
+		var winnerId: Int = 0
+		
         try! realm.write {
-            
+			
             var teamOneWins = 0
 			var teamTwoWins = 0
             for i in 0..<teamOneScores.count {
@@ -620,11 +622,13 @@ class BracketController {
                 selectedMatchup.teamTwo?.losses += 1
                 selectedMatchup.teamTwo?.isEliminated = true
                 selectedMatchup.teamOne?.bracketRounds.append(selectedMatchup.round + 1)
+				winnerId = (selectedMatchup.teamOne?.challonge_participant_id)!
                 advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne!)
             } else {
                 selectedMatchup.teamOne?.losses += 1
                 selectedMatchup.teamTwo?.wins += 1
                 selectedMatchup.teamOne?.isEliminated = true
+				winnerId = (selectedMatchup.teamTwo?.challonge_participant_id)!
                 selectedMatchup.teamTwo?.bracketRounds.append(selectedMatchup.round + 1)
                 advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamTwo!)
             }
@@ -652,7 +656,9 @@ class BracketController {
             selectedMatchup.isReported = true
 			tournamentDAO.addOnlineMatchup(matchup: selectedMatchup)
         }
-        
+		
+		let challongeMatchAPI = ChallongeMatchupAPI()
+		challongeMatchAPI.updateChallongeMatch(tournament: tournament, match: selectedMatchup, winnerId: winnerId)
         updateTournamentProgress()
 		
 		// a new matchup may be ready!

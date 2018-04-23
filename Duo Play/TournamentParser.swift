@@ -242,12 +242,11 @@ class TournamentParser : ChallongeTournamentAPIDelegate {
 	// we should have a list of included matchups and participants
 	// map our teams to participants
 	// map
-	func parseStartedTournament(onlineTournament: [String: Any], localTournament: Tournament, challongeMatchups: [[String:Any]]) {
-		didCreateChallongeTournament(onlineTournament: onlineTournament, localTournament: localTournament)
+	func parseStartedTournament(localTournament: Tournament, challongeParticipants: [[String:Any]], challongeMatchups: [[String:Any]]) {
 		
 		let matchupParser = MatchupParser()
 		let teamParser = TeamParser()
-		
+		teamParser.parseIncludedTeams(tournament: localTournament, challongeParticipants: challongeParticipants)
 		matchupParser.parseIncludedMatchups(tournament: localTournament, challongeMatchups: challongeMatchups)
 	}
 }
