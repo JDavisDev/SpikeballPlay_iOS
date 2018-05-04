@@ -9,50 +9,36 @@
 import Foundation
 import RealmSwift
 
-public class MatchupParser : ChallongeMatchupAPIDelegate {
-	func didPostChallongeMatchup(matchup: BracketMatchup, matchupObject: [String:Any]) {
-		Realm.asyncOpen() { realm, error in
-			if let realm = realm {
-				// Realm successfully opened
-				try! realm.write {
-					matchup.id = matchupObject["id"] as! Int
-				}
-			} else if error != nil {
-				// Handle error that occurred while opening the Realm
-			}
-		}
-	}
+public class MatchupParser {
+	var delegate : MatchupParserDelegate?
+	weak var db: DBManager?
 	
 	func parseIncludedMatchups(tournament: Tournament, challongeMatchups: [[String:Any]]) {
 		// assign retrieved matchups from challonge to our local matchups so we can report them later!
-		Realm.asyncOpen() { realm, error in
-			if let realm = realm {
-				// Realm successfully opened
-				try! realm.write {
-					for matchup in challongeMatchups {
-						for localMatchup in tournament.matchupList {
-							if let playerOneId = matchup["player1_id"] as? Int {
-								if let playerTwoId = matchup["player2_id"] as? Int {
-									if let isOpen = matchup["state"] as? String {
-											if localMatchup.teamOne?.challonge_participant_id == playerOneId &&
-												localMatchup.teamTwo?.challonge_participant_id == playerTwoId &&
-												isOpen == "open" {
-												// same match... parse!
-												// basically, I'm reassigning the challonge IDs to overwrite these ids so they match
-												localMatchup.id = matchup["id"] as! Int
-												localMatchup.tournament_id = matchup["tournament_id"] as! Int
-											}
-										
-									}
-								}
-							}
-						}
-					}
-				}
-			} else if error != nil {
-				// Handle error that occurred while opening the Realm
-			}
+		let db = DBManager()
+		db.beginWrite()
+		for matchup in challongeMatchups {
+			let localMatchup = getRealmMatchupFromChallongeData(tournament: tournament, data: matchup)
+			// same match... parse!
+			// basically, I'm reassigning the challonge IDs to overwrite these ids so they match
+			localMatchup.id = matchup["id"] as! Int
+			localMatchup.challongeId = matchup["id"] as! Int
+			localMatchup.tournament_id = matchup["tournament_id"] as! Int
+
+			db.updateRealmObject(object: localMatchup)
 		}
+		
+		db.commitWrite()
+		self.delegate?.didParseMatchups()
+	}
+	
+	func getRealmMatchupFromChallongeData(tournament: Tournament, data: [String: Any]) -> BracketMatchup {
+		let teamOne = db?.getTournamentTeamFromChallonge(tournamentId: tournament.id, teamChallongeId: data["player1_id"] as! Int)
+		let teamTwo = db?.getTournamentTeamFromChallonge(tournamentId: tournament.id, teamChallongeId: data["player2_id"] as! Int)
+		
+		let matchup = db?.getTournamentMatchupWithTeams(tournament: tournament, teamOne: teamOne!, teamTwo: teamTwo!)
+		
+		return matchup ?? BracketMatchup()
 	}
 }
 

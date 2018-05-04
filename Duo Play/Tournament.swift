@@ -39,6 +39,10 @@ class Tournament : Object {
     var poolList = List<Pool>()
     var teamList = List<Team>()
     var matchupList = List<BracketMatchup>()
+	
+	override static func primaryKey() -> String? {
+		return "id"
+	}
 }
 
 /*

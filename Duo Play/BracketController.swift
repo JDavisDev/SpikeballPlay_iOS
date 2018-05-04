@@ -25,6 +25,8 @@ class BracketController {
     var isEnd = false
     var baseBracketSize = 0
     var tournamentProgress = 0
+	var teamCount = 0
+	var isStarted = false
 	
 	var bracketViewDelegate: LiveBracketViewDelegate?
 	
@@ -32,32 +34,22 @@ class BracketController {
         tournament = TournamentController.getCurrentTournament()
         poolList = tournament.poolList
         byeCount = getByeCount()
+		teamCount = tournament.teamList.count
+		isStarted = tournament.isStarted
     }
     
     // this will be called when tournament starts
     // when things change, like settings and teams.
     // be dynamic and adaptable!
     func createBracket() {
-        if tournament.teamList.count > 0 {
+        if !isStarted && teamCount > 0  {
             seedTeams()
-			
-            if !tournament.isStarted {
-                createAndOrderMatchups()
-			} else {
-				try! realm.write {
-					for team in tournament.teamList {
-						//resetTeamValues(team: team)
-					}
-				}
-				
-				//createAndOrderMatchups()
-			}
-			
-			updateTournamentProgress()
+			createAndOrderMatchups()
+		} else {
 			if bracketViewDelegate != nil {
 				bracketViewDelegate?.bracketCreated()
 			}
-        }
+		}
     }
     
     func getRoundCount() -> Int {
@@ -93,11 +85,17 @@ class BracketController {
     // Get games needed to play this round
     // NOT how many we have so far.
     func getRoundGameCount(round: Int) -> Int {
-        let teamCount = tournament.teamList.count
-        let var1 = teamCount + getByeCount()
-        let var2 = var1 / 2
-        let final = var2 / round
-        return final
+		var returnVal = 0
+		let realm = try! Realm()
+		try! realm.write {
+			let teamCount = self.tournament.teamList.count
+			let var1 = teamCount + self.getByeCount()
+			let var2 = var1 / 2
+			let final = var2 / round
+			returnVal = final
+		}
+		
+		return returnVal
     }
     
     func getByeCount() -> Int {
@@ -151,44 +149,45 @@ class BracketController {
     // if matchups have been reported, let's block them after seeding.
     // nothing else should be able to be updated
     func seedTeams() {
-        try! realm.write {
-            var array = Array(tournament.teamList)
-            tournament.teamList.removeAll()
-			
-			array.sort {
-				return $0.seed < $1.seed
-			}
-			
-            // seed the teams here based on wins, then point diff, then name
-//            array.sort {
-//                if $0.wins == $1.wins {
-//					// if tournament has started, sort by wins, then seed.
-//					if tournament.progress_meter <= 0 {
-//                    	if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
-//                        	return $0.seed < $1.seed
-//                    	} else {
-//                        	return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
-//                    	}
-//					} else {
-//						return $0.seed < $1.seed
-//					}
-//                } else {
-//                    return $0.wins > $1.wins
-//                }
-//            }
-			
-            // we've sorted/seeded, now re-add
-            var seed = 1
-            for team in array {
-				// if tournament has begun, don't change their seeds!
-				if tournament.progress_meter <= 0 {
-					team.seed = seed
+				// Realm successfully opened
+				try! realm.write {
+					var array = Array(self.tournament.teamList)
+					self.tournament.teamList.removeAll()
+					
+					array.sort {
+						return $0.seed < $1.seed
+					}
+					
+					// seed the teams here based on wins, then point diff, then name
+		//            array.sort {
+		//                if $0.wins == $1.wins {
+		//					// if tournament has started, sort by wins, then seed.
+		//					if tournament.progress_meter <= 0 {
+		//                    	if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
+		//                        	return $0.seed < $1.seed
+		//                    	} else {
+		//                        	return ($0.pointsFor - $0.pointsAgainst) > ($1.pointsFor - $1.pointsAgainst)
+		//                    	}
+		//					} else {
+		//						return $0.seed < $1.seed
+		//					}
+		//                } else {
+		//                    return $0.wins > $1.wins
+		//                }
+		//            }
+					
+					// we've sorted/seeded, now re-add
+					var seed = 1
+					for team in array {
+						// if tournament has begun, don't change their seeds!
+						if self.tournament.progress_meter <= 0 {
+							team.seed = seed
+						}
+						
+						self.tournament.teamList.append(team)
+						seed += 1
+					}
 				}
-				
-                tournament.teamList.append(team)
-                seed += 1
-            }
-        }
     }
 	//THIS WILL CONFLICT WITH THE ABOVE METHOD
 	// run through the list and SET seeds based position in the list
@@ -427,6 +426,8 @@ class BracketController {
 		
 		if getByeCount() > 2 {
 			updateMatchups()
+		} else if bracketViewDelegate != nil {
+			bracketViewDelegate?.bracketCreated()
 		}
     }
 	
@@ -524,6 +525,10 @@ class BracketController {
 				}
 			}
         }
+		
+		if bracketViewDelegate != nil {
+			bracketViewDelegate?.bracketCreated()
+		}
     }
 	
 	func createBracketMatchup(team: Team, teamTwo: Team) {

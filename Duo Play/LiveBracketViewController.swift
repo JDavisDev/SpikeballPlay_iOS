@@ -11,7 +11,8 @@ import RealmSwift
 import Crashlytics
 import Firebase
 
-class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBracketViewDelegate {
+class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBracketViewDelegate, ChallongeMatchupAPIDelegate {
+	
 	var pinch = UIPinchGestureRecognizer()
 	
 	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -41,6 +42,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
         self.view.backgroundColor = UIColor.black
         self.view.addSubview(scrollView)
 		bracketController.bracketViewDelegate = self
+		challongeMatchupAPI.delegate = self
 		self.scrollView.delegate = self
 		self.scrollView.addGestureRecognizer(pinch)
 		pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.pinch(sender:)))
@@ -49,9 +51,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		self.scrollView.isUserInteractionEnabled = true
 		self.scrollView.contentSize = CGSize(width: 10000, height: 10000)
 		
-		try! realm.write() {
-			tournament = TournamentController.getCurrentTournament()
-		}
+		tournament = TournamentController.getCurrentTournament()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -69,8 +69,12 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	
 		// every view, let's refetch and redraw.
 		// make this less dependent on other functions updating things.
-		challongeMatchupAPI.getMatchupsForTournament(tournament: tournament)
-		bracketController.createBracket()
+		if tournament.isStarted {
+			//challongeMatchupAPI.getMatchupsForTournament(tournament: tournament)
+			bracketController.createBracket()
+		} else {
+			bracketController.createBracket()
+		}
     }
 	
 	func clearView() {
@@ -89,8 +93,13 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	func bracketCreated() {
 		createBracketView()
 	}
-	
 	// END BRACKET DELEGATE
+	
+	// MATCHUP DELEGATE
+	func didGetChallongeMatchups() {
+		bracketController.createBracket()
+	}
+	// END MATCHUP DELEGATE
 	
 	// Pinch Controls
 	@objc func pinch(sender:UIPinchGestureRecognizer) {
@@ -102,36 +111,31 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		
     func getMaxBracketWidth() -> Int {
         var returnInt = 70
-        
-        if tournament.teamList.count > 0 {
-            for team in tournament.teamList {
-                if team.name.count * 10 > returnInt {
-                    returnInt = team.name.count * 10
-                }
-            }
-        }
+//		let db = DBManager()
+//		//if tournament.teamList.count > 0 {
+//			for team in db.getTournamentTeamsList(tournament: tournament) {
+//				if team.name.count * 10 > returnInt {
+//					returnInt = team.name.count * 10
+//				}
+//			}
+//		//}
+		
         // label width needs to be 8 less, because name labels are left padded by 8
-        labelWidth = returnInt + 12
-        return returnInt + 20
-    }
-    
-    func getBracketMatchCount() -> Int {
-        var count = 0
-        try! realm.write {
-            count = tournament.teamList.count - 1
-        }
-        
-        return count
+        labelWidth = returnInt + 16
+        return returnInt + 24
     }
     
     // could generate first round positions.
     // then each cell after, is in the middle of the next two cells and offset.
     func createBracketView() {
-		bracketCellWidth = getMaxBracketWidth()
-		teamCount = tournament.teamList.count
-		bracketMatchCount = getBracketMatchCount()
-		roundCount = bracketController.getRoundCount()
-		byeCount = bracketController.getByeCount()
+		let realm = try! Realm()
+		try! realm.write {
+			self.bracketCellWidth = self.getMaxBracketWidth()
+			self.teamCount = self.tournament.teamList.count
+			self.bracketMatchCount = self.teamCount - 1
+			self.roundCount = self.bracketController.getRoundCount()
+			self.byeCount = self.bracketController.getByeCount()
+		}
 		
 		Answers.logCustomEvent(withName: "Bracket Drawn",
 									   customAttributes: [
@@ -144,8 +148,9 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     
     // create first round based on match counts
     func createFirstRoundBracketCells() {
-        if bracketController.getRoundGameCount(round: 1) > 0 {
-            for game in 1...bracketController.getRoundGameCount(round: 1) {
+		let roundGameCount = bracketController.getRoundGameCount(round: 1)
+        if roundGameCount > 0 {
+            for game in 1...roundGameCount {
                 // create a cell and set the base position, we'll move later based on round/match #
                 // yPos is not offsetting in the middle of other places
                 var yPos = 8
@@ -180,6 +185,13 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                     if tournament.matchupList.count > (game - 1) && tournament.matchupList[game - 1].round == 1 {
                         let teamOne = tournament.matchupList[game - 1].teamOne
                         let teamTwo = tournament.matchupList[game - 1].teamTwo
+						
+						if tournament.matchupList[game - 1].challongeId != 0 {
+							bracketCell.layer.shadowColor = UIColor.yellow as! CGColor
+							bracketCell.layer.shadowOpacity = 1
+							bracketCell.layer.shadowOffset = CGSize.zero
+							bracketCell.layer.shadowRadius = 6
+						}
 						
                         teamOneLabel.text = teamOne?.name
 						
@@ -218,6 +230,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     
     // matchups still are correct, but the display is wrong.
     func createAdditionalBracketCells() {
+		if roundCount < 2 { return }
+		
         for round in 2...roundCount {
             if bracketController.getRoundGameCount(round: round) > 0 {
                 for game in 1...bracketController.getRoundGameCount(round: round) {
@@ -516,6 +530,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
 			self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+			self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
 		}))
 		
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in

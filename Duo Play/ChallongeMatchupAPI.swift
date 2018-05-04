@@ -8,17 +8,19 @@
 
 import Foundation
 
-public class ChallongeMatchupAPI {
-	static let challongeBaseUrl = "https://api.challonge.com/v1/"
+public class ChallongeMatchupAPI : MatchupParserDelegate {
+	let challongeBaseUrl = "https://api.challonge.com/v1/"
 	let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
-	static let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
-	static let SPIKEBALL_API_KEY = ""
-	
+	let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
+	let SPIKEBALL_API_KEY = ""
 	let matchupParser = MatchupParser()
 	
+	var delegate : ChallongeMatchupAPIDelegate?
+	
 	func getMatchupsForTournament(tournament: Tournament) {
+		var challongeMatchups = [[String:Any]]()
 		let matchParser = MatchupParser()
-		let urlString = ChallongeMatchupAPI.challongeBaseUrl + "tournaments/" +
+		let urlString = challongeBaseUrl + "tournaments/" +
 			tournament.url + "/matches.json?" + "api_key=" + PERSONAL_API_KEY
 		
 		if let myURL = URL(string: urlString) {
@@ -27,7 +29,6 @@ public class ChallongeMatchupAPI {
 			let session = URLSession.shared
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
-					var challongeMatchups = [[String:Any]]()
 					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
 						for obj in json {
 							if let match = obj as? [String:Any] {
@@ -36,7 +37,8 @@ public class ChallongeMatchupAPI {
 								}
 							}
 						}
-							
+						
+						matchParser.delegate = self
 						matchParser.parseIncludedMatchups(tournament: tournament, challongeMatchups: challongeMatchups)
 					}
 				} catch {
@@ -46,6 +48,10 @@ public class ChallongeMatchupAPI {
 			
 			task.resume()
 		}
+	}
+	
+	func didParseMatchups() {
+		delegate?.didGetChallongeMatchups()
 	}
 	
 	/*

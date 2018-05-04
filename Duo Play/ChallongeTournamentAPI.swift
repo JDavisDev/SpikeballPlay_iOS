@@ -15,7 +15,9 @@ public class ChallongeTournamentAPI {
     static let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
     static let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
     static let SPIKEBALL_API_KEY = ""
-
+	
+	let matchupAPI = ChallongeMatchupAPI()
+	
     public var tournamentList = [NSDictionary]()
 
 	// MARK: TOURNAMENT
@@ -100,10 +102,12 @@ public class ChallongeTournamentAPI {
 			let session = URLSession.shared
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
-					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-						/* json[0] == key"tournament" and value: Any */
-						if let tournamentObject = json["tournament"] as? [String: Any] {
-							self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
+					if data != nil {
+						if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+							/* json[0] == key"tournament" and value: Any */
+							if let tournamentObject = json["tournament"] as? [String: Any] {
+								self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
+							}
 						}
 					}
 				} catch {
