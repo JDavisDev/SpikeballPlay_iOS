@@ -37,6 +37,7 @@ class TournamentSettingsView: UIViewController {
     @IBOutlet weak var playersPerPoolSegementedControl: UISegmentedControl!
     @IBOutlet weak var advanceButton: UIButton!
     @IBOutlet weak var playersPerPoolLabel: UILabel!
+	@IBOutlet weak var isPoolPlaySwitch: UISwitch!
 	
 	let challongeTournamentAPI = ChallongeTournamentAPI()
 	let bracketController = BracketController()
@@ -239,6 +240,7 @@ class TournamentSettingsView: UIViewController {
 		// set a param here to ONLY send up a tournament once, otherwise update the tournament
 		if !tournament.isReadOnly {
         	try! realm.write {
+				tournament.isPoolPlay = isPoolPlaySwitch.isOn
 				tournament.isOnline = isOnlineSwitch.isOn
 				tournament.isPrivate = !isPublicSwitch.isOn
 				tournament.isQuickReport = false //isQuickReportSwitch.isOn

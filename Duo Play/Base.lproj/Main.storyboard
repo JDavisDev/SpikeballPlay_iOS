@@ -1547,6 +1547,7 @@
                     </view>
                     <connections>
                         <outlet property="isOnlineSwitch" destination="4zd-vs-PGw" id="G49-hK-C1Z"/>
+                        <outlet property="isPoolPlaySwitch" destination="Mqo-6a-pIX" id="iwT-hf-Tdd"/>
                         <outlet property="isPublicSwitch" destination="vNQ-kd-Odh" id="0t5-bo-Ijg"/>
                         <outlet property="playersPerPoolLabel" destination="OUC-wR-l5I" id="sD1-Aw-MOb"/>
                         <outlet property="playersPerPoolSegementedControl" destination="iPN-nT-7IH" id="hLX-Nc-3kM"/>
@@ -1781,7 +1782,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Team Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n4d-IE-JxP">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Team Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="n4d-IE-JxP">
                                                     <rect key="frame" x="15" y="20" width="91" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1895,7 +1896,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="FSc-F1-mXN">
-                                <rect key="frame" x="0.0" y="94" width="375" height="568"/>
+                                <rect key="frame" x="0.0" y="86" width="375" height="576"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -1923,9 +1924,8 @@
                                 </prototypes>
                                 <sections/>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="yvb-f5-0LD">
-                                <rect key="frame" x="112" y="72" width="150" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="yvb-f5-0LD">
+                                <rect key="frame" x="112" y="20" width="150" height="58"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                 <state key="normal" title="Add Pool">
                                     <color key="titleColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1937,10 +1937,14 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="FSc-F1-mXN" firstAttribute="centerY" secondItem="fGW-ob-mFp" secondAttribute="centerY" constant="44.5" id="3HT-kf-LSz"/>
+                            <constraint firstItem="FSc-F1-mXN" firstAttribute="centerY" secondItem="fGW-ob-mFp" secondAttribute="centerY" constant="40.5" id="3HT-kf-LSz"/>
+                            <constraint firstItem="yvb-f5-0LD" firstAttribute="top" secondItem="Jhi-aF-b9O" secondAttribute="bottom" id="Con-Ig-s5a"/>
+                            <constraint firstItem="FSc-F1-mXN" firstAttribute="top" secondItem="yvb-f5-0LD" secondAttribute="bottom" constant="8" symbolic="YES" id="IBi-Jf-NqE"/>
                             <constraint firstItem="FSc-F1-mXN" firstAttribute="centerX" secondItem="fGW-ob-mFp" secondAttribute="centerX" id="f6X-tZ-JHP"/>
+                            <constraint firstItem="yvb-f5-0LD" firstAttribute="centerX" secondItem="FSc-F1-mXN" secondAttribute="centerX" id="faX-EQ-Ncj"/>
+                            <constraint firstItem="yvb-f5-0LD" firstAttribute="leading" secondItem="fGW-ob-mFp" secondAttribute="leadingMargin" constant="96" id="mU6-Wo-uwP"/>
                             <constraint firstItem="FSc-F1-mXN" firstAttribute="leading" secondItem="fGW-ob-mFp" secondAttribute="leadingMargin" constant="-16" id="oxw-mK-G78"/>
-                            <constraint firstItem="FSc-F1-mXN" firstAttribute="top" secondItem="Jhi-aF-b9O" secondAttribute="bottom" constant="74" id="x1Y-gO-3lu"/>
+                            <constraint firstItem="FSc-F1-mXN" firstAttribute="top" secondItem="Jhi-aF-b9O" secondAttribute="bottom" constant="66" id="x1Y-gO-3lu"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Pools" id="TwT-pz-wk5"/>
@@ -1965,18 +1969,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="178" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AJ8-bp-Ziv">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="149" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AJ8-bp-Ziv">
                                 <rect key="frame" x="0.0" y="138" width="375" height="529"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="separatorColor" red="0.99989169840000003" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="sectionIndexBackgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MatchupCell" rowHeight="178" id="WAK-U4-Ef6">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="178"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MatchupCell" rowHeight="149" id="WAK-U4-Ef6">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="149"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WAK-U4-Ef6" id="Owy-C2-2hC">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="177.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="148.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g1L-5r-8yf">
@@ -2001,6 +2005,9 @@
                                 <state key="normal" title="Finish Pool">
                                     <color key="titleColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="finishPoolButton:" destination="Mu6-XL-VCM" eventType="touchUpInside" id="9AV-tt-s1G"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -30,7 +30,8 @@ class TeamsController {
             
             realm.add(team)
             newPool.teamList.append(team)
-            
+            team.pool = newPool
+			
             if isNewPool {
                 realm.add(newPool)
                 tournament.poolList.append(newPool)

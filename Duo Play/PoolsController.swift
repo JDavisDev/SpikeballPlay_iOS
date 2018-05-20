@@ -38,6 +38,20 @@ class PoolsController {
 		return PoolsController.selectedPoolName
 	}
 	
+	// maybe do a search here? contains?
+	func getPoolByName(name: String, tournamentId: Int) -> Pool {
+		let pools = realm.objects(Pool.self)
+			.filter("name = '\(name)' AND tournament_id = \(tournamentId)")
+		
+		if pools.count > 0 {
+			return pools.first!
+		} else {
+			let pool = Pool()
+			pool.name = "nil"
+			return pool
+		}
+	}
+	
     func addTeamToPool(pool: Pool, team: Team) {
         try! realm.write {
             team.pool = pool

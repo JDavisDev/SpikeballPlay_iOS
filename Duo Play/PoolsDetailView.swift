@@ -49,16 +49,54 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func generateMatchupList() {
-            // this will generate and add matchups to pool object
-		generator.generatePoolPlayGames(pool: pool)
-		
-        updateMatchupList()
+		// this will generate and add matchups to pool object
+		if !pool.isStarted {
+			generator.generatePoolPlayGames(pool: pool)
+        	updateMatchupList()
+		}
     }
-    
+	
+	@IBAction func finishPoolButton(_ sender: UIButton) {
+		// let's show a dialog to confirm!
+		showFinishPoolDialog()
+	}
+	
+	func showFinishPoolDialog() {
+		let message = "Finish Pool and close all match ups?"
+		
+		let alert = UIAlertController(title: "Finalize Pool", message: message,
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			self.finishPool()
+		}))
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func finishPool() {
+		try! realm.write {
+			for matchup in pool.matchupList {
+				matchup.isReported = true
+			}
+			
+			pool.isFinished = true
+		}
+		
+		self.navigationController?.popViewController(animated: true)
+	}
+	
     // MARK: - Pools Table View
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MatchupCell")
+		// don't show reported games
+		// need to add to not show more than one game per team? Just the next available game?
         if !matchupList[indexPath.row].isReported  {
             cell!.textLabel?.text = String((matchupList[indexPath.row].teamOne?.name)! + " vs. " + (matchupList[indexPath.row].teamTwo?.name)!)
         }
@@ -85,6 +123,7 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         if segue.identifier == "MatchupDetailVC" {
             if let nextVC = segue.destination as? PoolPlayMatchReporterView {
                 nextVC.selectedMatchup = sender as! PoolPlayMatchup
+				nextVC.currentPool = self.pool
             }
         }
     }

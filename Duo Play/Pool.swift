@@ -14,6 +14,8 @@ public class Pool : Object {
     @objc dynamic var division = ""
     @objc dynamic var isPowerPool = false
 	@objc dynamic var tournament_id: Int = 0
+	@objc dynamic var isFinished = false
+	@objc dynamic var isStarted = false
     var matchupList = List<PoolPlayMatchup>()
 	var teamList = List<Team>()
 }

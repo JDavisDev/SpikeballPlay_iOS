@@ -30,8 +30,15 @@ class PoolPlayMatchGenerator {
         matchupMatrix = Array(repeating: Array(repeating: 0, count: teamCount / 2), count: 2)
         // if odd number, I could throw in a "dummy" team as the rest.
 		
-		if teamList.count < 2 { return }
+		
+		
+		if teamList.count < 4 || pool.isStarted {
+			return
+		}
 
+		try! realm.write {
+			pool.matchupList.removeAll()
+		}
 		initMatrix()
         addMatchupsFromMatrix()
         
@@ -108,22 +115,24 @@ class PoolPlayMatchGenerator {
     }
     
     func addMatchupsFromMatrix() {
-        for _ in 0..<teamCount - 1 {
-            for column in 0..<teamCount/2 {
-                try! realm.write {
-					if teamList.count > 2 {
-						let matchup = PoolPlayMatchup()
-						matchup.teamOne = teamList[matchupMatrix[0][column] - 1]
-						matchup.teamTwo = teamList[matchupMatrix[1][column] - 1]
-						
-						matchup.round = currentRound
-						matchup.division = "Advanced"
-						matchup.isReported = false
-						realm.add(matchup)
-						pool.matchupList.append(matchup)
-					}
-                }
-            }
+		try! realm.write {
+			pool.matchupList.removeAll()
+		}
+		
+		for _ in 0..<teamCount - 1 {
+			for column in 0..<teamCount/2 {
+				try! realm.write {
+					let matchup = PoolPlayMatchup()
+					matchup.teamOne = teamList[matchupMatrix[0][column] - 1]
+					matchup.teamTwo = teamList[matchupMatrix[1][column] - 1]
+				
+					matchup.round = currentRound
+					matchup.division = "Advanced"
+					matchup.isReported = false
+					realm.add(matchup)
+					pool.matchupList.append(matchup)
+				}
+			}
             
             slideMatrix()
         }

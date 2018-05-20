@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Crashlytics
 
 class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
@@ -29,13 +30,103 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         title = "Teams"
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
-		
-        initGestureRecognizer()
-    }
+	}
     
     override func viewDidAppear(_ animated: Bool) {
         updateTeamList()
     }
+	
+	func longPressGesture() -> UILongPressGestureRecognizer {
+		let lpg = UILongPressGestureRecognizer(target: self, action: #selector(self.teamLongPress))
+		lpg.minimumPressDuration = 0.5
+		return lpg
+	}
+	
+	@objc func teamLongPress(_ sender: UILongPressGestureRecognizer) {
+		var selectedTeam = Team()
+		
+		if let label = sender.view?.subviews[0].subviews[0] as? UILabel {
+			let name = label.text
+			selectedTeam = teamsController.getTeamByName(name: name!, tournamentId: tournament.id)
+		} else {
+			return
+		}
+		
+		//show dialog to rename or delete session
+		let alert = UIAlertController(title: "Move Team",
+									  message: "Enter Team's New Pool", preferredStyle: .alert)
+		
+		alert.addTextField { (textField) in
+			textField.placeholder = "Pool Name"
+			textField.text = selectedTeam.pool?.name
+		}
+		
+		let moveToPoolAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+			_ = alert.textFields![0] as UITextField
+			let newPoolName = alert.textFields![0].text!
+			// find pool from pool name
+			let newPool = self.poolsController.getPoolByName(name: newPoolName, tournamentId: self.tournament.id)
+			
+			if newPool.name != "nil" {
+				self.showNewPoolConfirmationAlert(team: selectedTeam, pool: newPool)
+			} else {
+				self.showPoolSearchErrorAlert()
+			}
+		}
+		
+		alert.addAction(moveToPoolAction)
+		
+		let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
+			
+			self.updateTeamList()
+			Answers.logCustomEvent(withName: "Team Deleted From Pool Play",
+								   customAttributes: [:])
+		}
+		
+		alert.addAction(deleteAction)
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		alert.popoverPresentationController?.sourceView = self.view
+		self.present(alert, animated: true, completion: nil)
+	}
+	
+	func showNewPoolConfirmationAlert(team: Team, pool: Pool) {
+		let alert = UIAlertController(title: "Confirm Pool",
+									  message: "Move team \(team.name) to \(pool.name)",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			try! self.realm.write {
+				// assign new pool to team
+				team.pool?.teamList.remove(at: (team.pool?.teamList.index(of: team))!)
+				self.poolsController.addTeamToPool(pool: pool, team: team)
+			}
+			
+			self.updateTeamList()
+		}))
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func showPoolSearchErrorAlert() {
+		let alert = UIAlertController(title: "Error",
+									  message: "Could not find pool by that name.",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
     
     func updateTeamList() {
         teamList.removeAll()
@@ -45,16 +136,6 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         }
         
         teamsTableView.reloadData()
-    }
-    
-    func initGestureRecognizer() {
-        longPressRecognizer.delegate = self
-        longPressRecognizer.addTarget(self, action: #selector(self.onLongPress))
-        self.teamsTableView.addGestureRecognizer(longPressRecognizer)
-    }
-    
-    @objc func onLongPress() {
-        //teamsTableView.setEditing(true, animated: true)
     }
     
     
@@ -126,15 +207,18 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		let destPool = tournament.poolList[destinationIndexPath.section]
 		
-		try! realm.write {
-			tournament.teamList.remove(at: tournament.teamList.index(of: movedObject)!)
-			tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
-			sourcePool.teamList.remove(at: sourceIndexPath.row)
-			destPool.teamList.append(movedObject)
+		if sourcePool.isStarted || destPool.isStarted {
+			showPoolStartedAlert()
+		} else {
+			try! realm.write {
+				tournament.teamList.remove(at: tournament.teamList.index(of: movedObject)!)
+				tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
+				sourcePool.teamList.remove(at: sourceIndexPath.row)
+				destPool.teamList.append(movedObject)
+			}
 		}
 		
         self.teamsTableView.reloadData()
-		
     }
 	
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
@@ -144,9 +228,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return .none
     }
-    
+		
     // moving and reassigning seems to work okay.
-    // Just need help accessing each row in each section.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
 		
@@ -157,6 +240,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		if tournament.teamList.count > 0 {
         	cell!.textLabel?.text = team.name
         	cell?.detailTextLabel?.text = team.division
+			cell?.addGestureRecognizer(self.longPressGesture())
 		}
         return cell!
     }
@@ -171,5 +255,17 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			self.teamsTableView.setEditing(true, animated: true)
 			editTeamsButton.setTitle("Save", for: .normal)
 		}
+	}
+	
+	func showPoolStartedAlert() {
+		let alert = UIAlertController(title: "Error",
+									  message: "Pool has begun. You cannot make team changes.",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
 	}
 }

@@ -42,8 +42,9 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // send pool
         let indexPath = poolsTableView.indexPathForSelectedRow
         let pool = tournament.poolList[(indexPath?.row)!]
+		let controller = segue.destination as? PoolsDetailView
+		
 		PoolsController.setSelectedPoolName(name: pool.name)
-        let controller = segue.destination as? PoolsDetailView
         controller?.pool = pool
     }
     
@@ -51,9 +52,13 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "poolCell")
-        cell!.textLabel?.text = tournament.poolList[indexPath.row].name
-        cell?.detailTextLabel?.text = String(describing: tournament.poolList[indexPath.row].division)
-        return cell!
+		// check if pool is finished
+		if !tournament.poolList[indexPath.row].isFinished {
+        	cell!.textLabel?.text = tournament.poolList[indexPath.row].name
+        	cell?.detailTextLabel?.text = String(describing: tournament.poolList[indexPath.row].division)
+		}
+		
+		return cell!
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

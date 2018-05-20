@@ -82,15 +82,15 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		tournamentNameLabel.text = tournament.name
 		
 		if tournament.isPoolPlay && !tournament.isPoolPlayFinished {
-			poolPlayButton.isHidden = false
+			poolPlayButton.isEnabled = true
 		} else {
-			poolPlayButton.isHidden = true
+			poolPlayButton.isEnabled = false
 		}
 		
 		if !tournament.isPoolPlay || tournament.isPoolPlayFinished {
-			bracketButton.isHidden = false
+			bracketButton.isEnabled = true
 		} else {
-			bracketButton.isHidden = true
+			bracketButton.isEnabled = false
 		}
 	}
 	
