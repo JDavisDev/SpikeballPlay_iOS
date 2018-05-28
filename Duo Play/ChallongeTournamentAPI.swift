@@ -41,10 +41,6 @@ public class ChallongeTournamentAPI {
 	
 	func startTournament(tournament: Tournament) {
 		let tournamentParser = TournamentParser()
-		let realm = try! Realm()
-		try! realm.write {
-			tournament.isStarted = true
-		}
 		
 		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY + "&include_participants=1" + "&include_matches=1"
 		

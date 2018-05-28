@@ -153,11 +153,11 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		TournamentController.setTournamentId(id: id)
 		
 		// do online saving
-		let challongeAPI = ChallongeTournamentAPI()
-		challongeAPI.createChallongeTournament(tournament: tournament)
+		//let challongeAPI = ChallongeTournamentAPI()
+		//challongeAPI.createChallongeTournament(tournament: tournament)
 		
-		let tournamentDao = TournamentDAO()
-		tournamentDao.addOnlineTournament(tournament: tournament)
+		//let tournamentDao = TournamentDAO()
+		//tournamentDao.addOnlineTournament(tournament: tournament)
 	}
 	
 	func getRandomStringForUrl(length: Int) -> String {
@@ -177,10 +177,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     
     func isIdUnique(id: Int) -> Bool {
         var count = 0
-        try! realm.write {
-             count = realm.objects(Tournament.self).filter("id = \(id)").count
-        }
-        
+        let db = DBManager()
+		db.beginWrite()
+		count = realm.objects(Tournament.self).filter("id = \(id)").count
+		db.commitWrite()
         return count == 0
     }
     

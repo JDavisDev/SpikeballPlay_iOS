@@ -88,7 +88,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
 									  preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-			self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+			self.startTournament()
 		}))
 		
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -97,6 +97,15 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
 		}))
 		
 		present(alert, animated: true, completion: nil)
+	}
+	
+	func startTournament() {
+		let db = DBManager()
+		db.beginWrite()
+		tournament.isStarted = true
+		db.commitWrite()
+		//self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+		//self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
 	}
     
     // MARK: - Table View methods
@@ -135,5 +144,4 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-
 }

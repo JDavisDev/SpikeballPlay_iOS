@@ -56,6 +56,8 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
 		if !tournament.poolList[indexPath.row].isFinished {
         	cell!.textLabel?.text = tournament.poolList[indexPath.row].name
         	cell?.detailTextLabel?.text = String(describing: tournament.poolList[indexPath.row].division)
+		} else {
+			cell!.textLabel?.text = "Finished Pool"
 		}
 		
 		return cell!
@@ -70,9 +72,11 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // let pool = PoolsViewController.poolsList[indexPath.row]
-        performSegue(withIdentifier: "poolDetailSegue", sender: self)
-        
+        let pool = tournament.poolList[indexPath.row]
+		
+		if !pool.isFinished {
+        	performSegue(withIdentifier: "poolDetailSegue", sender: self)
+		}
     }
 
 }

@@ -46,41 +46,44 @@ class TournamentSettingsView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		if tournament.isPoolPlay {
-			playersPerPoolSegementedControl.isHidden = false
-			playersPerPoolLabel.isHidden = false
-			
-			// bracket AND Pool Play
-			playersPerPoolSegementedControl.isHidden = false
-			playersPerPoolLabel.isHidden = false
-			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
-		} else {
-			// bracket only
-			playersPerPoolSegementedControl.isHidden = true
-			playersPerPoolLabel.isHidden = true
-		}
 		
-		if tournament.progress_meter > 0 || tournament.isReadOnly {
-			// tournament has begun, don't let settings be editable
-			playersPerPoolSegementedControl.isEnabled = false
-			// maybe show a message as to why everything is disabled.
-		}
-		
-		
-		
-		// tournament is read only, let's hide everything!
-		if tournament.isReadOnly {
-			isOnlineSwitch.isHidden = true
-		
-			isPublicSwitch.isHidden = true
-			tournamentNameTextField.isEnabled = false
-			advanceButton.setTitle("Next", for: .normal)
-		}
     }
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+		
+	}
+	
+	private func updateView() {
 		tournamentNameTextField.text = tournament.name
+		
+		isPoolPlaySwitch.setOn(tournament.isPoolPlay && !tournament.isPoolPlayFinished,
+							   animated: true)
+		
+		if isPoolPlaySwitch.isOn {
+			playersPerPoolSegementedControl.isHidden = false
+			playersPerPoolLabel.isHidden = false
+			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
+		} else {
+			playersPerPoolSegementedControl.isHidden = true
+			playersPerPoolLabel.isHidden = true
+		}
+		
+		if tournament.progress_meter > 0 || tournament.isReadOnly || tournament.isStarted {
+			// tournament has begun, don't let settings be editable
+			playersPerPoolSegementedControl.isEnabled = false
+			isPoolPlaySwitch.isEnabled = true
+			// maybe show a message as to why everything is disabled.
+		}
+		
+		// tournament is read only, let's hide everything!
+		if tournament.isReadOnly {
+			isOnlineSwitch.isHidden = true
+			isPublicSwitch.isHidden = true
+			isPoolPlaySwitch.isHidden = true
+			tournamentNameTextField.isEnabled = false
+			advanceButton.setTitle("Next", for: .normal)
+		}
 	}
 	
 	@IBAction func deleteButton(_ sender: UIButton) {
@@ -106,6 +109,16 @@ class TournamentSettingsView: UIViewController {
 		}))
 		
 		present(alert, animated: true, completion: nil)
+	}
+	@IBAction func isPoolPlaySwitchToggled(_ sender: UISwitch) {
+		if isPoolPlaySwitch.isOn {
+			playersPerPoolSegementedControl.isHidden = false
+			playersPerPoolLabel.isHidden = false
+			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
+		} else {
+			playersPerPoolSegementedControl.isHidden = true
+			playersPerPoolLabel.isHidden = true
+		}
 	}
 	
 	func deleteTournament(deleteOnline: Bool) {

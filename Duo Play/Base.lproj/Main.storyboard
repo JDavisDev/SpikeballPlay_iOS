@@ -1483,6 +1483,9 @@
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mqo-6a-pIX" userLabel="Is PoolPlay Switch">
                                 <rect key="frame" x="298" y="336" width="51" height="31"/>
                                 <color key="onTintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="isPoolPlaySwitchToggled:" destination="Tsw-tC-GGE" eventType="valueChanged" id="r0v-N8-eAc"/>
+                                </connections>
                             </switch>
                             <switch hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vNQ-kd-Odh">
                                 <rect key="frame" x="301" y="521" width="51" height="31"/>
@@ -1558,6 +1561,102 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1q2-T8-GXh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="584.79999999999995" y="-206.44677661169416"/>
+        </scene>
+        <!--Teams-->
+        <scene sceneID="vrH-hs-spc">
+            <objects>
+                <viewController title="Teams" id="6Bm-c6-wcC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KLf-55-glT"/>
+                        <viewControllerLayoutGuide type="bottom" id="gDI-Sm-Q6g"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2Ii-bb-bdV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="whg-t1-7aa">
+                                <rect key="frame" x="16" y="0.0" width="205" height="78"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="205" id="C5x-b3-p3M"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <state key="normal" title="Add Two Teams"/>
+                                <connections>
+                                    <action selector="addTeamsInBulk:" destination="W62-W3-ujY" eventType="touchUpInside" id="72i-tQ-lDq"/>
+                                </connections>
+                            </button>
+                            <searchBar hidden="YES" contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search Teams" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ta2-g2-g1m">
+                                <rect key="frame" x="0.0" y="78" width="375" height="56"/>
+                                <color key="barTintColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" textContentType="name"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
+                                <connections>
+                                    <outlet property="delegate" destination="W62-W3-ujY" id="FHv-3B-oH2"/>
+                                </connections>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="EoA-Fv-bOe">
+                                <rect key="frame" x="0.0" y="127" width="375" height="540"/>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="375" id="ZiV-m3-o8V"/>
+                                </constraints>
+                                <color key="separatorColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <color key="sectionIndexColor" red="1" green="0.91923777630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="sectionIndexBackgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="teamCell" rowHeight="92" id="HDh-Ss-JLM">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="92"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="HDh-Ss-JLM" id="HOR-FP-wro">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="91.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Nx0-rb-U51">
+                                                    <rect key="frame" x="15" y="11" width="345" height="70"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="Nx0-rb-U51" firstAttribute="bottom" secondItem="HOR-FP-wro" secondAttribute="bottomMargin" id="Fao-1E-HgJ"/>
+                                                <constraint firstItem="Nx0-rb-U51" firstAttribute="centerY" secondItem="HOR-FP-wro" secondAttribute="centerY" id="I2F-YT-Wvq"/>
+                                                <constraint firstItem="Nx0-rb-U51" firstAttribute="centerX" secondItem="HOR-FP-wro" secondAttribute="centerX" id="KLn-5G-NgH"/>
+                                                <constraint firstItem="Nx0-rb-U51" firstAttribute="leading" secondItem="HOR-FP-wro" secondAttribute="leadingMargin" id="xH6-Fs-UMD"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qmJ-xH-P4Y">
+                                <rect key="frame" x="337" y="28" width="22" height="22"/>
+                                <connections>
+                                    <action selector="addTeam:" destination="W62-W3-ujY" eventType="touchUpInside" id="snu-al-9Nm"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <constraints>
+                            <constraint firstItem="Ta2-g2-g1m" firstAttribute="top" secondItem="qmJ-xH-P4Y" secondAttribute="bottom" constant="28" id="1bs-i2-PNp"/>
+                            <constraint firstItem="Ta2-g2-g1m" firstAttribute="leading" secondItem="2Ii-bb-bdV" secondAttribute="leading" id="AbM-r3-GZx"/>
+                            <constraint firstItem="whg-t1-7aa" firstAttribute="bottom" secondItem="Ta2-g2-g1m" secondAttribute="top" id="Req-Yl-A3Z"/>
+                            <constraint firstItem="qmJ-xH-P4Y" firstAttribute="leading" secondItem="whg-t1-7aa" secondAttribute="trailing" constant="116" id="ZBd-qP-YMN"/>
+                            <constraint firstItem="whg-t1-7aa" firstAttribute="leading" secondItem="2Ii-bb-bdV" secondAttribute="leadingMargin" id="c6O-Cm-Nla"/>
+                            <constraint firstItem="EoA-Fv-bOe" firstAttribute="bottom" secondItem="gDI-Sm-Q6g" secondAttribute="top" id="ep9-2B-ilx"/>
+                            <constraint firstItem="qmJ-xH-P4Y" firstAttribute="top" secondItem="KLf-55-glT" secondAttribute="bottom" constant="8" symbolic="YES" id="ixP-Ej-Ibg"/>
+                            <constraint firstItem="EoA-Fv-bOe" firstAttribute="top" secondItem="qmJ-xH-P4Y" secondAttribute="bottom" constant="77" id="pTc-6D-jjW"/>
+                            <constraint firstItem="whg-t1-7aa" firstAttribute="centerY" secondItem="qmJ-xH-P4Y" secondAttribute="centerY" id="pmX-cL-hcR"/>
+                            <constraint firstItem="Ta2-g2-g1m" firstAttribute="leading" secondItem="EoA-Fv-bOe" secondAttribute="leading" id="y9f-nh-9ca"/>
+                            <constraint firstItem="Ta2-g2-g1m" firstAttribute="trailing" secondItem="EoA-Fv-bOe" secondAttribute="trailing" id="yc8-pQ-w3k"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ipb-Ci-NQi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="584.79999999999995" y="-1549.4752623688157"/>
         </scene>
         <!--Tournament-->
         <scene sceneID="VCw-et-PcE">
@@ -1642,6 +1741,7 @@
                                 <state key="normal" title="Teams"/>
                                 <connections>
                                     <action selector="teamsButtonClicked:" destination="uue-fQ-IDZ" eventType="touchUpInside" id="pzp-Tc-J5u"/>
+                                    <segue destination="6Bm-c6-wcC" kind="show" identifier="tournamentTeamsSegue" id="lSe-v3-Vh8"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2304,7 +2404,7 @@
             </objects>
             <point key="canvasLocation" x="5854" y="-2103"/>
         </scene>
-        <!--Matchups View Controller-->
+        <!--Matchups-->
         <scene sceneID="uLP-82-FNd">
             <objects>
                 <viewController id="D2T-rh-igs" customClass="MatchupsViewController" customModule="DuoPlay" customModuleProvider="target" sceneMemberID="viewController">
@@ -2355,9 +2455,7 @@
                             <constraint firstItem="yFz-DU-DIN" firstAttribute="bottom" secondItem="pV5-OK-Vah" secondAttribute="top" id="pSj-XC-kF2"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="GamesBarItemImage" selectedImage="GamesBarItemImage" id="LzU-Qn-Fey">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="Matchups" id="LzU-Qn-Fey"/>
                     <connections>
                         <outlet property="matchupsTableView" destination="yFz-DU-DIN" id="CJ0-dd-nHL"/>
                         <segue destination="1cT-kW-IQp" kind="show" identifier="bracketReporterSegue" id="vIx-zL-6tc"/>
@@ -2401,9 +2499,7 @@
                             <outletCollection property="gestureRecognizers" destination="4qN-mf-L77" appends="YES" id="zX2-ga-IB4"/>
                         </connections>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="BracketBarItemImage" selectedImage="BracketBarItemImage" id="3u2-tO-LUR">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="Bracket" id="3u2-tO-LUR"/>
                     <size key="freeformSize" width="700" height="667"/>
                     <connections>
                         <outlet property="activityIndicator" destination="GW2-0V-Mg8" id="MLF-Me-nmz"/>
@@ -2501,16 +2597,16 @@
                             <constraint firstItem="8yx-xk-h8z" firstAttribute="leading" secondItem="ngO-ne-rcl" secondAttribute="leading" id="Lj9-O2-aaF"/>
                             <constraint firstItem="vvx-5v-sb3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ngO-ne-rcl" secondAttribute="leading" constant="20" symbolic="YES" id="P9h-IG-tjz"/>
                             <constraint firstItem="8yx-xk-h8z" firstAttribute="top" secondItem="D9f-5Z-Iri" secondAttribute="bottom" constant="77" id="PVV-yO-bM9"/>
-                            <constraint firstItem="vvx-5v-sb3" firstAttribute="top" secondItem="gfm-5n-hLM" secondAttribute="bottom" constant="8" symbolic="YES" id="Pu3-4a-B8F"/>
                             <constraint firstItem="dvz-pq-7jk" firstAttribute="leading" secondItem="8yx-xk-h8z" secondAttribute="leading" id="QRj-UZ-kp2"/>
                             <constraint firstAttribute="trailingMargin" secondItem="D9f-5Z-Iri" secondAttribute="trailing" constant="12" id="SVn-gE-LNg"/>
                             <constraint firstAttribute="bottom" secondItem="8yx-xk-h8z" secondAttribute="bottom" constant="49" id="Vp7-4Q-Y1P"/>
                             <constraint firstItem="D9f-5Z-Iri" firstAttribute="leading" secondItem="vvx-5v-sb3" secondAttribute="trailing" constant="8" symbolic="YES" id="Vyh-aP-Mx3"/>
-                            <constraint firstItem="D9f-5Z-Iri" firstAttribute="top" secondItem="gfm-5n-hLM" secondAttribute="bottom" constant="29" id="b81-8h-let"/>
+                            <constraint firstItem="D9f-5Z-Iri" firstAttribute="top" secondItem="gfm-5n-hLM" secondAttribute="bottom" constant="29" id="WNP-kx-jFb"/>
+                            <constraint firstItem="vvx-5v-sb3" firstAttribute="top" secondItem="gfm-5n-hLM" secondAttribute="bottom" constant="8" symbolic="YES" id="i2k-ki-qHA"/>
                             <constraint firstItem="dvz-pq-7jk" firstAttribute="trailing" secondItem="8yx-xk-h8z" secondAttribute="trailing" id="oLq-CK-rDU"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="PlayersBarItemImage" selectedImage="PlayersBarItemImage" id="mKK-Y1-Z7b"/>
+                    <tabBarItem key="tabBarItem" title="Teams" id="mKK-Y1-Z7b"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
@@ -2938,7 +3034,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="BracketBarItemImage" width="48" height="48"/>
         <image name="DoneImage" width="48" height="48"/>
         <image name="GamesBarItemImage" width="48" height="48"/>
         <image name="HistoryBarItemImage" width="48" height="48"/>

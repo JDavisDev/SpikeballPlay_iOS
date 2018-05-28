@@ -38,19 +38,6 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 							   customAttributes: [:])
 	}
     
-    override func viewWillDisappear(_ animated: Bool) {
-//		if didTeamsChange {
-//			let bracketController = BracketController()
-//			
-//			for team in tournament.teamList {
-//				bracketController.resetTeamValues(team: team)
-//			}
-//			didTeamsChange = false
-//		}
-		
-		super.viewWillDisappear(true)
-    }
-    
     // MARK: - Adding teams
 	
 	@IBAction func addTeamsInBulk(_ sender: UIButton) {
@@ -83,7 +70,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     
     @IBAction func addTeam(_ sender: UIButton) {
         // check if tournament has started, only add teams if it has not.
-        if tournament.progress_meter <= 0 && !tournament.isReadOnly && !tournament.isStarted {
+        if !tournament.isStarted && !tournament.isReadOnly {
             teamsTableView.setEditing(false, animated: true)
             // let's present an alert to enter a team. cleaner ui
             let alert = UIAlertController(title: "Add Team",
@@ -132,10 +119,11 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 			team.tournament_id = self.tournament.id
 		}
 		
-		let teamsParser = TeamParser()
-		self.challongeTeamsAPI.delegate = teamsParser
-		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
-		self.tournamentDAO.addOnlineTournamentTeam(team: team)
+// challonge stuff comes later.
+//		let teamsParser = TeamParser()
+//		self.challongeTeamsAPI.delegate = teamsParser
+//		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
+//		self.tournamentDAO.addOnlineTournamentTeam(team: team)
 		self.teamsController.addTeam(team: team)
 	}
 	
@@ -200,7 +188,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     @objc func longPress(_ sender: UILongPressGestureRecognizer) {
         var selectedTeam = Team()
 		
-		if tournament.progress_meter <= 0 && !tournament.isReadOnly {
+		if !tournament.isStarted && !tournament.isReadOnly {
 			if let button = sender.view as? UIButton {
 				let name = button.currentTitle
 				selectedTeam = getTeamByName(name: name!)

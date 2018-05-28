@@ -39,24 +39,33 @@ class PoolsController {
 	}
 	
 	// maybe do a search here? contains?
-	func getPoolByName(name: String, tournamentId: Int) -> Pool {
+	func searchPoolByName(name: String, tournamentId: Int) -> Pool {
 		let pools = realm.objects(Pool.self)
-			.filter("name = '\(name)' AND tournament_id = \(tournamentId)")
+			.filter("tournament_id = \(tournamentId)")
 		
 		if pools.count > 0 {
-			return pools.first!
-		} else {
-			let pool = Pool()
-			pool.name = "nil"
-			return pool
+			for pool in pools {
+				if pool.name.contains(name) {
+					return pool
+				}
+			}
 		}
+		
+		let pool = Pool()
+		pool.name = "nil"
+		return pool
 	}
 	
     func addTeamToPool(pool: Pool, team: Team) {
-        try! realm.write {
-            team.pool = pool
-            pool.teamList.append(team)
-        }
+		if realm.isInWriteTransaction {
+			team.pool = pool
+			pool.teamList.append(team)
+		} else {
+			try! realm.write {
+				team.pool = pool
+				pool.teamList.append(team)
+			}
+		}
     }
 	
 	// add blank new pool
@@ -106,7 +115,7 @@ class PoolsController {
 			
 			for pool in tournament.poolList {
 				for matchup in pool.matchupList {
-						totalMatchCount += 1
+					totalMatchCount += 1
 					
 					if matchup.isReported {
 						reportedMatchCount += 1
@@ -169,7 +178,10 @@ class PoolsController {
 			finishPoolMatchups(pool: pool)
 		}
 		
-		tournament.isPoolPlayFinished = true
+		try! realm.write {
+			tournament.isPoolPlayFinished = true
+		}
+		
 		seedTeams()
 	}
 	

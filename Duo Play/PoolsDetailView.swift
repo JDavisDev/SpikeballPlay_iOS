@@ -26,14 +26,23 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         matchupTableView.delegate = self
         matchupTableView.dataSource = self
         pool = getCurrentPool()
-        generateMatchupList()
+        updateMatchupList()
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
+		
+		updateMatchupList()
+	}
     
 	func getCurrentPool() -> Pool {
 		return PoolsController.getSelectedPool()
 	}
     
     func updateMatchupList() {
+		// this will generate and add matchups to pool object
+		generateMatchupList()
+		
         self.matchupList.removeAll()
         
         // fetch matches left then update list
@@ -49,10 +58,8 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
     }
     
     func generateMatchupList() {
-		// this will generate and add matchups to pool object
 		if !pool.isStarted {
 			generator.generatePoolPlayGames(pool: pool)
-        	updateMatchupList()
 		}
     }
 	
@@ -88,7 +95,27 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 			pool.isFinished = true
 		}
 		
+		checkIfPoolPlayFinished()
+		
 		self.navigationController?.popViewController(animated: true)
+	}
+	
+	func checkIfPoolPlayFinished() {
+		var isPoolPlayFinished = true
+		
+		try! realm.write {
+			for pool in tournament.poolList {
+				if !pool.isFinished {
+					isPoolPlayFinished = false
+				}
+			}
+			
+			tournament.isPoolPlayFinished = isPoolPlayFinished
+		}
+		
+		let poolsController = PoolsController()
+		poolsController.setPoolPlayFinished(isFinished: true)
+		poolsController.finishPoolPlay()
 	}
 	
     // MARK: - Pools Table View

@@ -65,7 +65,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			_ = alert.textFields![0] as UITextField
 			let newPoolName = alert.textFields![0].text!
 			// find pool from pool name
-			let newPool = self.poolsController.getPoolByName(name: newPoolName, tournamentId: self.tournament.id)
+			let newPool = self.poolsController.searchPoolByName(name: newPoolName, tournamentId: self.tournament.id)
 			
 			if newPool.name != "nil" {
 				self.showNewPoolConfirmationAlert(team: selectedTeam, pool: newPool)

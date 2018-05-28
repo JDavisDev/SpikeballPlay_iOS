@@ -60,6 +60,8 @@ class RPRandomizingController {
         var returnPlayers = [Int]()
         
         for index in playersAvailable {
+			// getting a crash right below here for some reason.
+			//playersAvailable is an array of player.id
             if session.playersList.count > 0 && session.playersList.count >= index - 1 &&
                 session.playersList[index - 1].gameList.count < fewestGames {
                fewestGames = session.playersList[index - 1].gameList.count

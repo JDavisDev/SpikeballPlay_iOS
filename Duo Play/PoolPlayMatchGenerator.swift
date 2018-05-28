@@ -30,8 +30,6 @@ class PoolPlayMatchGenerator {
         matchupMatrix = Array(repeating: Array(repeating: 0, count: teamCount / 2), count: 2)
         // if odd number, I could throw in a "dummy" team as the rest.
 		
-		
-		
 		if teamList.count < 4 || pool.isStarted {
 			return
 		}

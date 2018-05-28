@@ -43,6 +43,8 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		if tournament.url.count > 0 {
 			challongeLinkLabel.text = "www.challonge.com/" + tournament.url
 		}
+		
+		updateView()
 	}
 	
 	// make it so user can't change the text, it just allows copying!

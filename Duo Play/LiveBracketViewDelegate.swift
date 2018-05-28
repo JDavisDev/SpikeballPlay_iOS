@@ -9,5 +9,5 @@
 import Foundation
 
 protocol LiveBracketViewDelegate {
-	func bracketCreated()
+	func bracketCreated(isUpdateMatchups: Bool)
 }

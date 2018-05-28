@@ -41,8 +41,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		
         self.view.backgroundColor = UIColor.black
         self.view.addSubview(scrollView)
-		bracketController.bracketViewDelegate = self
-		challongeMatchupAPI.delegate = self
+		bracketController.bracketControllerDelegate = self
+		//challongeMatchupAPI.delegate = self
 		self.scrollView.delegate = self
 		self.scrollView.addGestureRecognizer(pinch)
 		pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.pinch(sender:)))
@@ -56,6 +56,9 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+		
+		//challongeMatchupAPI.delegate = self
+		
 		clearView()
 		
 		activityIndicator.startAnimating()
@@ -71,11 +74,23 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		// make this less dependent on other functions updating things.
 		if tournament.isStarted {
 			//challongeMatchupAPI.getMatchupsForTournament(tournament: tournament)
-			bracketController.createBracket()
+			createBracket()
 		} else {
-			bracketController.createBracket()
+			createBracket()
 		}
     }
+	
+	func createBracket() {
+		let bracketCreator = BracketCreator(tournament: tournament, bracketController: bracketController)
+		bracketCreator.bracketCreatorDelegate = self
+		
+		if !tournament.isStarted && tournament.teamList.count > 0  {
+			bracketController.seedTeams()
+			bracketCreator.createBracket()
+		} else {
+			bracketController.updateMatchups()
+		}
+	}
 	
 	func clearView() {
 		var views = scrollView.subviews
@@ -90,14 +105,21 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	}
 	
 	// BRACKET DELEGATE
-	func bracketCreated() {
-		createBracketView()
+	func bracketCreated(isUpdateMatchups: Bool) {
+		if isUpdateMatchups {
+			bracketController.updateMatchups()
+		} else {
+			createBracketView()
+		}
+		
 	}
 	// END BRACKET DELEGATE
 	
 	// MATCHUP DELEGATE
 	func didGetChallongeMatchups() {
-		bracketController.createBracket()
+		// may not use this? could be fire and forget? Assuming it works...
+		// could use the highlighting here, if we have a match id, color it up
+		createBracket()
 	}
 	// END MATCHUP DELEGATE
 	
@@ -128,14 +150,17 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     // could generate first round positions.
     // then each cell after, is in the middle of the next two cells and offset.
     func createBracketView() {
-		let realm = try! Realm()
-		try! realm.write {
-			self.bracketCellWidth = self.getMaxBracketWidth()
-			self.teamCount = self.tournament.teamList.count
-			self.bracketMatchCount = self.teamCount - 1
-			self.roundCount = self.bracketController.getRoundCount()
-			self.byeCount = self.bracketController.getByeCount()
-		}
+		clearView()
+		
+		let db = DBManager()
+		db.beginWrite()
+		
+		self.bracketCellWidth = self.getMaxBracketWidth()
+		self.teamCount = self.tournament.teamList.count
+		self.bracketMatchCount = self.teamCount - 1
+		self.roundCount = self.bracketController.getRoundCount()
+		self.byeCount = self.bracketController.getByeCount()
+		db.commitWrite()
 		
 		Answers.logCustomEvent(withName: "Bracket Drawn",
 									   customAttributes: [
@@ -178,7 +203,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                 
                 try! realm.write {
                     // set team labels
-                    let tournament = TournamentController.getCurrentTournament()
                     
                     // make sure we have games to fill in teams
                     // otherwise, just write TBD so they can visualize the entire bracket.
@@ -449,7 +473,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
             }
         }
     }
-    
+	
+	// Get the touch location and match it to a bracket match to be reported.
     @objc func matchTouched(sender:UITapGestureRecognizer) {
 		var matchupFound = false
         // open score entry page, or just select a winner. Maybe a dialog for quickness
@@ -529,8 +554,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 									  preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-			self.challongeTournamentAPI.startTournament(tournament: self.tournament)
-			self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
+			self.startTournament()
 		}))
 		
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -539,6 +563,15 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		}))
 		
 		present(alert, animated: true, completion: nil)
+	}
+	
+	func startTournament() {
+		let db = DBManager()
+		db.beginWrite()
+		tournament.isStarted = true
+		db.commitWrite()
+		//self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+		//self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
