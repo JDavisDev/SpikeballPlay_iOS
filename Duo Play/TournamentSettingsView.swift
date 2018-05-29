@@ -42,16 +42,10 @@ class TournamentSettingsView: UIViewController {
 	let challongeTournamentAPI = ChallongeTournamentAPI()
 	let bracketController = BracketController()
     let tournament = TournamentController.getCurrentTournament()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-		
-		
-    }
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		
+		updateView()
 	}
 	
 	private func updateView() {

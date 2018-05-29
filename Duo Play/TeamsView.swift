@@ -77,7 +77,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		alert.addAction(moveToPoolAction)
 		
 		let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (alertAction) in
-			
+			self.deleteTeam(team: selectedTeam)
 			self.updateTeamList()
 			Answers.logCustomEvent(withName: "Team Deleted From Pool Play",
 								   customAttributes: [:])
@@ -92,6 +92,21 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		alert.popoverPresentationController?.sourceView = self.view
 		self.present(alert, animated: true, completion: nil)
+	}
+	
+	func deleteTeam(team: Team) {
+		try! realm.write {
+			//self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
+			let pool = team.pool
+			let index = pool?.teamList.index(of: team)
+			team.pool?.teamList.remove(at: index!)
+			
+			let tourneyIndex = tournament.teamList.index(of: team)
+			tournament.teamList.remove(at: tourneyIndex!)
+			
+			realm.delete(team.poolPlayGameList)
+			realm.delete(team)
+		}
 	}
 	
 	func showNewPoolConfirmationAlert(team: Team, pool: Pool) {
@@ -148,6 +163,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let action = UIAlertAction(title: "Save", style: .default) { (alertAction) in
             _ = alert.textFields![0] as UITextField
             let newName = alert.textFields![0].text!
+			
+			if !self.isTeamNameUnique(teamName: newName) {
+				self.showTeamNameNotUniqueAlert()
+				return
+			}
+			
             let team = Team()
             
             try! self.realm.write() {
@@ -175,7 +196,34 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         }))
         
         present(alert, animated: true, completion: nil)
-    }
+	}
+	
+	private func isTeamNameUnique(teamName: String) -> Bool {
+		let dbManager = DBManager()
+		dbManager.beginWrite()
+		
+		for team in tournament.teamList {
+			if team.name.lowercased() == teamName.lowercased() {
+				return false
+			}
+		}
+		
+		dbManager.commitWrite()
+		
+		return true
+	}
+	
+	private func showTeamNameNotUniqueAlert() {
+		let alert = UIAlertController(title: "Error",
+									  message: "Team Name Must Be Unique",
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
     
     //MARK: Table view init
     

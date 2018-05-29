@@ -158,6 +158,8 @@ class PoolsController {
 				}
 			}
 			
+			array = tieBreaker(teams: array)
+			
 			// we've sorted/seeded, now re-add
 			var seed = 1
 			for team in array {
@@ -169,6 +171,54 @@ class PoolsController {
 				tournament.teamList.append(team)
 				seed += 1
 			}
+		}
+	}
+	
+	private func tieBreaker(teams: [Team]) -> [Team] {
+		var array = teams
+		for index in 0..<teams.count-1 {
+			if teams[index].pool?.name == teams[index+1].pool?.name &&
+				teams[index].wins == teams[index+1].wins &&
+				teams[index].losses == teams[index+1].losses {
+				// we have a win/loss tie, check for head to head
+				// if team two won that game... switch their positions.
+				let teamOne = teams[index]
+				let teamTwo = teams[index+1]
+				
+				// we have a tie, let's check for the head to head match up.
+				for game in tournament.matchupList {
+					if (game.teamOne?.name == teamOne.name && game.teamTwo?.name == teamTwo.name) ||
+						(game.teamTwo?.name == teamOne.name && game.teamOne?.name == teamTwo.name) {
+						if teamTwo == getWinner(game: game) {
+							// team two won, so it should move up a seed
+							// flip them!
+							let oneIndex = teams.index(of: teamOne)
+							let twoIndex = teams.index(of: teamTwo)
+							array.swapAt(oneIndex!, twoIndex!)
+						}
+					}
+				}
+			}
+		}
+		
+		return array
+	}
+	
+	private func getWinner(game: BracketMatchup) -> Team {
+		var teamOneWins = 0
+		var teamTwoWins = 0
+		for i in 0..<game.teamOneScores.count {
+			if game.teamOneScores[i] > game.teamTwoScores[i] {
+				teamOneWins += 1
+			} else if game.teamTwoScores[i] > game.teamOneScores[i] {
+				teamTwoWins += 1
+			}
+		}
+		
+		if teamOneWins > teamTwoWins {
+			return game.teamOne!
+		} else {
+			return game.teamTwo!
 		}
 	}
 	

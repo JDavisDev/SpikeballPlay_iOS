@@ -26,7 +26,6 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         matchupTableView.delegate = self
         matchupTableView.dataSource = self
         pool = getCurrentPool()
-        updateMatchupList()
     }
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -124,8 +123,17 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         let cell = tableView.dequeueReusableCell(withIdentifier: "MatchupCell")
 		// don't show reported games
 		// need to add to not show more than one game per team? Just the next available game?
-        if !matchupList[indexPath.row].isReported  {
-            cell!.textLabel?.text = String((matchupList[indexPath.row].teamOne?.name)! + " vs. " + (matchupList[indexPath.row].teamTwo?.name)!)
+		let nextMatchup = matchupList[indexPath.row]
+		
+        if !nextMatchup.isReported  {
+			// if a team in the matchup is nil, that must be a rest game!
+			if nextMatchup.teamOne == nil {
+				cell!.textLabel?.text = String((nextMatchup.teamTwo?.name)! + " vs. REST")
+			} else if nextMatchup.teamTwo == nil {
+				cell!.textLabel?.text = String((nextMatchup.teamOne?.name)! + " vs. REST")
+			} else {
+            	cell!.textLabel?.text = String((nextMatchup.teamOne?.name)! + " vs. " + (nextMatchup.teamTwo?.name)!)
+			}
         }
         
         return cell!
@@ -141,6 +149,9 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // make the cell act as a button to report
+		// make sure that both teams are NOT nil
+		// if tapped, maybe clear the row, show a dialog to mark it finished?
+		// or hide it completely.
         let selectedMatchup = self.matchupList[indexPath.row]
         self.performSegue(withIdentifier: "MatchupDetailVC", sender: selectedMatchup)
     }

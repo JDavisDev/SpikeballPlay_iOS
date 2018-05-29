@@ -160,6 +160,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		self.bracketMatchCount = self.teamCount - 1
 		self.roundCount = self.bracketController.getRoundCount()
 		self.byeCount = self.bracketController.getByeCount()
+		
 		db.commitWrite()
 		
 		Answers.logCustomEvent(withName: "Bracket Drawn",
