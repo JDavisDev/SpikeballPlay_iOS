@@ -58,20 +58,24 @@ class RPRandomizingController {
     func getPlayersWithFewestGames() -> [Int] {
         var fewestGames: Int = 1000000
         var returnPlayers = [Int]()
-        
-        for index in playersAvailable {
-			// getting a crash right below here for some reason.
-			//playersAvailable is an array of player.id
-            if session.playersList.count > 0 && session.playersList.count >= index - 1 &&
-                session.playersList[index - 1].gameList.count < fewestGames {
-               fewestGames = session.playersList[index - 1].gameList.count
-            }
+		let playersList = session.playersList
+		
+		// get the fewest games count
+        for id in playersAvailable {
+			for player in playersList {
+				if player.id == id {
+					if player.gameList.count < fewestGames {
+						fewestGames = player.gameList.count
+					}
+					break
+				}
+			}
         }
 
         // run thru each player and see if they match the fewest games
         for player in playersAvailable {
-            if session.playersList[player - 1].gameList.count <= fewestGames {
-                returnPlayers.append(session.playersList[player - 1].id)
+            if playersList[player - 1].gameList.count <= fewestGames {
+                returnPlayers.append(playersList[player - 1].id)
             }
         }
         
@@ -126,8 +130,14 @@ class RPRandomizingController {
     
     // see if all the unique games have been played
     func isUniqueGamesLeft() -> Bool {
-        
-        let numGamesPossible = factorial(num: (session.playersList.count)) / 8
+		var suspendedCount = 0
+		for player in session.playersList {
+			if player.isSuspended {
+				suspendedCount += 1
+			}
+		}
+		
+        let numGamesPossible = factorial(num: (session.playersList.count - suspendedCount)) / 8
         let currentCount = session.gameList.count
         return currentCount < numGamesPossible
     }
