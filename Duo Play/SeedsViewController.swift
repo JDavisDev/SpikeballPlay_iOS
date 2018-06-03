@@ -7,25 +7,44 @@
 //
 
 import UIKit
+import Crashlytics
 
 class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var teamSeedsTableView: UITableView!
+	var bracketController = BracketController()
     var teamList = [Team]()
     let tournament = TournamentController.getCurrentTournament()
+	@IBOutlet weak var editSeedsButton: UIButton!
+	var didSeedsChange = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         teamSeedsTableView.delegate = self
         teamSeedsTableView.dataSource = self
-        
-        updateTeamSeedsList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        updateTeamSeedsList()
+		
+		Answers.logContentView(withName: "Bracket Seeds Page View",
+							   contentType: "Bracket Seeds Page View",
+							   contentId: "12",
+							   customAttributes: [:])
+		
+//        updateTeamSeedsList()
+//		updateTitle()
     }
+	
+	func updateTitle() {
+		if tournament.progress_meter > 0 {
+			tabBarItem.title = "Standings"
+			editSeedsButton.isHidden = true
+		} else if tournament.isReadOnly {
+			tabBarItem.title = "Seeds"
+			editSeedsButton.isHidden = true
+		}
+	}
     
     func updateTeamSeedsList() {
         self.teamList.removeAll()
@@ -36,6 +55,25 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         teamSeedsTableView.reloadData()
     }
+	
+	
+	@IBAction func editSeedsButtonClicked(_ sender: UIButton) {
+		if teamSeedsTableView.isEditing {
+			// turn editing off
+			self.teamSeedsTableView.setEditing(false, animated: true)
+			editSeedsButton.setTitle("Edit Seeds", for: .normal)
+			
+			if didSeedsChange {
+				bracketController.updateSeeds(teamList: teamList)
+				didSeedsChange = false
+			}
+		} else {
+			self.teamSeedsTableView.setEditing(true, animated: true)
+			editSeedsButton.setTitle("Save Seeds", for: .normal)
+		}
+		
+		self.teamSeedsTableView.reloadData()
+	}
     
     // MARK: - Table View methods
     
@@ -46,16 +84,33 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "seedCell")
         let team = self.teamList[indexPath.row]
-        cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + ": " + String(team.wins) + "-" + String(team.losses)
+		if tournament.progress_meter > 0 {
+			// tournament has started, show wins/losses
+        	cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + ": " + String(team.wins) + "-" + String(team.losses)
+		} else {
+			// just show seeds.
+			cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name
+		}
         return cell!
     }
-    
-//    // Dragging teams around
-//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        let movedObject = self.teamList[sourceIndexPath.row]
-//        self.teamList.remove(at: sourceIndexPath.row)
-//        self.teamList.insert(movedObject, at: destinationIndexPath.row)
-//        self.teamSeedsTableView.reloadData()
-//    }
-
+	
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		return .none
+	}
+	
+	func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+		return false
+	}
+	
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		let movedObject = self.teamList[sourceIndexPath.row]
+		self.teamList.remove(at: sourceIndexPath.row)
+		self.teamList.insert(movedObject, at: destinationIndexPath.row)
+		didSeedsChange = true
+		self.teamSeedsTableView.reloadData()
+	}
+	
+	func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		return true
+	}
 }

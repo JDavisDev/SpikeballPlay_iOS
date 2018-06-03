@@ -19,89 +19,50 @@ class PoolPlayMatchGenerator {
     var totalMatchesToPlay = 0
     var teamOne = Team()
     var teamTwo = Team()
+	var isOddNumber = false
     var matchupMatrix : [[Int]] = Array(repeating: Array(repeating: 0, count: 2), count: 2)
     var gameList = List<PoolPlayMatchup>()
     
     func generatePoolPlayGames(pool: Pool) {
-        
         self.pool = pool
         teamCount = pool.teamList.count
         teamList = pool.teamList
         numOfRounds = teamCount - 1
-        let gamesPerRound = teamCount / 2                            //columns       // rows
-        matchupMatrix = Array(repeating: Array(repeating: 0, count: teamCount / 2), count: 2)
-        // if odd number, I could throw in a "dummy" team as the rest.
-        
-        initMatrix()
+		self.isOddNumber = teamCount % 2 == 0 ? false : true
+														//columns       // rows
+		let count = isOddNumber ? teamCount/2 + 1 : teamCount/2
+        matchupMatrix = Array(repeating: Array(repeating: 0, count: count), count: 2)
+		
+		if teamList.count < 4 || pool.isStarted {
+			return
+		}
+
+		try! realm.write {
+			pool.matchupList.removeAll()
+		}
+		
+		initMatrix()
         addMatchupsFromMatrix()
-        
-        
-        
-        
-        /* OLDER STUFF */
-        // ROUND ONE
-//        for i in 1...teamCount / 2 {
-//            try! realm.write {
-//                let game = PoolPlayMatchup() //round: 1, teamOne: teamList[i - 1], teamTwo: teamList[teamCount - i])
-//                // if pass all checks, add game
-//
-//                game.teamOne = teamList[i - 1]
-//                game.teamTwo = teamList[teamCount - i]
-//
-//                if !isMatchupDuplicate(teamOne: game.teamOne!, teamTwo: game.teamTwo!, gameList: gameList) {
-//                    realm.add(game)
-//                    pool.matchupList.append(game)
-//                    gameList.append(game)
-//                }
-//            }
-//        }
-//
-//        currentRound += 1
-        
-        // Process rounds 2 - number of Rounds
-        // WRITE THIS NEXT
-        // THEN POOL PLAY MATCH REPORTING
-        // OR Updating MATCH LIST AFTER GAMES ARE REPORTED
-//        if numOfRounds >= 2 {
-//            while numOfRounds * gamesPerRound > gameList.count {
-//                // set each game
-//                for var i in 0..<gamesPerRound {
-//                    try! realm.write {
-//                        // check each team and get their opponent
-//                        let matchup = PoolPlayMatchup()
-//                        matchup.teamOne = getTeamOne(id: i + 1, gameList: gameList)
-//                        let opponent = getNextOpponent(teamOne: (matchup.teamOne)!, round: currentRound, gameList: gameList)
-//                        matchup.teamTwo = opponent
-//                        matchup.round = currentRound
-//
-//                        if !isMatchupDuplicate(teamOne: matchup.teamOne!, teamTwo: matchup.teamTwo!, gameList: gameList) {
-//                            realm.add(matchup)
-//                            pool.matchupList.append(matchup)
-//                            gameList.append(matchup)
-//                        }
-//                    }
-//                }
-//                // added all games of that round, increment round
-//                currentRound += 1
-//            }
-//        }
-//
-//        try! realm.write {
-//            realm.add(gameList)
-//        }
     }
     
     // set up first set up matches and numbers based on team counts
     func initMatrix() {
         var num = 1
-
+		let matrixCount = isOddNumber ? teamCount/2 + 1 : teamCount/2
+		
         for row in 0..<2 {
-            for column in 0..<teamCount/2 {
+            for column in 0..<matrixCount {
+				for values in matchupMatrix {
+					if values.contains(num) {
+						return
+					}
+				}
+				
                 matchupMatrix[row][column] = num
                 
-                if num == teamCount/2 {
+                if num == matrixCount {
                     num = teamCount
-                } else if num > teamCount/2 {
+                } else if num > matrixCount {
                     num -= 1
                 } else {
                     num += 1
@@ -111,20 +72,38 @@ class PoolPlayMatchGenerator {
     }
     
     func addMatchupsFromMatrix() {
-        for _ in 0..<teamCount - 1 {
-            for column in 0..<teamCount/2 {
-                try! realm.write {
-                    let matchup = PoolPlayMatchup()
-                    matchup.teamOne = teamList[matchupMatrix[0][column] - 1]
-                    matchup.teamTwo = teamList[matchupMatrix[1][column] - 1]
-                        
-                    matchup.round = currentRound
-                    matchup.division = "Advanced"
-                    matchup.isReported = false
-                    realm.add(matchup)
-                    pool.matchupList.append(matchup)
-                }
-            }
+		try! realm.write {
+			pool.matchupList.removeAll()
+		}
+		
+		let count = isOddNumber ? teamCount/2 + 1 : teamCount/2
+		
+		for _ in 0..<teamCount - 1 {
+			for column in 0..<count {
+				try! realm.write {
+					let matchup = PoolPlayMatchup()
+					if teamList.count >= matchupMatrix[0][column] - 2 &&
+						matchupMatrix[0][column] != 0 {
+						matchup.teamOne = teamList[matchupMatrix[0][column] - 1]
+					} else {
+						matchup.teamOne = nil
+					}
+					
+					if teamList.count >= matchupMatrix[1][column] - 2 &&
+						matchupMatrix[1][column] != 0 {
+						matchup.teamTwo = teamList[matchupMatrix[1][column] - 1]
+					} else {
+						matchup.teamTwo = nil
+					}
+					
+				
+					matchup.round = currentRound
+					matchup.division = "Advanced"
+					matchup.isReported = false
+					realm.add(matchup)
+					pool.matchupList.append(matchup)
+				}
+			}
             
             slideMatrix()
         }
@@ -137,11 +116,12 @@ class PoolPlayMatchGenerator {
     // 1 | 8  7  6  5         |
     //   ---------------------
     func slideMatrix() {
+		let count = isOddNumber ? teamCount + 1 : teamCount
         currentRound += 1
         
         let temp = matchupMatrix[1][0]
         
-        switch teamCount {
+        switch count {
         case 4:
             matchupMatrix[1][0] = matchupMatrix[1][1]
             matchupMatrix[1][1] = matchupMatrix[0][1]

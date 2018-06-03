@@ -11,12 +11,13 @@ import MessageUI
 import RealmSwift
 import Crashlytics
 import StoreKit
+import Firebase
 
 class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var tournamentButton: UIButton!
     @IBOutlet weak var randomPlayButton: UIButton!
-    @IBOutlet weak var rulesButton: UIButton!
+    @IBOutlet weak var tgButton: UIButton!
     @IBOutlet weak var contactButton: UIButton!
     @IBOutlet weak var rateButton: UIButton!
     
@@ -27,11 +28,61 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         
         initButtonStyles()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		if Auth.auth().currentUser == nil {
+			Auth.auth().signIn(withEmail: "jdevfeedback@gmail.com", password: "testpw") { (user, error) in
+				if error != nil {
+					// show error
+					
+					Auth.auth().createUser(withEmail: "jdevfeedback@gmail.com", password: "testpw"){ (user, error) in
+						if error != nil {
+							// show error
+							self.showAlertMessage(title: "Sign In", message: "Error : Some online features may be disabled.")
+						}
+					}
+					
+					return
+				}
+			}
+		}
+		
+		getAnnouncements()
+		
+	}
+	
+	func getAnnouncements() {
+		let fireDB = Firestore.firestore()
+		fireDB.collection("announcements").getDocuments { (querySnapshot, err) in
+			if let err = err {
+				print("Error getting announcements \(err)")
+			} else {
+				let obj = querySnapshot!.documents.first?.data()
+				if((obj) != nil) {
+					let title = obj!["title"] as! String
+					let message = obj!["message"] as! String
+					
+					if title.count > 0 && message.count > 0 {
+						self.showAlertMessage(title: title, message: message)
+					}
+				}
+			}
+		}
+	}
+	
+	func showAlertMessage(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
     
     func initButtonStyles() {
         tournamentButton.layer.cornerRadius = 20
@@ -42,10 +93,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         randomPlayButton.layer.borderColor = UIColor.yellow.cgColor
         randomPlayButton.layer.borderWidth = 1
         
-        rulesButton.layer.cornerRadius = 20
-        rulesButton.layer.borderColor = UIColor.yellow.cgColor
-        rulesButton.layer.borderWidth = 1
-        
+        tgButton.layer.cornerRadius = 20
+        tgButton.layer.borderColor = UIColor.yellow.cgColor
+        tgButton.layer.borderWidth = 1
+		
         contactButton.layer.cornerRadius = 20
         contactButton.layer.borderColor = UIColor.yellow.cgColor
         contactButton.layer.borderWidth = 1
@@ -115,5 +166,10 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         // Dismiss the mail compose view controller.
         controller.dismiss(animated: true, completion: nil)
     }
+	
+	@IBAction func tgButtonClicked(_ sender: UIButton) {
+		//may not need.
+	}
+	
 }
 

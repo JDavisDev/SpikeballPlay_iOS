@@ -7,13 +7,18 @@
 //
 
 import UIKit
+import Crashlytics
+import Firebase
 
 class MatchupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var matchupsTableView: UITableView!
+	let tournament = TournamentController.getCurrentTournament()
+	let challongeTournamentAPI = ChallongeTournamentAPI()
+	
     var matchupList = [BracketMatchup]()
-    let tournament = TournamentController.getCurrentTournament()
     var roundCount = 3
+	
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +30,12 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+		
+		Answers.logContentView(withName: "Bracket Matchups View",
+							   contentType: "Bracket Matchups Page View",
+							   contentId: "11",
+							   customAttributes: [:])
+		
         updateMatchupsList()
     }
     
@@ -49,6 +60,8 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
             return 7
         case 129...256:
             return 8
+		case 257...512:
+			return 9
         default:
             return 0
         }
@@ -58,13 +71,42 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.matchupList.removeAll()
         
         for matchup in tournament.matchupList {
-            if !matchup.isReported {
+            if !matchup.isReported && matchup.teamOne != nil &&
+                matchup.teamTwo != nil {
                 self.matchupList.append(matchup)
             }
         }
         
         matchupsTableView.reloadData()
     }
+	
+	func checkStartTournament() {
+		// tournament has NOT began. check if they want to finalize and begin the tournament
+		let message = "Finalize participants and start tournament?"
+		
+		let alert = UIAlertController(title: "Start Tournament", message: message,
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			self.startTournament()
+		}))
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func startTournament() {
+		let db = DBManager()
+		db.beginWrite()
+		tournament.isStarted = true
+		db.commitWrite()
+		//self.challongeTournamentAPI.startTournament(tournament: self.tournament)
+		//self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
+	}
     
     // MARK: - Table View methods
     
@@ -75,15 +117,24 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchupCell")
         let matchup = matchupList[indexPath.row]
-        if !matchup.isReported {
-            cell!.textLabel?.text = (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
+        if !matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
+			cell!.textLabel?.text = "Round \(matchup.round) : " + (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
         }
+        
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedMatchup = matchupList[indexPath.row]
-        performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
+		// only allow selection if tournament is editable.
+		if(!tournament.isStarted) {
+			self.checkStartTournament()
+		} else if !tournament.isReadOnly {
+        	let selectedMatchup = matchupList[indexPath.row]
+			Answers.logCustomEvent(withName: "Matchup List Tapped",
+							   customAttributes: [:])
+			Analytics.logEvent("Bracket_List_Tapped", parameters: nil)
+        	performSegue(withIdentifier: "bracketReporterSegue", sender: selectedMatchup)
+		}
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -93,5 +144,4 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-
 }

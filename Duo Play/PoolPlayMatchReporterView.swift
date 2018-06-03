@@ -15,6 +15,7 @@ class PoolPlayMatchReporterView : UIViewController {
     
     // the selected matchup gets stored here.
     var selectedMatchup = PoolPlayMatchup()
+	var currentPool = Pool()
     
     @IBOutlet weak var teamTwoNameLabel: UILabel!
     @IBOutlet weak var teamOneNameLabel: UILabel!
@@ -31,6 +32,7 @@ class PoolPlayMatchReporterView : UIViewController {
     @IBOutlet weak var teamTwoGameThreeScoreLabel: UILabel!
     
     override func viewDidLoad() {
+		title = "Pool Play"
         teamOneNameLabel.text = selectedMatchup.teamOne?.name
         teamTwoNameLabel.text = selectedMatchup.teamTwo?.name
     }
@@ -119,8 +121,12 @@ class PoolPlayMatchReporterView : UIViewController {
             teamTwoScores.append(teamTwoGameTwoScore!)
             teamTwoScores.append(teamTwoGameThreeScore!)
             
-            reporterController.reportMatch(selectedMatchup: self.selectedMatchup,numOfGamesPlayed: numOfGamesPlayed, teamOneScores: teamOneScores, teamTwoScores: teamTwoScores)
-            
+			reporterController.reportMatch(currentPool: self.currentPool,
+										   selectedMatchup: self.selectedMatchup,
+										   numOfGamesPlayed: numOfGamesPlayed,
+										   teamOneScores: teamOneScores,
+										   teamTwoScores: teamTwoScores)
+			
             self.navigationController?.popViewController(animated: true)
         }))
         
