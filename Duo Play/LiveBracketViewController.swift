@@ -208,7 +208,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                         let teamTwo = tournament.matchupList[game - 1].teamTwo
 						
 						if tournament.matchupList[game - 1].challongeId != 0 {
-							bracketCell.layer.shadowColor = UIColor.yellow as? CGColor
+							bracketCell.layer.shadowColor = (UIColor.yellow as! CGColor)
 							bracketCell.layer.shadowOpacity = 1
 							bracketCell.layer.shadowOffset = CGSize.zero
 							bracketCell.layer.shadowRadius = 6
