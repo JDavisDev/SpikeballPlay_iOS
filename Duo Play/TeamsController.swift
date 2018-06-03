@@ -84,7 +84,7 @@ class TeamsController {
     func getAvailablePool() -> Pool {
         let tournament = TournamentController.getCurrentTournament()
         for pool in tournament.poolList {
-            if pool.teamList.count < playersPerPool {
+            if pool.teamList.count < playersPerPool && !pool.isStarted {
                 isNewPool = false
                 return pool
             }

@@ -12,7 +12,6 @@ import RealmSwift
 class TournamentLandingViewController: UIViewController, TournamentDAODelegate, UITextFieldDelegate {
 	@IBOutlet weak var poolPlayButton: UIButton!
 	
-	@IBOutlet weak var teamsButton: UIButton!
 	@IBOutlet weak var settingsButton: UIButton!
 	@IBOutlet weak var tournamentNameLabel: UILabel!
 	@IBOutlet weak var bracketButton: UIButton!
@@ -74,10 +73,6 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		settingsButton.layer.cornerRadius = 20
 		settingsButton.layer.borderColor = UIColor.white.cgColor
 		settingsButton.layer.borderWidth = 1
-		
-		teamsButton.layer.cornerRadius = 20
-		teamsButton.layer.borderColor = UIColor.white.cgColor
-		teamsButton.layer.borderWidth = 1
 	}
 	
 	func updateView() {

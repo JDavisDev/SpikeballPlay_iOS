@@ -117,6 +117,11 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	// Create tournament from dialog
 	func createNewTournament(newName: String, password: String) {
 		let tournament = Tournament()
+//		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//		let cdTournament = CDTournament(context: context)
+//		cdTournament.name = "CD TEST"
+//		// Save the data to coredata
+//		(UIApplication.shared.delegate as! AppDelegate).saveContext()
 		
 		if newName.count > 0 {
 			tournament.name = newName

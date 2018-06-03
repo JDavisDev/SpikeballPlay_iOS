@@ -14,11 +14,8 @@ class BracketController {
 	static var hasDrawn = false
     let realm = try! Realm()
     let tournament: Tournament
-    let poolList: List<Pool>
 	let tournamentDAO = TournamentDAO()
 	
-    var byeCount = 0
-    var roundCount = 0
     var nodeList = [Node]()
     var isEnd = false
     var baseBracketSize = 0
@@ -30,10 +27,6 @@ class BracketController {
 	
     init() {
         tournament = TournamentController.getCurrentTournament()
-        poolList = tournament.poolList
-		teamCount = tournament.teamList.count
-		isStarted = tournament.isStarted
-		byeCount = getByeCount()
     }
     
     func getRoundCount() -> Int {
@@ -73,7 +66,7 @@ class BracketController {
 		let realm = try! Realm()
 		try! realm.write {
 			let teamCount = self.tournament.teamList.count
-			let var1 = teamCount + self.byeCount
+			let var1 = teamCount + getByeCount()
 			let var2 = var1 / 2
 			let final = var2 / round
 			returnVal = final
@@ -207,7 +200,7 @@ class BracketController {
 			// BYE matchups are counted as reported.
 			// if we ONLY have byes reported, set to zero
 			// when another is reported, we can count them in the progress
-			if byeCount == Int(round(currentPoints/pointsPerMatchup)) {
+			if getByeCount() == Int(round(currentPoints/pointsPerMatchup)) {
 				tournamentProgress = 0
 			} else {
 				let progress = Int(round(currentPoints))
@@ -291,7 +284,19 @@ class BracketController {
 				team.bracketVerticalPositions.last != nil &&
 				team.bracketVerticalPositions.last == teamTwo.bracketVerticalPositions.last {
 				
-				createBracketMatchup(team: team, teamTwo: teamTwo)
+				var canContinue = true
+				// make sure this matchup doesn't exist.
+				for matchup in tournament.matchupList {
+					if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
+						matchup.teamTwo?.seed == teamTwo.seed)) {
+						canContinue = false
+						break
+					}
+				}
+				
+				if canContinue {
+					createBracketMatchup(team: team, teamTwo: teamTwo)
+				}
 			}
 		} else {
 			// more than two teams, let's find the right two
@@ -352,9 +357,12 @@ class BracketController {
 			game.round = team.bracketRounds.last!
 			game.round_position = team.bracketVerticalPositions.last!
 			game.division = "Advanced"
-			realm.add(game)
-			tournament.matchupList.append(game)
-			tournamentDAO.addOnlineMatchup(matchup: game)
+			
+			if isGameUnique(game: game) {
+				realm.add(game)
+				tournament.matchupList.append(game)
+				tournamentDAO.addOnlineMatchup(matchup: game)
+			}
 		}
 	}
 	
@@ -374,7 +382,9 @@ class BracketController {
     
     func isGameUnique(game: BracketMatchup) -> Bool {
         for matchup in tournament.matchupList {
-            if matchup == game {
+			if (matchup.teamOne?.name == game.teamOne?.name || matchup.teamTwo?.name == game.teamOne?.name) &&
+				(matchup.teamOne?.name == game.teamTwo?.name || matchup.teamTwo?.name == game.teamTwo?.name) &&
+				matchup.tournament_id == game.tournament_id {
                 return false
             }
         }
@@ -413,7 +423,7 @@ class BracketController {
 		var winnerId: Int = 0
 		
         try! realm.write {
-			
+			selectedMatchup.isReported = true
             var teamOneWins = 0
 			var teamTwoWins = 0
             for i in 0..<teamOneScores.count {

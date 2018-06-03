@@ -26,11 +26,12 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         matchupTableView.delegate = self
         matchupTableView.dataSource = self
         pool = getCurrentPool()
+		title = pool.name
+		updateMatchupList()
     }
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(true)
-		
 		updateMatchupList()
 	}
     
@@ -47,12 +48,17 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
         // fetch matches left then update list
         try! realm.write() {
             for matchup in pool.matchupList {
-                if !matchup.isReported {
+                if !matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
                     self.matchupList.append(matchup)
                 }
             }
         }
-        
+		
+		// no more matches, lock it down!
+		if pool.isStarted && matchupList.count <= 0 {
+			finishPool()
+		}
+		
         matchupTableView.reloadData()
     }
     
@@ -112,9 +118,10 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 			tournament.isPoolPlayFinished = isPoolPlayFinished
 		}
 		
-		let poolsController = PoolsController()
-		poolsController.setPoolPlayFinished(isFinished: true)
-		poolsController.finishPoolPlay()
+		if isPoolPlayFinished {
+			let poolsController = PoolsController()
+			poolsController.finishPoolPlay()
+		}
 	}
 	
     // MARK: - Pools Table View
@@ -132,10 +139,11 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 			} else if nextMatchup.teamTwo == nil {
 				cell!.textLabel?.text = String((nextMatchup.teamOne?.name)! + " vs. REST")
 			} else {
-            	cell!.textLabel?.text = String((nextMatchup.teamOne?.name)! + " vs. " + (nextMatchup.teamTwo?.name)!)
+            	cell!.textLabel?.text = "Round \(nextMatchup.round) : " + String((nextMatchup.teamOne?.name)! + " vs. " + (nextMatchup.teamTwo?.name)!)
 			}
         }
-        
+		
+		cell?.textLabel?.textColor = UIColor.white
         return cell!
     }
 
@@ -152,6 +160,18 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 		// make sure that both teams are NOT nil
 		// if tapped, maybe clear the row, show a dialog to mark it finished?
 		// or hide it completely.
+		if self.matchupList[indexPath.row].teamOne == nil ||
+			self.matchupList[indexPath.row].teamTwo == nil {
+			try! realm.write {
+				self.matchupList[indexPath.row].isReported = true
+				self.pool.matchupList[indexPath.row].isReported = true
+			}
+			
+			updateMatchupList()
+			self.matchupTableView.reloadData()
+			return
+		}
+		
         let selectedMatchup = self.matchupList[indexPath.row]
         self.performSegue(withIdentifier: "MatchupDetailVC", sender: selectedMatchup)
     }

@@ -26,6 +26,7 @@
 		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
 		474F5E5A206AAC090027F57D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 474F5E59206AAC090027F57D /* GoogleService-Info.plist */; };
 		475FF2831FA96FEC0018BB63 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475FF2821FA96FEC0018BB63 /* Session.swift */; };
+		47794A4120C25D57004477B9 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 47794A3F20C25D57004477B9 /* DataModel.xcdatamodeld */; };
 		478388B21FBA5DF500D8052E /* PoolsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478388B11FBA5DF500D8052E /* PoolsController.swift */; };
 		478388B41FBB8BA000D8052E /* PoolsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478388B31FBB8BA000D8052E /* PoolsDetailView.swift */; };
 		479157111FAD692800892145 /* RPDifficultyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 479157101FAD692800892145 /* RPDifficultyController.swift */; };
@@ -139,6 +140,7 @@
 		474F5E58206A849B0027F57D /* Duo Play.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Duo Play.entitlements"; sourceTree = "<group>"; };
 		474F5E59206AAC090027F57D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		475FF2821FA96FEC0018BB63 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		47794A4020C25D57004477B9 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		478388B11FBA5DF500D8052E /* PoolsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolsController.swift; sourceTree = "<group>"; };
 		478388B31FBB8BA000D8052E /* PoolsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolsDetailView.swift; sourceTree = "<group>"; };
 		479157101FAD692800892145 /* RPDifficultyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RPDifficultyController.swift; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 				47F01A9E209CC412008B7CD1 /* DBManager.swift */,
 				47F9F7E41F32814900C88DEA /* MainViewController.swift */,
 				47F9F7E61F32814900C88DEA /* Main.storyboard */,
+				47794A3F20C25D57004477B9 /* DataModel.xcdatamodeld */,
 				47F9F7E91F32814900C88DEA /* Assets.xcassets */,
 				47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */,
 				474F5E59206AAC090027F57D /* GoogleService-Info.plist */,
@@ -966,6 +969,7 @@
 				47F9F7E31F32814900C88DEA /* AppDelegate.swift in Sources */,
 				47F9F8101F33B51400C88DEA /* RPController.swift in Sources */,
 				479BBCFF208A7AA400275A4E /* LiveBracketViewDelegate.swift in Sources */,
+				47794A4120C25D57004477B9 /* DataModel.xcdatamodeld in Sources */,
 				47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */,
 				47F01A9F209CC412008B7CD1 /* DBManager.swift in Sources */,
 				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
@@ -1235,6 +1239,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		47794A3F20C25D57004477B9 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				47794A4020C25D57004477B9 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 47794A4020C25D57004477B9 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 47F9F7D71F32814900C88DEA /* Project object */;
 }

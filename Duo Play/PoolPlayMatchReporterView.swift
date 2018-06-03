@@ -32,6 +32,7 @@ class PoolPlayMatchReporterView : UIViewController {
     @IBOutlet weak var teamTwoGameThreeScoreLabel: UILabel!
     
     override func viewDidLoad() {
+		title = "Pool Play"
         teamOneNameLabel.text = selectedMatchup.teamOne?.name
         teamTwoNameLabel.text = selectedMatchup.teamTwo?.name
     }

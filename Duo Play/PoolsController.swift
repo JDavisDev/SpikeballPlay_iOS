@@ -129,12 +129,6 @@ class PoolsController {
 		}
 	}
 	
-	func setPoolPlayFinished(isFinished: Bool) {
-		try! realm.write {
-			tournament.isPoolPlayFinished = isFinished
-		}
-	}
-	
 	func seedTeams() {
 		try! realm.write {
 			var array = Array(tournament.teamList)
@@ -219,6 +213,22 @@ class PoolsController {
 			return game.teamOne!
 		} else {
 			return game.teamTwo!
+		}
+	}
+	
+	func deletePool(pool: Pool) {
+		try! realm.write {
+			for team in pool.teamList {
+				let index = tournament.teamList.index(of: team)
+				tournament.teamList.remove(at: index!)
+			}
+			
+			let index = tournament.poolList.index(of: pool)
+			
+			tournament.poolList.remove(at: index!)
+			pool.matchupList.removeAll()
+			pool.teamList.removeAll()
+			realm.delete(pool)
 		}
 	}
 	

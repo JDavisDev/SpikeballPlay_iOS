@@ -14,13 +14,17 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     
 	@IBOutlet weak var editTeamsButton: UIButton!
 	@IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
-    var teamsController = TeamsController()
+    let teamsController = TeamsController()
+	let searchController = UISearchController(searchResultsController: nil)
     let poolsController = PoolsController()
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
-    var teamList = [Team]()
+	
+	@IBOutlet weak var searchBar: UISearchBar!
+	var teamList = [Team]()
 	var bracketController = BracketController()
-    
+	var filteredTeams = [Team]()
+	
     @IBOutlet weak var teamNameTextField: UITextField!
     @IBOutlet weak var teamsTableView: UITableView!
     
@@ -30,6 +34,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         title = "Teams"
         teamsTableView.delegate = self
         teamsTableView.dataSource = self
+		// Setup the Search Controller
+		searchController.searchResultsUpdater = self
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.searchBar.placeholder = "Search Teams"
+		teamsTableView.tableHeaderView = searchController.searchBar
+		definesPresentationContext = true
 	}
     
     override func viewDidAppear(_ animated: Bool) {
@@ -52,7 +62,15 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			return
 		}
 		
-		//show dialog to rename or delete session
+		showMoveTeamDialog(selectedTeam: selectedTeam)
+	}
+	
+	func showMoveTeamDialog(selectedTeam: Team) {
+		if (selectedTeam.pool?.isStarted)! || (selectedTeam.pool?.isFinished)! || self.tournament.isReadOnly || self.tournament.isStarted {
+			self.showPoolStartedAlert()
+			return
+		}
+		
 		let alert = UIAlertController(title: "Move Team",
 									  message: "Enter Team's New Pool", preferredStyle: .alert)
 		
@@ -68,7 +86,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			let newPool = self.poolsController.searchPoolByName(name: newPoolName, tournamentId: self.tournament.id)
 			
 			if newPool.name != "nil" {
-				self.showNewPoolConfirmationAlert(team: selectedTeam, pool: newPool)
+				if newPool.isFinished || newPool.isStarted || self.tournament.isReadOnly {
+					self.showPoolStartedAlert()
+					return
+				} else {
+					self.showNewPoolConfirmationAlert(team: selectedTeam, pool: newPool)
+				}
 			} else {
 				self.showPoolSearchErrorAlert()
 			}
@@ -95,6 +118,11 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	}
 	
 	func deleteTeam(team: Team) {
+		if (team.pool?.isStarted)! || (team.pool?.isFinished)! || self.tournament.isReadOnly || self.tournament.isStarted {
+			self.showPoolStartedAlert()
+			return
+		}
+		
 		try! realm.write {
 			//self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
 			let pool = team.pool
@@ -107,6 +135,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			realm.delete(team.poolPlayGameList)
 			realm.delete(team)
 		}
+		
+		updateTeamList()
 	}
 	
 	func showNewPoolConfirmationAlert(team: Team, pool: Pool) {
@@ -153,9 +183,16 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         teamsTableView.reloadData()
     }
     
-    
     @IBAction func addTeam(_ sender: UIButton) {
         teamsTableView.setEditing(false, animated: true)
+		
+		if let pool = tournament.poolList.last {
+			if pool.isStarted || pool.isFinished || self.tournament.isReadOnly || self.tournament.isStarted {
+				self.showPoolStartedAlert()
+				return
+			}
+		}
+		
         // let's present an alert to enter a team. cleaner ui
         let alert = UIAlertController(title: "Add Team",
                                       message: "", preferredStyle: .alert)
@@ -179,7 +216,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
                 self.tournament.teamList.append(team)
                 team.tournament_id = self.tournament.id
             }
-            
+			
+			self.updateTeamList()
             self.teamsController.addTeam(team: team)
             self.teamsTableView.reloadData()
         }
@@ -200,7 +238,9 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	
 	private func isTeamNameUnique(teamName: String) -> Bool {
 		let dbManager = DBManager()
-		dbManager.beginWrite()
+		if !realm.isInWriteTransaction {
+			dbManager.beginWrite()
+		}
 		
 		for team in tournament.teamList {
 			if team.name.lowercased() == teamName.lowercased() {
@@ -208,7 +248,9 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			}
 		}
 		
-		dbManager.commitWrite()
+		if realm.isInWriteTransaction {
+			dbManager.commitWrite()
+		}
 		
 		return true
 	}
@@ -229,10 +271,17 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // fetches the number of teams in this pool
+		if isFiltering() {
+			return filteredTeams.count
+		}
+		
         return tournament.poolList[section].teamList.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+		if isFiltering() {
+			return 1
+		}
         return tournament.poolList.count
     }
     
@@ -242,8 +291,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
-        header?.textLabel?.text = tournament.poolList[section].name
+		let header = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
+		if isFiltering() {
+			header?.textLabel?.text = "Teams"
+		} else {
+        	header?.textLabel?.text = tournament.poolList[section].name
+		}
         return header
     }
     
@@ -255,7 +308,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		let destPool = tournament.poolList[destinationIndexPath.section]
 		
-		if sourcePool.isStarted || destPool.isStarted {
+		if sourcePool.isStarted || destPool.isStarted || sourcePool.isFinished || destPool.isFinished {
 			showPoolStartedAlert()
 		} else {
 			try! realm.write {
@@ -266,6 +319,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			}
 		}
 		
+		updateTeamList()
         self.teamsTableView.reloadData()
     }
 	
@@ -282,22 +336,86 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamNameCell")
 		
 		// get the pool to match with the corresponding section
-        let pool = tournament.poolList[indexPath.section]
-		let team = pool.teamList[indexPath.row]
-		
-		if tournament.teamList.count > 0 {
-        	cell!.textLabel?.text = team.name
-        	cell?.detailTextLabel?.text = team.division
-			cell?.addGestureRecognizer(self.longPressGesture())
+		if isFiltering() {
+			// handle this diff
+			if filteredTeams.count > indexPath.row {
+				let team = filteredTeams[indexPath.row]
+				cell!.textLabel?.text = team.name
+				cell?.detailTextLabel?.text = team.division
+				cell?.addGestureRecognizer(self.longPressGesture())
+			}
+		} else {
+			let pool = tournament.poolList[indexPath.section]
+			let team = pool.teamList[indexPath.row]
+			
+			if tournament.teamList.count > 0 {
+				cell!.textLabel?.text = team.name
+				cell?.detailTextLabel?.text = team.division
+				cell?.addGestureRecognizer(self.longPressGesture())
+			}
 		}
         return cell!
     }
+	
+	func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+		let move = UITableViewRowAction(style: .normal, title: "Move") { action, index in
+			let pool = self.tournament.poolList[index.section]
+			self.showMoveTeamDialog(selectedTeam: pool.teamList[index.row])
+		}
+		move.backgroundColor = .lightGray
+		
+		let rename = UITableViewRowAction(style: .normal, title: "Rename") { action, index in
+			let pool = self.tournament.poolList[index.section]
+			self.showRenameTeamAlert(team: pool.teamList[index.row])
+		}
+		rename.backgroundColor = .orange
+		
+		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+			let pool = self.tournament.poolList[index.section]
+			self.deleteTeam(team: pool.teamList[index.row])
+		}
+		
+		return [delete, rename, move]
+	}
+	
+	func showRenameTeamAlert(team: Team) {
+		if !tournament.isStarted && !tournament.isReadOnly {
+			//show dialog to rename or delete a team
+			let alert = UIAlertController(title: "Rename",
+										  message: "", preferredStyle: .alert)
+			
+			alert.addTextField { (textField) in
+				textField.placeholder = "Team Name"
+				textField.text = team.name
+			}
+			
+			let renameAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
+				_ = alert.textFields![0] as UITextField
+				let newName = alert.textFields![0].text!
+				try! self.realm.write {
+					team.name = newName
+				}
+				
+				// update lists
+				self.teamsTableView.reloadData()
+			}
+			alert.addAction(renameAction)
+			
+			alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+				// cancel
+				return
+			}))
+			
+			alert.popoverPresentationController?.sourceView = self.view
+			self.present(alert, animated: true, completion: nil)
+		}
+	}
 
 	@IBAction func editTeamsButtonClicked(_ sender: UIButton) {
 		if teamsTableView.isEditing {
 			// turn editing off
 			self.teamsTableView.setEditing(false, animated: true)
-			editTeamsButton.setTitle("Edit", for: .normal)
+			editTeamsButton.setTitle("Move Teams", for: .normal)
 		} else {
 			// turn editing on
 			self.teamsTableView.setEditing(true, animated: true)
@@ -315,5 +433,31 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		}))
 		
 		present(alert, animated: true, completion: nil)
+	}
+	
+	// MARK: - Search Bar methods
+	
+	func isFiltering() -> Bool {
+		return searchController.isActive && !searchBarIsEmpty()
+	}
+	
+	func searchBarIsEmpty() -> Bool {
+		// Returns true if the text is empty or nil
+		return searchController.searchBar.text?.isEmpty ?? true
+	}
+	
+	func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+		filteredTeams = teamList.filter({( team : Team) -> Bool in
+			return team.name.lowercased().contains(searchText.lowercased())
+		})
+		
+		teamsTableView.reloadData()
+	}
+}
+
+extension TeamsView: UISearchResultsUpdating {
+	// MARK: - UISearchResultsUpdating Delegate
+	func updateSearchResults(for searchController: UISearchController) {
+		filterContentForSearchText(searchController.searchBar.text!)
 	}
 }

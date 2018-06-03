@@ -35,12 +35,24 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     var byeCount = 0
     var teamCount = 0
 	var frameWidth: CGFloat = 0
-	
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+		initBracketView()
+		Answers.logContentView(withName: "Bracket Page View",
+							   contentType: "Bracket Page View",
+							   contentId: "9",
+							   customAttributes: [:])
 		
-        self.view.backgroundColor = UIColor.black
-        self.view.addSubview(scrollView)
+		Analytics.logEvent("Live_Bracket_View_Viewed", parameters: nil)
+    }
+	
+	func initBracketView() {
+		activityIndicator?.startAnimating()
+		clearView()
+		
+		self.view.backgroundColor = UIColor.black
+		self.view.addSubview(scrollView)
 		bracketController.bracketControllerDelegate = self
 		//challongeMatchupAPI.delegate = self
 		self.scrollView.delegate = self
@@ -52,24 +64,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		self.scrollView.contentSize = CGSize(width: 10000, height: 10000)
 		
 		tournament = TournamentController.getCurrentTournament()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
 		
-		//challongeMatchupAPI.delegate = self
-		
-		clearView()
-		
-		activityIndicator.startAnimating()
-		
-		Answers.logContentView(withName: "Bracket Page View",
-							   contentType: "Bracket Page View",
-							   contentId: "9",
-							   customAttributes: [:])
-		
-		Analytics.logEvent("Live_Bracket_View_Viewed", parameters: nil)
-	
 		// every view, let's refetch and redraw.
 		// make this less dependent on other functions updating things.
 		if tournament.isStarted {
@@ -78,7 +73,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		} else {
 			createBracket()
 		}
-    }
+	}
 	
 	func createBracket() {
 		let bracketCreator = BracketCreator(tournament: tournament, bracketController: bracketController)
@@ -93,8 +88,10 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	}
 	
 	func clearView() {
-		var views = scrollView.subviews
-		views.removeAll()
+		let subViews = self.scrollView.subviews
+		for subview in subViews{
+			subview.removeFromSuperview()
+		}
 		
 		for cell in bracketCells {
 			cell.removeFromSuperview()
@@ -133,14 +130,13 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		
     func getMaxBracketWidth() -> Int {
         var returnInt = 70
-//		let db = DBManager()
-//		//if tournament.teamList.count > 0 {
-//			for team in db.getTournamentTeamsList(tournament: tournament) {
-//				if team.name.count * 10 > returnInt {
-//					returnInt = team.name.count * 10
-//				}
-//			}
-//		//}
+		if tournament.teamList.count > 0 {
+			for team in tournament.teamList {
+				if team.name.count * 10 > returnInt {
+					returnInt = team.name.count * 12
+				}
+			}
+		}
 		
         // label width needs to be 8 less, because name labels are left padded by 8
         labelWidth = returnInt + 16
@@ -435,7 +431,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
             }
         }
 		
-		activityIndicator.stopAnimating()
+		activityIndicator?.stopAnimating()
     }
     
     func isTeamOnBottomOfBracketCell(team: Team, currentRound: Int) -> Bool {
@@ -461,10 +457,10 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 			if tournament.teamList.count % 2 == 1 {
 				// odd number
 				// need a new calc method here..
-				if team.seed - byeCount < tournament.teamList.count/2 {
-					return false
-				} else {
+				if team.seed * 2 > bracketController.getByeCount() + tournament.teamList.count {
 					return true
+				} else {
+					return false
 				}
 			} else if Float(team.seed) <= Float(Float(tournament.teamList.count + byeCount)/2) {
 				// need float division to get accurate results.
@@ -502,8 +498,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 							if	!matchup.isReported &&
 								matchup.teamOne != nil &&
 								matchup.teamTwo != nil &&
-								matchup.teamOne!.name == teamOneLabel.text &&
-								matchup.teamTwo!.name == teamTwoLabel.text {
+								(matchup.teamOne!.name == teamOneLabel.text || matchup.teamTwo!.name == teamOneLabel.text) &&
+								(matchup.teamTwo!.name == teamTwoLabel.text || matchup.teamOne!.name == teamTwoLabel.text) {
 								selectedMatchup = matchup
 								matchupFound = true
 								break

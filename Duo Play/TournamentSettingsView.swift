@@ -13,7 +13,7 @@ import Crashlytics
 // TODO : Disable settings if tournament has started!
 // Need some pool play settings to check where we are in tournament.
 // controlling flow between pool play and bracket or Bracket only.
-class TournamentSettingsView: UIViewController {
+class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 	
 //	func didGetChallongeTournamentData(onlineTournament: [String : Any], localTournament: Tournament) {
 //			localTournament.id = onlineTournament["id"] as! Int
@@ -42,22 +42,35 @@ class TournamentSettingsView: UIViewController {
 	let challongeTournamentAPI = ChallongeTournamentAPI()
 	let bracketController = BracketController()
     let tournament = TournamentController.getCurrentTournament()
+	let dbManager = DBManager()
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
+	var tournamentStyles = [String]()
+	
+	private enum TournamentFormat: String {
+		case BracketPoolPlay = "Bracket + Pool Play"
+		case BracketOnly = "Bracket Only"
+		//case BracketSwissPool = "Bracket + Swiss Pool Play"
+		//case SwissOnly = "Swiss Only"
+		
+		static let allValues = [BracketPoolPlay, BracketOnly]//, BracketSwissPool, SwissOnly]
+	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
 		updateView()
 	}
 	
 	private func updateView() {
+		initPicker()
 		tournamentNameTextField.text = tournament.name
 		
-		isPoolPlaySwitch.setOn(tournament.isPoolPlay && !tournament.isPoolPlayFinished,
-							   animated: true)
+		setPoolPlayOn(isOn: tournament.isPoolPlay && !tournament.isPoolPlayFinished)
 		
 		if isPoolPlaySwitch.isOn {
 			playersPerPoolSegementedControl.isHidden = false
 			playersPerPoolLabel.isHidden = false
-			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
+			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 4
 		} else {
 			playersPerPoolSegementedControl.isHidden = true
 			playersPerPoolLabel.isHidden = true
@@ -66,7 +79,8 @@ class TournamentSettingsView: UIViewController {
 		if tournament.progress_meter > 0 || tournament.isReadOnly || tournament.isStarted {
 			// tournament has begun, don't let settings be editable
 			playersPerPoolSegementedControl.isEnabled = false
-			isPoolPlaySwitch.isEnabled = true
+			isPoolPlaySwitch.isEnabled = false
+			tournamentStylePicker.isUserInteractionEnabled = false
 			// maybe show a message as to why everything is disabled.
 		}
 		
@@ -74,10 +88,22 @@ class TournamentSettingsView: UIViewController {
 		if tournament.isReadOnly {
 			isOnlineSwitch.isHidden = true
 			isPublicSwitch.isHidden = true
-			isPoolPlaySwitch.isHidden = true
 			tournamentNameTextField.isEnabled = false
+			tournamentStylePicker.isUserInteractionEnabled = false
 			advanceButton.setTitle("Next", for: .normal)
 		}
+	}
+	
+	private func initPicker() {
+		for value in TournamentFormat.allValues {
+			tournamentStyles.append(value.rawValue)
+		}
+		
+		tournamentStylePicker.delegate = self
+		tournamentStylePicker.dataSource = self
+		tournamentStylePicker.tintColor = UIColor.white
+		tournamentStylePicker.showsSelectionIndicator = true
+		tournamentStylePicker.reloadAllComponents()
 	}
 	
 	@IBAction func deleteButton(_ sender: UIButton) {
@@ -104,14 +130,17 @@ class TournamentSettingsView: UIViewController {
 		
 		present(alert, animated: true, completion: nil)
 	}
+	
 	@IBAction func isPoolPlaySwitchToggled(_ sender: UISwitch) {
 		if isPoolPlaySwitch.isOn {
 			playersPerPoolSegementedControl.isHidden = false
 			playersPerPoolLabel.isHidden = false
-			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 6
+			playersPerPoolSegementedControl.selectedSegmentIndex = tournament.playersPerPool - 4
+			tournamentStylePicker.selectRow(0, inComponent: 0, animated: true)
 		} else {
 			playersPerPoolSegementedControl.isHidden = true
 			playersPerPoolLabel.isHidden = true
+			tournamentStylePicker.selectRow(1, inComponent: 0, animated: true)
 		}
 	}
 	
@@ -218,28 +247,7 @@ class TournamentSettingsView: UIViewController {
 		
 		present(alert, animated: true, completion: nil)
 	}
-	
-	@IBAction func poolPlayAndBracketButton(_ sender: UIButton) {
-		let realm = try! Realm()
-		try! realm.write {
-			tournament.isPoolPlay = true
-		}
-		
-		// bracket AND Pool Play
-		playersPerPoolSegementedControl.isHidden = false
-		playersPerPoolLabel.isHidden = false
-	}
-	
-	@IBAction func bracketOnlyButton(_ sender: UIButton) {
-		let realm = try! Realm()
-		try! realm.write {
-			tournament.isPoolPlay = false
-		}
-		
-		// bracket only
-		playersPerPoolSegementedControl.isHidden = true
-		playersPerPoolLabel.isHidden = true
-	}
+
     
     @IBAction func saveSettings(_ sender: UIButton) {
 		let realm = try! Realm()
@@ -251,7 +259,7 @@ class TournamentSettingsView: UIViewController {
 				tournament.isOnline = isOnlineSwitch.isOn
 				tournament.isPrivate = !isPublicSwitch.isOn
 				tournament.isQuickReport = false //isQuickReportSwitch.isOn
-				tournament.playersPerPool = playersPerPoolSegementedControl.selectedSegmentIndex + 6
+				tournament.playersPerPool = playersPerPoolSegementedControl.selectedSegmentIndex + 4
 				tournament.name = (tournamentNameTextField.text?.count.magnitude)! > 0 ?
 					tournamentNameTextField.text! :
 					tournament.name
@@ -265,4 +273,33 @@ class TournamentSettingsView: UIViewController {
 			"isPublic": String(!tournament.isPrivate),
 			"isPassword": String(tournament.password.count > 0)])
     }
+	
+	func setPoolPlayOn(isOn: Bool) {
+		isPoolPlaySwitch.setOn(isOn, animated: true)
+		playersPerPoolLabel.isHidden = !isOn
+		playersPerPoolSegementedControl.isHidden = !isOn
+		tournamentStylePicker.selectRow(isOn ? 0 : 1, inComponent: 0, animated: true)
+	}
+	
+	// MARK: Tournament Style Picker
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		return tournamentStyles.count
+	}
+	
+	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		return tournamentStyles[row]
+	}
+	
+	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		// save setting
+		if row == 0 {
+			setPoolPlayOn(isOn: true)
+		} else {
+			setPoolPlayOn(isOn: false)
+		}
+	}
+	
+	func numberOfComponents(in pickerView: UIPickerView) -> Int {
+		return 1
+	}
 }

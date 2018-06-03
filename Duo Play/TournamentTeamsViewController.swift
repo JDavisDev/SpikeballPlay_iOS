@@ -17,11 +17,10 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 	let tournamentDAO = TournamentDAO()
 	let challongeTeamsAPI = ChallongeTeamsAPI()
 	
-    @IBOutlet weak var teamsTableView: UITableView!
+	@IBOutlet weak var editSeedsButton: UIButton!
+	@IBOutlet weak var teamsTableView: UITableView!
 	@IBOutlet weak var teamsSearchBar: UISearchBar!
 	
-	var didTeamsChange = false
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,36 +35,6 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 							   contentType: "Bracket Teams View",
 							   contentId: "7",
 							   customAttributes: [:])
-	}
-    
-    // MARK: - Adding teams
-	
-	@IBAction func addTeamsInBulk(_ sender: UIButton) {
-		// debug only for now
-		// add a ton of teams to see what happens
-//		if tournament.progress_meter <= 0 && !tournament.isReadOnly {
-//			for _ in 1...2 {
-//				let team = Team()
-//
-//				try! self.realm.write() {
-//					team.name = "Team #" + String(tournament.teamList.count + 1)
-//					team.division = "Advanced"
-//					team.bracketRounds.append(1)
-//					team.id = self.tournament.teamList.count + 1
-//					self.tournament.teamList.append(team)
-//					team.tournament_id = self.tournament.id
-//				}
-//
-//				self.teamsController.addTeam(team: team)
-//				self.tournamentDAO.addOnlineTournamentTeam(team: team)
-//			}
-//
-//
-//			self.didTeamsChange = true
-//			self.teamsTableView.reloadData()
-//		} else {
-//			presentTournamentStartedAlert()
-//		}
 	}
     
     @IBAction func addTeam(_ sender: UIButton) {
@@ -85,7 +54,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 					self.createNewTeam(newName: newName)
 					self.teamsTableView.reloadData()
 				} else {
-					self.presentEmptyTeamNameAlert()
+					self.presentTournamentErrorAlert(title: "Error", message: "Name cannot be empty")
 				}
             }
             
@@ -102,7 +71,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
             
             present(alert, animated: true, completion: nil)
         } else {
-			presentTournamentStartedAlert()
+			presentTournamentErrorAlert(title: "Tournament Started", message: "The tournament has already begun, teams may not be changed.")
         }
     }
 	
@@ -127,35 +96,19 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 		self.teamsController.addTeam(team: team)
 	}
 	
-	func presentTournamentStartedAlert() {
-		let alert = UIAlertController(title: "Tournament Started",
-									  message: "The tournament has already begun, teams may not be changed.",
-									  preferredStyle: .alert)
-		
-		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-			// ok / dismiss
-			return
-		}))
-		
-		present(alert, animated: true, completion: nil)
+	@IBAction func editSeedsClicked(_ sender: UIButton) {
+		if !teamsTableView.isEditing {
+			teamsTableView.setEditing(true, animated: true)
+			editSeedsButton.setTitle("Save Seeds", for: .normal)
+		} else {
+			teamsTableView.setEditing(false, animated: true)
+			editSeedsButton.setTitle("Edit Seeds", for: .normal)
+		}
 	}
 	
-	func presentEmptyTeamNameAlert() {
-		let alert = UIAlertController(title: "Error",
-									  message: "Must enter a team name",
-									  preferredStyle: .alert)
-		
-		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-			// ok / dismiss
-			return
-		}))
-		
-		present(alert, animated: true, completion: nil)
-	}
-	
-	func presentTournamentReadOnlyAlert() {
-		let alert = UIAlertController(title: "Read Only",
-									  message: "The tournament is locked and cannot be edited.",
+	func presentTournamentErrorAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message,
 									  preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
@@ -175,7 +128,6 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 			self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
             realm.delete(team.poolPlayGameList)
             realm.delete(team)
-			self.didTeamsChange = true
         }
     }
     
@@ -211,7 +163,6 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 				try! self.realm.write {
 					let team = selectedTeam
 					team.name = newName
-					self.didTeamsChange = true
 				}
 				
 				// update lists
@@ -238,7 +189,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 			alert.popoverPresentationController?.sourceView = self.view
 			self.present(alert, animated: true, completion: nil)
 		} else {
-			presentTournamentStartedAlert()
+			presentTournamentErrorAlert(title: "Tournament Started", message: "The tournament has already begun, teams may not be changed.")
 		}
     }
     
@@ -261,4 +212,37 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         
         return cell!
     }
+	
+	// Dragging teams around
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		let movedObject = tournament.teamList[sourceIndexPath.row]
+		
+		if tournament.isStarted || tournament.isReadOnly {
+			presentTournamentErrorAlert(title: "Editing Error", message: "The tournament is locked and cannot be edited.")
+		} else {
+			try! realm.write {
+				tournament.teamList.remove(at: tournament.teamList.index(of: movedObject)!)
+				tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
+				reseedBasedOnPosition()
+			}
+		}
+		
+		self.teamsTableView.reloadData()
+	}
+	
+	func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+		return false
+	}
+	
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+		return .none
+	}
+	
+	func reseedBasedOnPosition() {
+		var seed = 1
+		for team in tournament.teamList {
+			team.seed = seed
+			seed += 1
+		}
+	}
 }

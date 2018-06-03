@@ -20,6 +20,7 @@ class PoolStandingsView: UIViewController, UITableViewDelegate, UITableViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		title = "Standings"
         teamStandingsTableView.delegate = self
         teamStandingsTableView.dataSource = self
         
@@ -55,7 +56,7 @@ class PoolStandingsView: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "standingsCell")
         let team = self.teamList[indexPath.row]
-        cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + ": " + String(team.wins) + "-" + String(team.losses)
+		cell!.textLabel?.text = "\(indexPath.row + 1). " + team.name + " | " + String(team.wins) + "-" + String(team.losses) + " | " + String(team.pointsFor - team.pointsAgainst)
         return cell!
     }
 }
