@@ -203,8 +203,8 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamCell")
         let button = cell?.contentView.subviews[0] as! UIButton
         let team = tournament.teamList[indexPath.row]
-        cell!.textLabel?.text = team.name
-		cell!.textLabel?.textColor = UIColor.white
+        //cell!.textLabel?.text = team.name
+		//cell!.textLabel?.textColor = UIColor.white
         button.setTitle(team.value(forKeyPath: "name") as? String,
                         for: .normal)
         
