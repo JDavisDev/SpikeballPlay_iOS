@@ -15,4 +15,7 @@ public class PoolPlayMatchup : Object {
     @objc dynamic public var round = 1
     @objc dynamic public var division = ""
     @objc dynamic public var isReported = false
+	@objc dynamic public var tournament_id: Int = 0
+	var teamOneScores = List<Int>()
+	var teamTwoScores = List<Int>()
 }

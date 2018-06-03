@@ -10,28 +10,22 @@ import Foundation
 import RealmSwift
 
 class TournamentController {
-    static public var currentTournamentId = ""
+    static public var currentTournamentId: Int = 0
+    static public var IS_QUICK_REPORT = false
     let realm = try! Realm()
-    
-//    func saveTournaments() {
-//        tournamentDAO.save()
-//    }
-//    
-//    func getTournaments() -> [Tournament] {
-//        tournamentDAO.getTournamentList()
-//    }
     
     static func getCurrentTournament() -> Tournament {
         let realm = try! Realm()
-        let results = realm.objects(Tournament.self).filter("uuid = '" + TournamentController.getCurrentTournamentId() + "'").first
+        let id = TournamentController.getCurrentTournamentId()
+        let results = realm.objects(Tournament.self).filter("id = \(id)").first
         return results!
     }
     
-    static func setTournamentId(uuid: String) {
-        TournamentController.currentTournamentId = uuid
+    static func setTournamentId(id: Int) {
+        TournamentController.currentTournamentId = id
     }
     
-    static func getCurrentTournamentId() -> String {
+    static func getCurrentTournamentId() -> Int {
         return TournamentController.currentTournamentId
     }
 }

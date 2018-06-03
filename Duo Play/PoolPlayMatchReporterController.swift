@@ -12,9 +12,10 @@ import RealmSwift
 public class PoolPlayMatchReporterController {
     let realm = try! Realm()
     
-    func reportMatch(selectedMatchup: PoolPlayMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
+	func reportMatch(currentPool: Pool, selectedMatchup: PoolPlayMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
         // save the match!
         try! realm.write {
+			currentPool.isStarted = true
             selectedMatchup.teamOne?.poolPlayGameList.append(selectedMatchup)
             selectedMatchup.teamTwo?.poolPlayGameList.append(selectedMatchup)
             
@@ -56,6 +57,15 @@ public class PoolPlayMatchReporterController {
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[0]
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[1]
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[2]
+			
+			// add scores to matchup object
+			selectedMatchup.teamOneScores.append(teamOneScores[0])
+			selectedMatchup.teamOneScores.append(teamOneScores[1])
+			selectedMatchup.teamOneScores.append(teamOneScores[2])
+			
+			selectedMatchup.teamTwoScores.append(teamTwoScores[0])
+			selectedMatchup.teamTwoScores.append(teamTwoScores[1])
+			selectedMatchup.teamTwoScores.append(teamTwoScores[2])
             
             selectedMatchup.isReported = true
         }
