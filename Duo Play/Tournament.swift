@@ -44,15 +44,24 @@ class Tournament : Object {
 		return "id"
 	}
 	
+	// creating a tournament based on firebase/challonge models
 	convenience init(dictionary: [String : Any]) {
 		self.init()
 		name = dictionary["name"] as! String
 		id = dictionary["id"] as! Int
+		url = dictionary["url"] as! String
+		tournament_type = dictionary["tournament_type"] as! String
 		isPoolPlay = dictionary["isPoolPlay"] as! Bool
 		playersPerPool = dictionary["playersPerPool"] as! Int
 		isStarted = dictionary["isStarted"] as! Bool
 		participants_count = dictionary["participants_count"] as! Int
 		password = dictionary["password"] as! String
+		state = dictionary["state"] as! String
+		progress_meter = dictionary["progress_meter"] as! Int
+		isQuickReport = dictionary["quick_advance"] as! Bool
+		swissRounds = dictionary["swiss_rounds"] as! Int
+		full_challonge_url = dictionary["full_challonge_url"] as! String
+		live_image_url = dictionary["live_image_url"] as! String
 	}
 	
 	var dictionary: [String: Any] {
@@ -63,7 +72,13 @@ class Tournament : Object {
 			"playersPerPool": playersPerPool,
 			"isStarted": isStarted,
 			"participants_count": participants_count,
-			"password": password
+			"password": password,
+			"url":url,
+			"progress_meter":progress_meter,
+			"quick_advance":isQuickReport,
+			"swiss_rounds":swissRounds,
+			"full_challonge_url":full_challonge_url,
+			"live_image_url":live_image_url
 		]
 	}
 }

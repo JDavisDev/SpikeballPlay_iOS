@@ -130,7 +130,6 @@ class TournamentDAO : TournamentParserDelegate {
 		// Create an initial document to update.
 		if tournament.isOnline && !tournament.isReadOnly {
 			let updatedDate = Date()
-			
 			let tournamentsRef = fireDB.collection("tournaments").document(String(tournament.id))
 			tournamentsRef.setData([
 				"userID": tournament.userID,

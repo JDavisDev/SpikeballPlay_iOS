@@ -102,6 +102,7 @@ public class ChallongeTournamentAPI {
 						if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 							/* json[0] == key"tournament" and value: Any */
 							if let tournamentObject = json["tournament"] as? [String: Any] {
+								let tourney = Tournament(dictionary: tournamentObject)
 								self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
 							}
 						}
