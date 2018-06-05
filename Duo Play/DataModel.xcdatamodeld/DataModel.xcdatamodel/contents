@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17E202" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="1.0">
     <entity name="CDBracketMatchup" representedClassName="CDBracketMatchup" syncable="YES" codeGenerationType="class">
+        <attribute name="challongeId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isReported" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isWinnersBracket" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="round" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="round_vertical_pos" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="scores" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDMatchScores" inverseName="bracketmatchup" inverseEntity="CDMatchScores" syncable="YES"/>
         <relationship name="teams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDTeam" inverseName="bracketgames" inverseEntity="CDTeam" syncable="YES"/>
+        <relationship name="tournament" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDTournament" inverseName="bracketmatchups" inverseEntity="CDTournament" syncable="YES"/>
+    </entity>
+    <entity name="CDDivision" representedClassName="CDDivision" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="pool" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDPool" inverseName="division" inverseEntity="CDPool" syncable="YES"/>
+        <relationship name="team" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDTeam" inverseName="division" inverseEntity="CDTeam" syncable="YES"/>
     </entity>
     <entity name="CDMatchScores" representedClassName="CDMatchScores" syncable="YES" codeGenerationType="class">
         <attribute name="scoreOne" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -14,7 +24,11 @@
         <relationship name="poolplaymatchup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDPoolPlayMatchup" inverseName="scores" inverseEntity="CDPoolPlayMatchup" syncable="YES"/>
     </entity>
     <entity name="CDPool" representedClassName="CDPool" syncable="YES" codeGenerationType="class">
+        <attribute name="isFinished" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isPowerPool" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isStarted" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="division" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDDivision" inverseName="pool" inverseEntity="CDDivision" syncable="YES"/>
         <relationship name="matchups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDPoolPlayMatchup" inverseName="pool" inverseEntity="CDPoolPlayMatchup" syncable="YES"/>
         <relationship name="teams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDTeam" inverseName="pool" inverseEntity="CDTeam" syncable="YES"/>
         <relationship name="tournament" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDTournament" inverseName="pools" inverseEntity="CDTournament" syncable="YES"/>
@@ -25,23 +39,58 @@
         <relationship name="teams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDTeam" inverseName="poolplaygames" inverseEntity="CDTeam" syncable="YES"/>
     </entity>
     <entity name="CDTeam" representedClassName="CDTeam" syncable="YES" codeGenerationType="class">
+        <attribute name="challonge_group_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="challonge_participant_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="challonge_tournament_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="final_rank" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isCheckedIn" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isEliminated" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="losses" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pointsAgainst" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="pointsFor" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="seed" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="tournament_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="wins" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="bracketgames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDBracketMatchup" inverseName="teams" inverseEntity="CDBracketMatchup" syncable="YES"/>
+        <relationship name="division" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDDivision" inverseName="team" inverseEntity="CDDivision" syncable="YES"/>
         <relationship name="pool" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDPool" inverseName="teams" inverseEntity="CDPool" syncable="YES"/>
         <relationship name="poolplaygames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDPoolPlayMatchup" inverseName="teams" inverseEntity="CDPoolPlayMatchup" syncable="YES"/>
         <relationship name="tournament" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDTournament" inverseName="teams" inverseEntity="CDTournament" syncable="YES"/>
     </entity>
     <entity name="CDTournament" representedClassName="CDTournament" syncable="YES" codeGenerationType="class">
+        <attribute name="challonge_tournament_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="created_date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="creatorUserName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="full_challonge_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isOnline" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isPoolPlay" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isPoolPlayFinished" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isPrivate" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isQuickReport" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isReadOnly" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isStarted" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="participants_count" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" minValueString="0" syncable="YES"/>
+        <attribute name="playersPerPool" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="progress_meter" optional="YES" attributeType="Integer 16" minValueString="0" maxValueString="100" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="swissRounds" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="bracketmatchups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDBracketMatchup" inverseName="tournament" inverseEntity="CDBracketMatchup" syncable="YES"/>
         <relationship name="pools" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDPool" inverseName="tournament" inverseEntity="CDPool" syncable="YES"/>
         <relationship name="teams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDTeam" inverseName="tournament" inverseEntity="CDTeam" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CDPool" positionX="351" positionY="-234" width="128" height="103"/>
-        <element name="CDTournament" positionX="-2" positionY="-297" width="128" height="88"/>
-        <element name="CDTeam" positionX="160" positionY="-72" width="128" height="118"/>
-        <element name="CDBracketMatchup" positionX="313" positionY="117" width="128" height="103"/>
-        <element name="CDPoolPlayMatchup" positionX="-146" positionY="99" width="128" height="88"/>
-        <element name="CDMatchScores" positionX="99" positionY="144" width="128" height="120"/>
+        <element name="CDBracketMatchup" positionX="196" positionY="60" width="128" height="178"/>
+        <element name="CDMatchScores" positionX="16" positionY="204" width="128" height="120"/>
+        <element name="CDPool" positionX="-396" positionY="-99" width="128" height="163"/>
+        <element name="CDPoolPlayMatchup" positionX="-315" positionY="182" width="128" height="88"/>
+        <element name="CDTeam" positionX="-83" positionY="-19" width="128" height="328"/>
+        <element name="CDTournament" positionX="-72" positionY="-495" width="128" height="388"/>
+        <element name="CDDivision" positionX="-189" positionY="-342" width="128" height="90"/>
     </elements>
 </model>

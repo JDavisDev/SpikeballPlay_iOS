@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import CoreData
 
 class TeamsController {
     var playersPerPool = 8
@@ -31,13 +32,30 @@ class TeamsController {
             realm.add(team)
             newPool.teamList.append(team)
             team.pool = newPool
-			
-            if isNewPool {
+
+			if isNewPool {
                 realm.add(newPool)
                 tournament.poolList.append(newPool)
             }
         }
     }
+	
+	func insertTeamIntoCoreData(obj: Team, objPool: Pool) {
+		let managedContext = CoreDataManager.sharedManager.persistentContainer.viewContext
+		let entity = NSEntityDescription.entity(forEntityName: "CDTeam",
+												in: managedContext)!
+		let team = NSManagedObject(entity: entity,
+										 insertInto: managedContext) as? CDTeam
+		team?.name = obj.name
+		team?.id = Int32(obj.id)
+		team?.tournament_id = Int64(obj.tournament_id)
+		
+		do {
+			try managedContext.save()
+		} catch let error as NSError {
+			print("Could not save. \(error), \(error.userInfo)")
+		}
+	}
 	
 	func getNextTeamNameId(tournament: Tournament) -> String {
 		var count = tournament.teamList.count

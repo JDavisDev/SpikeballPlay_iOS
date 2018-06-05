@@ -11,6 +11,7 @@ import RealmSwift
 import Crashlytics
 import Firebase
 import FirebaseAuthUI
+import CoreData
 
 class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewDelegate, TournamentDAODelegate {
 
@@ -18,6 +19,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	
 	let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
+	var cdTournamentlist = [NSManagedObject]()
     let realm = try! Realm()
 	let tournamentDao = TournamentDAO()
 	let fireDB = Firestore.firestore()
@@ -117,16 +119,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	// Create tournament from dialog
 	func createNewTournament(newName: String, password: String) {
 		let tournament = Tournament()
-//		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//		let cdTournament = CDTournament(context: context)
-//		cdTournament.name = "CD TEST"
-//		// Save the data to coredata
-//		(UIApplication.shared.delegate as! AppDelegate).saveContext()
+		var name = newName
 		
-		if newName.count > 0 {
-			tournament.name = newName
-		} else {
-			tournament.name = "Tournament #" + String(self.tournamentList.count + 1)
+		if name.count <= 0 {
+			name = "Tournament #" + String(self.tournamentList.count + 1)
 		}
 		
 		if password.count > 0 {
@@ -139,6 +135,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			id = Int(arc4random_uniform(UInt32(max)))
 		}
 		
+		tournament.name = name
 		tournament.id = Int(id)
 		tournament.poolList = List<Pool>()
 		tournament.teamList = List<Team>()
@@ -157,12 +154,36 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		
 		TournamentController.setTournamentId(id: id)
 		
+		saveTournamentToCoreData(obj: tournament)
+		
 		// do online saving
 		//let challongeAPI = ChallongeTournamentAPI()
 		//challongeAPI.createChallongeTournament(tournament: tournament)
 		
 		//let tournamentDao = TournamentDAO()
 		//tournamentDao.addOnlineTournament(tournament: tournament)
+	}
+	
+	func saveTournamentToCoreData(obj: Tournament) {
+		let managedContext = CoreDataManager.sharedManager.persistentContainer.viewContext
+		let entity = NSEntityDescription.entity(forEntityName: "CDTournament",
+												in: managedContext)!
+		let tournament = NSManagedObject(entity: entity,
+										 insertInto: managedContext) as? CDTournament
+		tournament?.name = obj.name
+		tournament?.url = obj.url
+		tournament?.password = obj.password
+		tournament?.created_date = obj.created_date
+		tournament?.userId = obj.userID
+		tournament?.id = Int64(obj.id)
+		
+		do {
+			try managedContext.save()
+			cdTournamentlist.append(tournament!)
+			tournamentTableView.reloadData()
+		} catch let error as NSError {
+			print("Could not save. \(error), \(error.userInfo)")
+		}
 	}
 	
 	func getRandomStringForUrl(length: Int) -> String {
@@ -238,11 +259,12 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
         let button = cell?.contentView.subviews[0] as! UIButton
 		let progress_label = cell?.contentView.subviews[1] as! UILabel
 		
-        if tournamentList.count > 0 {
-			button.setTitle((tournamentList[indexPath.row].value(forKeyPath: "name") as? String)!,
+        if cdTournamentlist.count > 0 {
+			button.setTitle((cdTournamentlist[indexPath.row].value(forKeyPath: "name") as? String)!,
                         for: .normal)
 			
-			let progressText = String(tournamentList[indexPath.row].progress_meter) + "%"
+			let progress = cdTournamentlist[indexPath.row].value(forKeyPath: "progress_meter")
+			let progressText = "\(progress ?? 0)%"
 			progress_label.text = progressText
         
             button.addTarget(self,
@@ -259,7 +281,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tournamentList.count
+        return cdTournamentlist.count
     }
     
     func updateLocalTournamentList() {
