@@ -43,6 +43,29 @@ class Tournament : Object {
 	override static func primaryKey() -> String? {
 		return "id"
 	}
+	
+	convenience init(dictionary: [String : Any]) {
+		self.init()
+		name = dictionary["name"] as! String
+		id = dictionary["id"] as! Int
+		isPoolPlay = dictionary["isPoolPlay"] as! Bool
+		playersPerPool = dictionary["playersPerPool"] as! Int
+		isStarted = dictionary["isStarted"] as! Bool
+		participants_count = dictionary["participants_count"] as! Int
+		password = dictionary["password"] as! String
+	}
+	
+	var dictionary: [String: Any] {
+		return [
+			"name": name,
+			"id": id,
+			"isPoolPlay": isPoolPlay,
+			"playersPerPool": playersPerPool,
+			"isStarted": isStarted,
+			"participants_count": participants_count,
+			"password": password
+		]
+	}
 }
 
 /*
