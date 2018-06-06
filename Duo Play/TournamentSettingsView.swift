@@ -162,7 +162,7 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 		challongeTournamentAPI.deleteChallongeTournament(tournament: tournament)
 		
 		if deleteOnline {
-			let tournamentDAO = TournamentDAO()
+			let tournamentDAO = TournamentFirebaseDao()
 			tournamentDAO.deleteOnlineTournament(tournament: tournament)
 		}
 		

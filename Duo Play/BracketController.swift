@@ -14,7 +14,7 @@ class BracketController {
 	static var hasDrawn = false
     let realm = try! Realm()
     let tournament: Tournament
-	let tournamentDAO = TournamentDAO()
+	let tournamentDAO = TournamentFirebaseDao()
 	
     var nodeList = [Node]()
     var isEnd = false
@@ -361,7 +361,7 @@ class BracketController {
 			if isGameUnique(game: game) {
 				realm.add(game)
 				tournament.matchupList.append(game)
-				tournamentDAO.addOnlineMatchup(matchup: game)
+				tournamentDAO.addFirebaseBracketMatchup(matchup: game)
 			}
 		}
 	}

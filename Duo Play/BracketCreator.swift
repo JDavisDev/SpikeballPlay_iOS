@@ -12,7 +12,7 @@ import RealmSwift
 class BracketCreator {
 	
 	let realm = try! Realm()
-	let tournamentDAO = TournamentDAO()
+	let tournamentDAO = TournamentFirebaseDao()
 	
 	var bracketController: BracketController
 	var tournament: Tournament
@@ -184,7 +184,7 @@ class BracketCreator {
 					game.teamTwo = nil
 					game.isReported = true
 					bracketController.reportByeMatch(teamToAdvance: game.teamOne!)
-					tournamentDAO.addOnlineTournamentTeam(team: game.teamOne!)
+					tournamentDAO.addFirebaseTeam(team: game.teamOne!)
 				} else {
 					// not a bye, proceed normally
 					game.teamTwo = bracketController.getTeamBySeed(seed: node.value[1])

@@ -171,7 +171,7 @@ class PoolsController {
 	private func tieBreaker(teams: [Team]) -> [Team] {
 		var array = teams
 		for index in 0..<teams.count-1 {
-			if teams[index].pool?.name == teams[index+1].pool?.name &&
+			if teams[index].pool.name == teams[index+1].pool.name &&
 				teams[index].wins == teams[index+1].wins &&
 				teams[index].losses == teams[index+1].losses {
 				// we have a win/loss tie, check for head to head

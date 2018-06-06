@@ -18,4 +18,15 @@ public class Pool : Object {
 	@objc dynamic var isStarted = false
     var matchupList = List<PoolPlayMatchup>()
 	var teamList = List<Team>()
+	
+	var dictionary: [String: Any] {
+		return [
+			"name": name,
+			"tournament_id": tournament_id,
+			"isFinished": isFinished,
+			"isStarted": isStarted,
+			"isPowerPool": isPowerPool,
+			"division": division
+		]
+	}
 }

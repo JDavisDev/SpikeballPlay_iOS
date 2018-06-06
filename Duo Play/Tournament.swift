@@ -62,6 +62,10 @@ class Tournament : Object {
 		swissRounds = dictionary["swiss_rounds"] as! Int
 		full_challonge_url = dictionary["full_challonge_url"] as! String
 		live_image_url = dictionary["live_image_url"] as! String
+		userID = dictionary["user_id"] as! String
+		isReadOnly = dictionary["is_read_only"] as! Bool
+		created_date = dictionary["created_date"] as! Date
+		updated_date = dictionary["updated_date"] as! Date
 	}
 	
 	var dictionary: [String: Any] {
@@ -70,6 +74,7 @@ class Tournament : Object {
 			"id": id,
 			"isPoolPlay": isPoolPlay,
 			"playersPerPool": playersPerPool,
+			"tournament_type": tournament_type,
 			"isStarted": isStarted,
 			"participants_count": participants_count,
 			"password": password,
@@ -78,7 +83,11 @@ class Tournament : Object {
 			"quick_advance":isQuickReport,
 			"swiss_rounds":swissRounds,
 			"full_challonge_url":full_challonge_url,
-			"live_image_url":live_image_url
+			"live_image_url":live_image_url,
+			"user_id": userID,
+			"created_date":created_date,
+			"updated_date":updated_date,
+			"is_read_only":isReadOnly
 		]
 	}
 }

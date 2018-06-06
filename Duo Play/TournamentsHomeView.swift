@@ -19,11 +19,12 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()
-	let tournamentDao = TournamentDAO()
+	let tournamentFbDao = TournamentFirebaseDao()
 	let fireDB = Firestore.firestore()
 	var handle: AuthStateDidChangeListenerHandle?
 	var onlineTournamentList = [[String:Any]]()
 	
+	var tournamentReference: DocumentReference?
 	
     @IBOutlet weak var tournamentNameTextField: UITextField!
     @IBOutlet weak var tournamentTableView: UITableView!
@@ -31,7 +32,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
-		tournamentDao.delegate = self
+		tournamentFbDao.delegate = self
 		super.viewDidLoad()
     }
     
@@ -53,17 +54,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			Auth.auth().removeStateDidChangeListener(handle)
 		}
 		// [END remove_auth_listener]
-	}
-	
-	func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
-		// handle user and error as necessary
-//		if let error = error {
-//			showAlertMessage(message: "authUI : " + error.localizedDescription)
-//		}
-//
-//		if let user = user {
-//			showAlertMessage(message: "authUI : " + user.email!)
-//		}
 	}
 	
 	func showAlertMessage(title: String, message: String) {
@@ -117,11 +107,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	// Create tournament from dialog
 	func createNewTournament(newName: String, password: String) {
 		let tournament = Tournament()
-//		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//		let cdTournament = CDTournament(context: context)
-//		cdTournament.name = "CD TEST"
-//		// Save the data to coredata
-//		(UIApplication.shared.delegate as! AppDelegate).saveContext()
 		
 		if newName.count > 0 {
 			tournament.name = newName
@@ -161,8 +146,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		//let challongeAPI = ChallongeTournamentAPI()
 		//challongeAPI.createChallongeTournament(tournament: tournament)
 		
-		//let tournamentDao = TournamentDAO()
-		//tournamentDao.addOnlineTournament(tournament: tournament)
+		tournamentFbDao.addOnlineTournament(tournament: tournament)
 	}
 	
 	func getRandomStringForUrl(length: Int) -> String {
@@ -273,7 +257,15 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
 	
 	func getOnlineTournaments() {
-		tournamentDao.getOnlineTournaments()
+		tournamentFbDao.getOnlineTournaments()
+	}
+	
+	// MARK - Firebase
+	
+	// listen for new tournaments to be created
+	// maybe limit to 'official spikeball' tournaments.
+	func initFbTournamentListener() {
+		
 	}
 	
 	// DELEGATION METHODS
@@ -360,7 +352,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 							
 							// let's go tournamentDAO.getTournamentData. the fetch will call parse
 							// parse calls back to DAO, DAO finishes and passses back to this view.
-							tournamentDao.getTournamentData(tournament: tournament)
+							tournamentFbDao.getTournamentData(tournament: tournament)
 						}
 					} else {
 						// didn't need to download data, just move forward like normal
@@ -387,7 +379,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 				}
 				
 				self.activityIndicator.startAnimating()
-				self.tournamentDao.getTournamentData(tournament: tournament)
+				self.tournamentFbDao.getTournamentData(tournament: tournament)
 			} else {
 				self.showPasswordResultAlert(isSuccess: false)
 			}
@@ -402,7 +394,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			}
 			
 			self.activityIndicator.startAnimating()
-			self.tournamentDao.getTournamentData(tournament: tournament)
+			self.tournamentFbDao.getTournamentData(tournament: tournament)
 		}))
 		
 		alert.addTextField { (textField) in

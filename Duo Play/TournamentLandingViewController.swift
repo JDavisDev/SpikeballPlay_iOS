@@ -18,7 +18,7 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 	@IBOutlet weak var refreshButton: UIButton!
 	@IBOutlet weak var challongeLinkLabel: UITextField!
 	
-	let tournamentDao = TournamentDAO()
+	let tournamentDao = TournamentFirebaseDao()
 	let realm = try! Realm()
 	var tournament = Tournament()
 	let bracketController = BracketController()

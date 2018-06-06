@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 import Firebase
 
-class TournamentDAO : TournamentParserDelegate {
+class TournamentFirebaseDao : TournamentParserDelegate {
     var tournamentsList = [Tournament]()
 	let fireDB = Firestore.firestore()
 	var delegate: TournamentDAODelegate?
@@ -130,28 +130,8 @@ class TournamentDAO : TournamentParserDelegate {
 		// Create an initial document to update.
 		if tournament.isOnline && !tournament.isReadOnly {
 			let updatedDate = Date()
-			let tournamentsRef = fireDB.collection("tournaments").document(String(tournament.id))
-			tournamentsRef.setData([
-				"userID": tournament.userID,
-				"password": tournament.password,
-				"isReadOnly": tournament.isReadOnly,
-				"created_date": tournament.created_date,
-				"updated_date": updatedDate,
-				"name": tournament.name,
-				"id": tournament.id,
-				"isOfficial": true,
-				"isPoolPlay" : tournament.isPoolPlay,
-				"progress_meter" : tournament.progress_meter,
-				"isQuickReport" : tournament.isQuickReport,
-				"isPoolPlayFinished" : tournament.isPoolPlayFinished,
-				"isPrivate" : false, //tournament.isPrivate,
-				"playersPerPool" : tournament.playersPerPool,
-				"state" : tournament.state,
-				"isOnline": true, // tournament.isOnline,
-				"tournament_type" : tournament.tournament_type,
-				"participants_count" : tournament.teamList.count,
-				"url": tournament.url
-			])
+			let tournamentsRef = fireDB.collection("tournaments").document("\(tournament.id)")
+			tournamentsRef.setData(tournament.dictionary)
 		}
 	}
 	
@@ -190,7 +170,7 @@ class TournamentDAO : TournamentParserDelegate {
 		}
 	}
 	
-	func addOnlineMatchup(matchup: BracketMatchup) {
+	func addFirebaseBracketMatchup(matchup: BracketMatchup) {
 		// Add a new document
 		// Create an initial document to update.
 		let bracketMatchupRef = fireDB.collection("bracket_matchups")
@@ -210,7 +190,7 @@ class TournamentDAO : TournamentParserDelegate {
 			])
 	}
 	
-	func addOnlineTournamentTeam(team: Team) {
+	func addFirebaseTeam(team: Team) {
 		// Add a new document
 		// Create an initial document to update.
 		let teamsRef = fireDB.collection("teams")

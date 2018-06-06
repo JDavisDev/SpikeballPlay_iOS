@@ -14,7 +14,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     let teamsController = TeamsController()
-	let tournamentDAO = TournamentDAO()
+	let tournamentDAO = TournamentFirebaseDao()
 	let challongeTeamsAPI = ChallongeTeamsAPI()
 	
 	@IBOutlet weak var editSeedsButton: UIButton!
