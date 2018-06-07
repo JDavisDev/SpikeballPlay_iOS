@@ -38,7 +38,9 @@ public class ChallongeMatchupAPI : MatchupParserDelegate {
 							}
 						}
 						
+						// Note, you want to update the property inside the async closure to make sure that you don’t update the property from a background thread.
 						matchParser.delegate = self
+						
 						matchParser.parseIncludedMatchups(tournament: tournament, challongeMatchups: challongeMatchups)
 					}
 				} catch {

@@ -146,7 +146,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		//let challongeAPI = ChallongeTournamentAPI()
 		//challongeAPI.createChallongeTournament(tournament: tournament)
 		
-		tournamentFbDao.addOnlineTournament(tournament: tournament)
+		tournamentFbDao.addFirebaseTournament(tournament: tournament)
 	}
 	
 	func getRandomStringForUrl(length: Int) -> String {
@@ -257,7 +257,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
 	
 	func getOnlineTournaments() {
-		tournamentFbDao.getOnlineTournaments()
+		tournamentFbDao.getFirebaseTournaments()
 	}
 	
 	// MARK - Firebase
@@ -280,20 +280,22 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
-		for tournament in onlineTournamentList {
-			if isTournamentUnique(tournament: tournament) {
-				if realm.isInWriteTransaction {
-					realm.add(tournament)
-				} else {
-					try! realm.write {
+		DispatchQueue.main.sync {
+			for tournament in onlineTournamentList {
+				if isTournamentUnique(tournament: tournament) {
+					if realm.isInWriteTransaction {
 						realm.add(tournament)
+					} else {
+						try! realm.write {
+							realm.add(tournament)
+						}
 					}
+					
+					tournamentList.append(tournament)
+				} else {
+					// not unique.. let's... overwrite it?
+					overwriteTournamentInRealm(newTournament: tournament)
 				}
-				
-				tournamentList.append(tournament)
-			} else {
-				// not unique.. let's... overwrite it?
-				overwriteTournamentInRealm(newTournament: tournament)
 			}
 		}
 		

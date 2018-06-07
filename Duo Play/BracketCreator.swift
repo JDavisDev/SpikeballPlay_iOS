@@ -12,7 +12,8 @@ import RealmSwift
 class BracketCreator {
 	
 	let realm = try! Realm()
-	let tournamentDAO = TournamentFirebaseDao()
+	let teamFirebaseDao = TeamFirebaseDao()
+	let matchupFirebaseDao = MatchupFirebaseDao()
 	
 	var bracketController: BracketController
 	var tournament: Tournament
@@ -148,6 +149,8 @@ class BracketCreator {
 		}
 	}
 	
+	// I believe this creates the first round from the nodes.
+	// update matchups will create future matchups
 	private func createMatchupsFromNodeList(nodes: [Node]) {
 		var verticalPositionCounter: Int = 1
 		
@@ -170,12 +173,12 @@ class BracketCreator {
 				
 				game.tournament_id = tournament.id
 				game.teamOne = bracketController.getTeamBySeed(seed: node.value[0])
-				bracketController.resetTeamValues(team: (game.teamOne)!)
+				bracketController.resetTeamValues(team: (game.teamOne))
 				
 				game.division = "Advanced"
 				game.round = 1
 				game.round_position = verticalPositionCounter
-				game.teamOne?.bracketVerticalPositions.append(game.round_position)
+				game.teamOne.bracketVerticalPositions.append(game.round_position)
 				
 				// check if a node value exceeds our teams, in which case, it's a bye.
 				let seedInt = Int(node.value[1])!
@@ -183,20 +186,18 @@ class BracketCreator {
 					// teamOne will get a bye here.
 					game.teamTwo = nil
 					game.isReported = true
-					bracketController.reportByeMatch(teamToAdvance: game.teamOne!)
-					tournamentDAO.addFirebaseTeam(team: game.teamOne!)
+					bracketController.reportByeMatch(teamToAdvance: game.teamOne)
+					teamFirebaseDao.updateFirebaseTeam(team: game.teamOne)
 				} else {
 					// not a bye, proceed normally
 					game.teamTwo = bracketController.getTeamBySeed(seed: node.value[1])
 					bracketController.resetTeamValues(team: (game.teamTwo)!)
 					game.teamTwo?.bracketVerticalPositions.append(game.round_position)
-					//tournamentDAO.addOnlineTournamentTeam(team: game.teamOne!)
-					//tournamentDAO.addOnlineTournamentTeam(team: game.teamTwo!)
 				}
 				
 				realm.add(game)
 				tournament.matchupList.append(game)
-				//tournamentDAO.addOnlineMatchup(matchup: game)
+				matchupFirebaseDao.addFirebaseBracketMatchup(matchup: game)
 				verticalPositionCounter += 1
 			}
 		}

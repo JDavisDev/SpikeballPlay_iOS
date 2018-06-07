@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Dispatch
 
 class DBManager {
 	public var database: Realm
@@ -17,7 +18,9 @@ class DBManager {
 	}
 	
 	func beginWrite() {
-		database.beginWrite()
+		DispatchQueue.main.sync {
+			database.beginWrite()
+		}
 	}
 	
 	func commitWrite() {

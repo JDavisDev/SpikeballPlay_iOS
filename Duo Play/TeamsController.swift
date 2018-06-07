@@ -43,7 +43,7 @@ class TeamsController {
 		var count = tournament.teamList.count
 		var countString = String(count)
 		
-		for _ in 1...tournament.teamList.count + 1 {
+		for _ in 1...tournament.teamList.count + 2 {
 			if getTeamByName(name: "Team #" + countString, tournamentId: tournament.id).name == "Team #" + countString {
 				// we've found a match, try another number
 				count += 1
@@ -92,17 +92,7 @@ class TeamsController {
         
         // no available pool, create one, append it, and return it
         isNewPool = true
-        let poolCount = tournament.poolList.count
-        let name = "Pool " + String(format: "%c", poolCount + 65) as String
-        let pool = Pool()
-		pool.tournament_id = tournament.id
-        pool.name = name
-        pool.teamList = List<Team>()
-        pool.division = "Advanced"
-        pool.isPowerPool = false
-        pool.matchupList = List<PoolPlayMatchup>()
-        
-        return pool
+		return poolController.addNewPool()!
     }
     
     

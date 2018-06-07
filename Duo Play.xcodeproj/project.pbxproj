@@ -23,7 +23,8 @@
 		472C8315204627490067B9C1 /* TournamentTeamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */; };
 		4733A910206C07B000B25395 /* TournamentDAODelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4733A90F206C07B000B25395 /* TournamentDAODelegate.swift */; };
 		4733A913206C08BC00B25395 /* TournamentUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4733A912206C08BC00B25395 /* TournamentUtil.swift */; };
-		473689661F40240700C04FD4 /* Division.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473689651F40240700C04FD4 /* Division.swift */; };
+		473790D320C8239A00BB0EF9 /* TeamFirebaseDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473790D220C8239A00BB0EF9 /* TeamFirebaseDao.swift */; };
+		473790D520C823A800BB0EF9 /* MatchupFirebaseDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473790D420C823A800BB0EF9 /* MatchupFirebaseDao.swift */; };
 		474F5E5A206AAC090027F57D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 474F5E59206AAC090027F57D /* GoogleService-Info.plist */; };
 		475FF2831FA96FEC0018BB63 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475FF2821FA96FEC0018BB63 /* Session.swift */; };
 		47716ED320C624EF0012A19E /* LocalCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47716ED220C624EF0012A19E /* LocalCollection.swift */; };
@@ -136,7 +137,8 @@
 		472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentTeamsViewController.swift; sourceTree = "<group>"; };
 		4733A90F206C07B000B25395 /* TournamentDAODelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentDAODelegate.swift; sourceTree = "<group>"; };
 		4733A912206C08BC00B25395 /* TournamentUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentUtil.swift; sourceTree = "<group>"; };
-		473689651F40240700C04FD4 /* Division.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Division.swift; sourceTree = "<group>"; };
+		473790D220C8239A00BB0EF9 /* TeamFirebaseDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamFirebaseDao.swift; sourceTree = "<group>"; };
+		473790D420C823A800BB0EF9 /* MatchupFirebaseDao.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchupFirebaseDao.swift; sourceTree = "<group>"; };
 		474F5E58206A849B0027F57D /* Duo Play.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Duo Play.entitlements"; sourceTree = "<group>"; };
 		474F5E59206AAC090027F57D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		475FF2821FA96FEC0018BB63 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -296,6 +298,8 @@
 				472103F51F5A191F00CA76C3 /* TournamentFirebaseDao.swift */,
 				4733A90F206C07B000B25395 /* TournamentDAODelegate.swift */,
 				47C7753E20C79B6B00F4BF09 /* PoolPlayFirebaseDao.swift */,
+				473790D220C8239A00BB0EF9 /* TeamFirebaseDao.swift */,
+				473790D420C823A800BB0EF9 /* MatchupFirebaseDao.swift */,
 			);
 			name = Firebase;
 			sourceTree = "<group>";
@@ -446,7 +450,6 @@
 				47DE96291F3E075400F944F0 /* Tournament.swift */,
 				47DE962B1F3E075C00F944F0 /* Pool.swift */,
 				47DE962E1F3E07DD00F944F0 /* Team.swift */,
-				473689651F40240700C04FD4 /* Division.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -938,14 +941,15 @@
 				47DE96371F3E2F9900F944F0 /* TeamsView.swift in Sources */,
 				47C13A532000275000CE886D /* LiveBracketViewController.swift in Sources */,
 				47967CC41FF9EEE8007E67E4 /* SeedsViewController.swift in Sources */,
+				473790D520C823A800BB0EF9 /* MatchupFirebaseDao.swift in Sources */,
 				479A9C2D2097A60700C3DF17 /* MatchupParserDelegate.swift in Sources */,
 				47DE962F1F3E07DD00F944F0 /* Team.swift in Sources */,
 				472103FC1F5D524C00CA76C3 /* PoolPlayMatchGenerator.swift in Sources */,
+				473790D320C8239A00BB0EF9 /* TeamFirebaseDao.swift in Sources */,
 				4733A913206C08BC00B25395 /* TournamentUtil.swift in Sources */,
 				47967CC61FF9F950007E67E4 /* BracketMatchup.swift in Sources */,
 				47E932441F36C29C00145E28 /* StatisticCell.swift in Sources */,
 				47E894BC2056D42900F9CEE8 /* TGGeneratedResultsViewController.swift in Sources */,
-				473689661F40240700C04FD4 /* Division.swift in Sources */,
 				47967CBC1FF998B2007E67E4 /* PoolStandingsView.swift in Sources */,
 				47BE733320507FF9003C100B /* Node.swift in Sources */,
 				47FB18612089093B00631AAA /* MatchupParser.swift in Sources */,

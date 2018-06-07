@@ -66,7 +66,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	}
 	
 	func showMoveTeamDialog(selectedTeam: Team) {
-		if (selectedTeam.pool?.isStarted)! || (selectedTeam.pool?.isFinished)! || self.tournament.isReadOnly || self.tournament.isStarted {
+		if (selectedTeam.pool.isStarted) || (selectedTeam.pool.isFinished) || self.tournament.isReadOnly || self.tournament.isStarted {
 			self.showPoolStartedAlert()
 			return
 		}
@@ -76,7 +76,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		alert.addTextField { (textField) in
 			textField.placeholder = "Pool Name"
-			textField.text = selectedTeam.pool?.name
+			textField.text = selectedTeam.pool.name
 		}
 		
 		let moveToPoolAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
@@ -118,7 +118,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	}
 	
 	func deleteTeam(team: Team) {
-		if (team.pool?.isStarted)! || (team.pool?.isFinished)! || self.tournament.isReadOnly || self.tournament.isStarted {
+		if (team.pool.isStarted) || (team.pool.isFinished) || self.tournament.isReadOnly || self.tournament.isStarted {
 			self.showPoolStartedAlert()
 			return
 		}
@@ -126,8 +126,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		try! realm.write {
 			//self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
 			let pool = team.pool
-			let index = pool?.teamList.index(of: team)
-			team.pool?.teamList.remove(at: index!)
+			let index = pool.teamList.index(of: team)
+			team.pool.teamList.remove(at: index!)
 			
 			let tourneyIndex = tournament.teamList.index(of: team)
 			tournament.teamList.remove(at: tourneyIndex!)
@@ -147,7 +147,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
 			try! self.realm.write {
 				// assign new pool to team
-				team.pool?.teamList.remove(at: (team.pool?.teamList.index(of: team))!)
+				team.pool.teamList.remove(at: (team.pool.teamList.index(of: team))!)
 				self.poolsController.addTeamToPool(pool: pool, team: team)
 			}
 			

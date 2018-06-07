@@ -124,8 +124,10 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     }
     
     func deleteTeam(team: Team) {
+		let teamFirebaseDao = TeamFirebaseDao()
+		
         try! realm.write {
-			self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
+			teamFirebaseDao.deleteFirebaseTeam(team: team, tournament: tournament)
             realm.delete(team.poolPlayGameList)
             realm.delete(team)
         }

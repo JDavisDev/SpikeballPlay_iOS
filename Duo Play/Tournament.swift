@@ -44,7 +44,7 @@ class Tournament : Object {
 		return "id"
 	}
 	
-	// creating a tournament based on firebase/challonge models
+	// creating a tournament based on incoming firebase/challonge datas
 	convenience init(dictionary: [String : Any]) {
 		self.init()
 		name = dictionary["name"] as! String
@@ -68,6 +68,7 @@ class Tournament : Object {
 		updated_date = dictionary["updated_date"] as! Date
 	}
 	
+	// returned to post to firebase
 	var dictionary: [String: Any] {
 		return [
 			"name": name,

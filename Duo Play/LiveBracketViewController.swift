@@ -214,7 +214,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 							bracketCell.layer.shadowRadius = 6
 						}
 						
-                        teamOneLabel.text = teamOne?.name
+						teamOneLabel.text = teamOne.name
 						
                         if teamTwo == nil || teamTwo?.name == "nil" || teamTwo?.name == nil {
                             teamTwoLabel.text = "BYE"
@@ -498,7 +498,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 							if	!matchup.isReported &&
 								matchup.teamOne != nil &&
 								matchup.teamTwo != nil &&
-								(matchup.teamOne!.name == teamOneLabel.text || matchup.teamTwo!.name == teamOneLabel.text) &&
+								(matchup.teamOne.name == teamOneLabel.text || matchup.teamTwo!.name == teamOneLabel.text) &&
 								(matchup.teamTwo!.name == teamTwoLabel.text || matchup.teamOne!.name == teamTwoLabel.text) {
 								selectedMatchup = matchup
 								matchupFound = true

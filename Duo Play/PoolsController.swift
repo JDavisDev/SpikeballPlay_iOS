@@ -69,21 +69,29 @@ class PoolsController {
     }
 	
 	// add blank new pool
-	func addNewPool() {
-		try! realm.write {
-			let poolCount = tournament.poolList.count
-			let name = "Pool " + String(format: "%c", poolCount + 65) as String
-			let pool = Pool()
-			pool.tournament_id = tournament.id
-			pool.name = name
-			pool.teamList = List<Team>()
-			pool.division = "Advanced"
-			pool.isPowerPool = false
-			pool.matchupList = List<PoolPlayMatchup>()
-			
-			realm.add(pool)
-			tournament.poolList.append(pool)
+	func addNewPool() -> Pool? {
+		var poolRef: Pool?
+		
+		DispatchQueue.main.sync {
+			try! realm.write {
+				let poolCount = tournament.poolList.count
+				let name = "Pool " + String(format: "%c", poolCount + 65) as String
+				let pool = Pool()
+				pool.tournament_id = tournament.id
+				pool.name = name
+				pool.teamList = List<Team>()
+				pool.division = "Advanced"
+				pool.isPowerPool = false
+				pool.matchupList = List<PoolPlayMatchup>()
+				
+				// set pool id
+				poolRef = pool
+				realm.add(pool)
+				tournament.poolList.append(pool)
+			}
 		}
+		
+		return poolRef
 	}
 	
 	func getProgressOfPool(pool: Pool) -> Float {
@@ -181,8 +189,8 @@ class PoolsController {
 				
 				// we have a tie, let's check for the head to head match up.
 				for game in tournament.matchupList {
-					if (game.teamOne?.name == teamOne.name && game.teamTwo?.name == teamTwo.name) ||
-						(game.teamTwo?.name == teamOne.name && game.teamOne?.name == teamTwo.name) {
+					if (game.teamOne.name == teamOne.name && game.teamTwo?.name == teamTwo.name) ||
+						(game.teamTwo?.name == teamOne.name && game.teamOne.name == teamTwo.name) {
 						if teamTwo == getWinner(game: game) {
 							// team two won, so it should move up a seed
 							// flip them!
@@ -210,7 +218,7 @@ class PoolsController {
 		}
 		
 		if teamOneWins > teamTwoWins {
-			return game.teamOne!
+			return game.teamOne
 		} else {
 			return game.teamTwo!
 		}

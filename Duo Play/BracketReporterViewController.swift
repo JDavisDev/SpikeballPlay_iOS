@@ -31,17 +31,13 @@ class BracketReporterViewController: UIViewController {
     @IBOutlet weak var teamTwoGameThreeScoreLabel: UILabel!
     
     override func viewDidLoad() {
-		if selectedMatchup.teamOne != nil && selectedMatchup.teamTwo != nil {
-        	teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
-        	teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
-		}
+		super.viewDidLoad()
+		checkSelectedMatchup()
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		
-		if selectedMatchup.teamOne != nil && selectedMatchup.teamTwo != nil {
-			teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
+	func checkSelectedMatchup() {
+		if selectedMatchup.teamOne.name.count > 0 && selectedMatchup.teamTwo != nil {
+			teamOneNameLabel.text = (selectedMatchup.teamOne.name)
 			teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
 		} else {
 			let alert = UIAlertController(title: "Matchup Error",

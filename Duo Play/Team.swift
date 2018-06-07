@@ -42,17 +42,31 @@ public class Team : Object {
 		pointsFor = dictionary["pointsFor"] as! Int
 		pointsAgainst = dictionary["pointsAgainst"] as! Int
 		tournament_id = dictionary["tournament_id"] as! Int
-		pool.name = dictionary["poolName"] as! String
-		let roundsArray = (dictionary["bracketRounds"] as! [Int])
-		bracketRounds.append(objectsIn: roundsArray)
-		let vertArray = dictionary["bracketVerticalPositions"] as! [Int]
-		bracketVerticalPositions.append(objectsIn: vertArray)
+		pool.name = dictionary["pool_name"] as! String
+		pool.id = dictionary["pool_id"] as! Int
+		//let roundsArray = (dictionary["bracketRounds"] as! [Int])
+		bracketRounds = dictionary["bracketRounds"] as! List<Int>
+		bracketVerticalPositions = dictionary["bracketRounds"] as! List<Int>
+		//bracketRounds.append(objectsIn: roundsArray)
+		//let vertArray = dictionary["bracketVerticalPositions"] as! [Int]
+		//bracketVerticalPositions.append(objectsIn: vertArray)
 	}
 	
 	var dictionary: [String: Any] {
 		return [
 			"name": name,
-			"id": id
+			"id": id,
+			"seed":seed,
+			"isEliminated":isEliminated,
+			"wins":wins,
+			"losses":losses,
+			"pointsFor":pointsFor,
+			"pointsAgainst":pointsAgainst,
+			"tournament_id":tournament_id,
+			"pool_name":pool.name,
+			"pool_id":pool.id,
+			"bracketRounds":bracketRounds,
+			"bracketVerticalPositions":bracketVerticalPositions
 		]
 	}
 }

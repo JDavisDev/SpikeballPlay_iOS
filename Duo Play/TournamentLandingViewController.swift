@@ -58,7 +58,7 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 	
 	@IBAction func refreshButtonClicked(_ sender: UIButton) {
 		// refresh tournament data and reload.
-		tournamentDao.getOnlineTournamentById(id: tournament.id)
+		tournamentDao.getFirebaseTournamentById(id: tournament.id)
 	}
 	
 	func updateButtons() {

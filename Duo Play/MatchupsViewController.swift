@@ -118,7 +118,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchupCell")
         let matchup = matchupList[indexPath.row]
         if !matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
-			cell!.textLabel?.text = "Round \(matchup.round) : " + (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
+			cell!.textLabel?.text = "Round \(matchup.round) : " + (matchup.teamOne.name)! + "  vs.  " + (matchup.teamTwo?.name)!
         }
         
         return cell!

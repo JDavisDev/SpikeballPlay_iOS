@@ -22,7 +22,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 	
 	// [GET]
 	
-	func getOnlineTournaments() {
+	func getFirebaseTournaments() {
 		_ = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 		
 		var list = [[String: Any]]()
@@ -42,7 +42,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 		}
 	}
 	
-	func getOnlineTournamentByName(name: String) {
+	func getFirebaseTournamentByName(name: String) {
 		var list = [[String: Any]]()
 		fireDB.collection("tournaments")
 			.whereField("name", isEqualTo: name)
@@ -59,7 +59,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 		}
 	}
 	
-	func getOnlineTournamentById(id: Int) {
+	func getFirebaseTournamentById(id: Int) {
 		var list = [[String: Any]]()
 		fireDB.collection("tournaments")
 			.whereField("id", isEqualTo: id)
@@ -83,59 +83,28 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 	}
 	
 	func getTournamentData(tournament: Tournament) {
-		getOnlineTeams(tournament: tournament)
-		getOnlineBracketMatchups(tournament: tournament)
+		//getOnlineTeams(tournament: tournament)
+		//getOnlineBracketMatchups(tournament: tournament)
 	}
 	
-	func getOnlineTeams(tournament: Tournament) {
-		fireDB.collection("teams")
-			.whereField("tournament_id", isEqualTo: tournament.id).getDocuments { (querySnapshot, err) in
-				if let err = err {
-					print("Error getting teams \(err)")
-				} else {
-					var list = [[String: Any]]()
-					for document in querySnapshot!.documents {
-						list.append(document.data())
-					}
-					
-					self.tournamentParser.parseOnlineTeams(onlineTeamsData: list, tournament: tournament)
-				}
-		}
-	}
 	
-	func getOnlineBracketMatchups(tournament: Tournament) {
-		fireDB.collection("bracket_matchups")
-			.whereField("tournament_id", isEqualTo: tournament.id)
-			.getDocuments { (querySnapshot, err) in
-				if let err = err {
-					print("Error getting bracket matchups \(err)")
-				} else {
-					var list = [[String: Any]]()
-					for document in querySnapshot!.documents {
-						list.append(document.data())
-					}
-					
-					self.tournamentParser.parseOnlineBracketMatchups(onlineBracketMatchupData: list, tournament: tournament)
-				}
-		}
-	}
 	
 	// Tournament Data parsing callbacks
 	func didParseTouramentData() {
 		delegate?.didGetOnlineTournamentData()
 	}
 
-	func addOnlineTournament(tournament: Tournament) {
+	func addFirebaseTournament(tournament: Tournament) {
 		// Add a new document
 		// Create an initial document to update.
 		if tournament.isOnline && !tournament.isReadOnly {
-			let updatedDate = Date()
 			let tournamentsRef = fireDB.collection("tournaments").document("\(tournament.id)")
 			tournamentsRef.setData(tournament.dictionary)
 		}
 	}
 	
-	func deleteOnlineTournament(tournament: Tournament) {
+	// delete everything with that tournament id
+	func deleteFirebaseTournament(tournament: Tournament) {
 		if !tournament.isReadOnly {
 			fireDB.collection("bracket_matchups").whereField("tournament_id", isEqualTo: tournament.id)
 				.getDocuments() { (querySnapshot, err) in
@@ -159,72 +128,24 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 				}
 			}
 			
+			fireDB.collection("pools").whereField("tournament_id", isEqualTo: tournament.id)
+				.getDocuments() { (querySnapshot, err) in
+					if let err = err {
+						print("Error getting teams: \(err)")
+					} else {
+						for document in querySnapshot!.documents {
+							document.reference.delete()
+						}
+					}
+			}
+			
 			fireDB.collection("tournaments").document(String(tournament.id))
 				.delete() { err in
-				if let err = err {
-					print("Error removing document: " + String(tournament.id) + "\(err)")
-				} else {
-					print("Tournament successfully removed!")
-				}
-			}
-		}
-	}
-	
-	func addFirebaseBracketMatchup(matchup: BracketMatchup) {
-		// Add a new document
-		// Create an initial document to update.
-		let bracketMatchupRef = fireDB.collection("bracket_matchups")
-			.document(
-				String(matchup.tournament_id) + " : " + String(matchup.round) + "-" + String(matchup.round_position))
-		bracketMatchupRef.setData([
-			"id": matchup.id,
-			"teamOneId" : matchup.teamOne?.id ?? 0,
-			"teamTwoId" : matchup.teamTwo?.id ?? 0,
-			"teamOneScores": Array(matchup.teamOneScores),
-			"teamTwoScores": Array(matchup.teamTwoScores),
-			"round": matchup.round,
-			"round_position" : matchup.round_position,
-			"division" : matchup.division,
-			"isReported" : matchup.isReported,
-			"tournament_id": matchup.tournament_id
-			])
-	}
-	
-	func addFirebaseTeam(team: Team) {
-		// Add a new document
-		// Create an initial document to update.
-		let teamsRef = fireDB.collection("teams")
-			.document(
-				String(team.tournament_id) + " : " + String(team.id) + "-" + String(team.name))
-		teamsRef.setData([
-			"tournament_id": team.tournament_id,
-			"id": team.id,
-			"seed": team.seed,
-			"name" : team.name,
-			"poolName" : team.pool?.name ?? "nil",
-			"isCheckedIn": team.isCheckedIn,
-			"wins": team.wins,
-			"losses": team.losses,
-			"pointsFor": team.pointsFor,
-			"pointsAgainst": team.pointsAgainst,
-			"division": team.division,
-			"isEliminated": team.isEliminated,
-			"bracketRounds": Array(team.bracketRounds),
-			"bracketVerticalPositions": Array(team.bracketVerticalPositions)
-			])
-	}
-	
-	func deleteOnlineTournamentTeam(team: Team, tournament: Tournament) {
-		fireDB.collection("teams").whereField("tournament_id", isEqualTo: tournament.id)
-			.whereField("name", isEqualTo: team.name)
-			.whereField("id", isEqualTo: team.id)
-			.getDocuments() { (querySnapshot, err) in
-			if let err = err {
-				print("Error getting teams: \(err)")
-			} else {
-				for document in querySnapshot!.documents {
-					document.reference.delete()
-				}
+					if let err = err {
+						print("Error removing document: " + String(tournament.id) + "\(err)")
+					} else {
+						print("Tournament successfully removed!")
+					}
 			}
 		}
 	}

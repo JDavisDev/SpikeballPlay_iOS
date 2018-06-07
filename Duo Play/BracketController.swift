@@ -15,6 +15,7 @@ class BracketController {
     let realm = try! Realm()
     let tournament: Tournament
 	let tournamentDAO = TournamentFirebaseDao()
+	let matchupFirebaseDao = MatchupFirebaseDao()
 	
     var nodeList = [Node]()
     var isEnd = false
@@ -214,7 +215,7 @@ class BracketController {
 			tournament.progress_meter = tournamentProgress
 		}
 		
-		tournamentDAO.addOnlineTournament(tournament: tournament)
+		tournamentDAO.addFirebaseTournament(tournament: tournament)
     }
 	
 	func isIdUnique(id: Int) -> Bool {
@@ -287,7 +288,7 @@ class BracketController {
 				var canContinue = true
 				// make sure this matchup doesn't exist.
 				for matchup in tournament.matchupList {
-					if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
+					if	((!matchup.isReported) && (matchup.teamOne.seed == teamTwo.seed ||
 						matchup.teamTwo?.seed == teamTwo.seed)) {
 						canContinue = false
 						break
@@ -303,7 +304,7 @@ class BracketController {
 			for team in availableTeams {
 				var canContinue = true
 				for matchup in tournament.matchupList {
-					if !matchup.isReported && matchup.teamOne?.seed == team.seed ||
+					if !matchup.isReported && matchup.teamOne.seed == team.seed ||
 						matchup.teamTwo?.seed == team.seed {
 						canContinue = false
 						break
@@ -314,7 +315,7 @@ class BracketController {
 					var canContinueTwo = true
 					// make sure the team isn't in another matchup
 					for matchup in tournament.matchupList {
-						if	((!matchup.isReported) && (matchup.teamOne?.seed == teamTwo.seed ||
+						if	((!matchup.isReported) && (matchup.teamOne.seed == teamTwo.seed ||
 							matchup.teamTwo?.seed == teamTwo.seed)) {
 							canContinueTwo = false
 							break
@@ -361,7 +362,7 @@ class BracketController {
 			if isGameUnique(game: game) {
 				realm.add(game)
 				tournament.matchupList.append(game)
-				tournamentDAO.addFirebaseBracketMatchup(matchup: game)
+				matchupFirebaseDao.addFirebaseBracketMatchup(matchup: game)
 			}
 		}
 	}
@@ -382,8 +383,8 @@ class BracketController {
     
     func isGameUnique(game: BracketMatchup) -> Bool {
         for matchup in tournament.matchupList {
-			if (matchup.teamOne?.name == game.teamOne?.name || matchup.teamTwo?.name == game.teamOne?.name) &&
-				(matchup.teamOne?.name == game.teamTwo?.name || matchup.teamTwo?.name == game.teamTwo?.name) &&
+			if (matchup.teamOne.name == game.teamOne.name || matchup.teamTwo?.name == game.teamOne.name) &&
+				(matchup.teamOne.name == game.teamTwo?.name || matchup.teamTwo?.name == game.teamTwo?.name) &&
 				matchup.tournament_id == game.tournament_id {
                 return false
             }
@@ -435,29 +436,29 @@ class BracketController {
             }
 			
             if teamOneWins > teamTwoWins {
-                selectedMatchup.teamOne?.wins += 1
+				selectedMatchup.teamOne.wins += 1
                 selectedMatchup.teamTwo?.losses += 1
                 selectedMatchup.teamTwo?.isEliminated = true
-                selectedMatchup.teamOne?.bracketRounds.append(selectedMatchup.round + 1)
-				winnerId = (selectedMatchup.teamOne?.challonge_participant_id)!
-                advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne!)
+				selectedMatchup.teamOne.bracketRounds.append(selectedMatchup.round + 1)
+				winnerId = (selectedMatchup.teamOne.challonge_participant_id)
+				advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne)
             } else {
-                selectedMatchup.teamOne?.losses += 1
+				selectedMatchup.teamOne.losses += 1
                 selectedMatchup.teamTwo?.wins += 1
-                selectedMatchup.teamOne?.isEliminated = true
+				selectedMatchup.teamOne.isEliminated = true
 				winnerId = (selectedMatchup.teamTwo?.challonge_participant_id)!
                 selectedMatchup.teamTwo?.bracketRounds.append(selectedMatchup.round + 1)
                 advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamTwo!)
             }
             
             // point accumulation for seeding.
-            selectedMatchup.teamOne?.pointsFor += teamOneScores[0]
-            selectedMatchup.teamOne?.pointsFor += teamOneScores[1]
-            selectedMatchup.teamOne?.pointsFor += teamOneScores[2]
+            selectedMatchup.teamOne.pointsFor += teamOneScores[0]
+            selectedMatchup.teamOne.pointsFor += teamOneScores[1]
+            selectedMatchup.teamOne.pointsFor += teamOneScores[2]
             
-            selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[0]
-            selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[1]
-            selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[2]
+            selectedMatchup.teamOne.pointsAgainst += teamTwoScores[0]
+            selectedMatchup.teamOne.pointsAgainst += teamTwoScores[1]
+            selectedMatchup.teamOne.pointsAgainst += teamTwoScores[2]
             
             selectedMatchup.teamOneScores.append(objectsIn: teamOneScores)
             selectedMatchup.teamTwoScores.append(objectsIn: teamTwoScores)
