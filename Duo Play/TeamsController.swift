@@ -31,11 +31,6 @@ class TeamsController {
             realm.add(team)
             newPool.teamList.append(team)
             team.pool = newPool
-			
-            if isNewPool {
-                realm.add(newPool)
-                tournament.poolList.append(newPool)
-            }
         }
     }
 	
@@ -44,7 +39,7 @@ class TeamsController {
 		var countString = String(count)
 		
 		for _ in 1...tournament.teamList.count + 2 {
-			if getTeamByName(name: "Team #" + countString, tournamentId: tournament.id).name == "Team #" + countString {
+			if getTeamByName(name: "Team #" + countString, tournamentId: tournament.id)?.name == "Team #" + countString {
 				// we've found a match, try another number
 				count += 1
 				countString = String(count)
@@ -57,27 +52,23 @@ class TeamsController {
 		return "infinity"
 	}
     
-    func getTeamByName(name: String, tournamentId: Int) -> Team {
+    func getTeamByName(name: String, tournamentId: Int) -> Team? {
 		let teams = realm.objects(Team.self).filter("name = '\(name)' AND tournament_id = \(tournamentId)")
 		
 		if teams.count > 0 {
 			return teams.first!
 		} else {
-			let team = Team()
-			team.name = "nil"
-			return team
+			return nil
 		}
     }
 	
-	func getTeamById(id: Int, tournamentId: Int) -> Team {
+	func getTeamById(id: Int, tournamentId: Int) -> Team? {
 		let teams = realm.objects(Team.self).filter("id = \(id) AND tournament_id = \(tournamentId)")
 		
 		if teams.count > 0 {
 			return teams.first!
 		} else {
-			let team = Team()
-			team.name = "nil"
-			return team
+			return nil
 		}
 	}
     

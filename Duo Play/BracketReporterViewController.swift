@@ -36,8 +36,8 @@ class BracketReporterViewController: UIViewController {
     }
 	
 	func checkSelectedMatchup() {
-		if selectedMatchup.teamOne.name.count > 0 && selectedMatchup.teamTwo != nil {
-			teamOneNameLabel.text = (selectedMatchup.teamOne.name)
+		if (selectedMatchup.teamOne?.name.count)! > 0 && selectedMatchup.teamTwo != nil {
+			teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
 			teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
 		} else {
 			let alert = UIAlertController(title: "Matchup Error",

@@ -129,7 +129,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournament.teamList = List<Team>()
 		tournament.url = getRandomStringForUrl(length: 12)
 		tournament.userID = Auth.auth().currentUser?.uid ?? Analytics.appInstanceID()
-		tournament.created_date = Date()
+		tournament.created_date = Date().description(with: Locale.autoupdatingCurrent)
 		tournament.creatorUserName = Auth.auth().currentUser?.displayName ?? ""
 		
 		try! self.realm.write {
@@ -166,10 +166,17 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     
     func isIdUnique(id: Int) -> Bool {
         var count = 0
-        let db = DBManager()
-		db.beginWrite()
-		count = realm.objects(Tournament.self).filter("id = \(id)").count
-		db.commitWrite()
+		if !Thread.isMainThread {
+			DispatchQueue.main.sync {
+				try! realm.write {
+					count = realm.objects(Tournament.self).filter("id = \(id)").count
+				}
+			}
+		} else {
+			try! realm.write {
+				count = realm.objects(Tournament.self).filter("id = \(id)").count
+			}
+		}
         return count == 0
     }
     
@@ -280,7 +287,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
-		DispatchQueue.main.sync {
+		//DispatchQueue.main.sync {
 			for tournament in onlineTournamentList {
 				if isTournamentUnique(tournament: tournament) {
 					if realm.isInWriteTransaction {
@@ -296,7 +303,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 					// not unique.. let's... overwrite it?
 					overwriteTournamentInRealm(newTournament: tournament)
 				}
-			}
+			//}
 		}
 		
 		updateTournamentList()
@@ -351,10 +358,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 						} else {
 							// we are online, but it's public, fetch the data.
 							activityIndicator.startAnimating()
-							
+							didGetOnlineTournamentData()
 							// let's go tournamentDAO.getTournamentData. the fetch will call parse
 							// parse calls back to DAO, DAO finishes and passses back to this view.
-							tournamentFbDao.getTournamentData(tournament: tournament)
+							//tournamentFbDao.getTournamentData(tournament: tournament)
 						}
 					} else {
 						// didn't need to download data, just move forward like normal

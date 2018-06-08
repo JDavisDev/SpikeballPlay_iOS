@@ -163,7 +163,7 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 		
 		if deleteOnline {
 			let tournamentDAO = TournamentFirebaseDao()
-			tournamentDAO.deleteOnlineTournament(tournament: tournament)
+			tournamentDAO.deleteFirebaseTournament(tournament: tournament)
 		}
 		
 		try! realm.write {
@@ -178,6 +178,7 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 			realm.delete(realm.objects(BracketMatchup.self).filter("tournament_id = \(tournament.id)"))
 			
 			for pool in tournament.poolList {
+				// crashing here from realm??
 				for matchup in pool.matchupList {
 					realm.delete(matchup)
 				}

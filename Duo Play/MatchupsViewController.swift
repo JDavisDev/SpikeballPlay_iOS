@@ -71,8 +71,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.matchupList.removeAll()
         
         for matchup in tournament.matchupList {
-            if !matchup.isReported && matchup.teamOne != nil &&
-                matchup.teamTwo != nil {
+            if !matchup.isReported && matchup.teamTwo != nil {
                 self.matchupList.append(matchup)
             }
         }
@@ -117,8 +116,8 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchupCell")
         let matchup = matchupList[indexPath.row]
-        if !matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
-			cell!.textLabel?.text = "Round \(matchup.round) : " + (matchup.teamOne.name)! + "  vs.  " + (matchup.teamTwo?.name)!
+        if !matchup.isReported && matchup.teamTwo != nil {
+			cell!.textLabel?.text = "Round \(matchup.round) : " + (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
         }
         
         return cell!

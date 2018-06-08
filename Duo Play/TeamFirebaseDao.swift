@@ -31,18 +31,16 @@ class TeamFirebaseDao {
 	func addFirebaseTeam(team: Team) {
 		// Add a new document
 		// Create an initial document to update.
-		let teamsRef = fireDB.collection("teams")
-			.document(
-				String(team.tournament_id) + " : " + String(team.id) + "-" + String(team.name))
-		teamsRef.setData(team.dictionary)
+		fireDB.collection("teams")
+			.document("\(team.tournament_id) : \(team.id) - \(team.name)")
+			.setData(team.dictionary)
 	}
 	
 	func updateFirebaseTeam(team: Team) {
 		// Update a team
-		let teamsRef = fireDB.collection("teams")
-			.document(
-				String(team.tournament_id) + " : " + String(team.id) + "-" + String(team.name))
-		teamsRef.updateData(team.dictionary)
+		fireDB.collection("teams")
+			.document("\(team.tournament_id) : \(team.id) - \(team.name)")
+			.updateData(team.dictionary)
 	}
 	
 	func deleteFirebaseTeam(team: Team, tournament: Tournament) {

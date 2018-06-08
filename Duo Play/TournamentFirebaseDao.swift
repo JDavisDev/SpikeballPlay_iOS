@@ -98,8 +98,15 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 		// Add a new document
 		// Create an initial document to update.
 		if tournament.isOnline && !tournament.isReadOnly {
-			let tournamentsRef = fireDB.collection("tournaments").document("\(tournament.id)")
-			tournamentsRef.setData(tournament.dictionary)
+			fireDB.collection("tournaments").document("\(tournament.name) - \(tournament.id)")
+			.setData(tournament.dictionary)
+		}
+	}
+	
+	func updateFirebaseTournament(tournament: Tournament) {
+		if tournament.isOnline && !tournament.isReadOnly {
+			fireDB.collection("tournaments").document("\(tournament.name) - \(tournament.id)")
+			.updateData(tournament.dictionary)
 		}
 	}
 	
@@ -109,7 +116,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 			fireDB.collection("bracket_matchups").whereField("tournament_id", isEqualTo: tournament.id)
 				.getDocuments() { (querySnapshot, err) in
 				if let err = err {
-					print("Error getting bracket_matchups: \(err)")
+					print("Error deleting bracket_matchups: \(err)")
 				} else {
 					for document in querySnapshot!.documents {
 						document.reference.delete()
@@ -120,7 +127,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 			fireDB.collection("teams").whereField("tournament_id", isEqualTo: tournament.id)
 				.getDocuments() { (querySnapshot, err) in
 				if let err = err {
-					print("Error getting teams: \(err)")
+					print("Error deleting teams: \(err)")
 				} else {
 					for document in querySnapshot!.documents {
 						document.reference.delete()
@@ -131,7 +138,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 			fireDB.collection("pools").whereField("tournament_id", isEqualTo: tournament.id)
 				.getDocuments() { (querySnapshot, err) in
 					if let err = err {
-						print("Error getting teams: \(err)")
+						print("Error deleting pools: \(err)")
 					} else {
 						for document in querySnapshot!.documents {
 							document.reference.delete()
@@ -139,12 +146,25 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 					}
 			}
 			
-			fireDB.collection("tournaments").document(String(tournament.id))
-				.delete() { err in
+			fireDB.collection("pool_play_matchups").whereField("tournament_id", isEqualTo: tournament.id)
+				.getDocuments() { (querySnapshot, err) in
 					if let err = err {
-						print("Error removing document: " + String(tournament.id) + "\(err)")
+						print("Error deleting pool play matchups: \(err)")
 					} else {
-						print("Tournament successfully removed!")
+						for document in querySnapshot!.documents {
+							document.reference.delete()
+						}
+					}
+			}
+			
+			fireDB.collection("tournaments").whereField("id", isEqualTo: tournament.id)
+				.getDocuments() { (querySnapshot, err) in
+					if let err = err {
+						print("Error deleting tournament: \(err)")
+					} else {
+						for document in querySnapshot!.documents {
+							document.reference.delete()
+						}
 					}
 			}
 		}

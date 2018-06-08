@@ -68,6 +68,9 @@ public class PoolPlayMatchReporterController {
 			selectedMatchup.teamTwoScores.append(teamTwoScores[2])
             
             selectedMatchup.isReported = true
+			
+			let matchupDao = MatchupFirebaseDao()
+			matchupDao.addFirebasePoolMatchup(matchup: selectedMatchup)
         }
     }
     

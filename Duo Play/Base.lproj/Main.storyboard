@@ -1629,7 +1629,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Tsh-Ul-AK0">
-                                <rect key="frame" x="147" y="481" width="81" height="61"/>
+                                <rect key="frame" x="54" y="497" width="81" height="61"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="61" id="5nW-AC-nf6"/>
                                 </constraints>
@@ -1639,33 +1639,51 @@
                                     <action selector="refreshButtonClicked:" destination="uue-fQ-IDZ" eventType="touchUpInside" id="yES-h5-XO1"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Wth-WX-lsy">
+                                <rect key="frame" x="203" y="497" width="156" height="61"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="61" id="EXR-K0-TcY"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <state key="normal" title="Save to Challonge"/>
+                                <connections>
+                                    <action selector="didTapSaveToChallonge:" destination="uue-fQ-IDZ" eventType="touchUpInside" id="tOK-bS-hEM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Tsh-Ul-AK0" firstAttribute="top" secondItem="UKh-7q-iqS" secondAttribute="bottom" constant="36" id="2zy-bd-qd2"/>
+                            <constraint firstItem="Tsh-Ul-AK0" firstAttribute="top" secondItem="UKh-7q-iqS" secondAttribute="bottom" constant="52" id="2zy-bd-qd2"/>
+                            <constraint firstAttribute="trailing" secondItem="Wth-WX-lsy" secondAttribute="trailing" constant="16" id="3FU-DU-AAv"/>
                             <constraint firstItem="RdU-Fj-b3K" firstAttribute="width" secondItem="PzQ-jQ-ucl" secondAttribute="width" id="4fe-T8-qQi"/>
+                            <constraint firstItem="Wth-WX-lsy" firstAttribute="top" secondItem="UKh-7q-iqS" secondAttribute="bottom" constant="52" id="DOy-4Q-WsU"/>
                             <constraint firstItem="PzQ-jQ-ucl" firstAttribute="top" secondItem="jvf-NA-6EZ" secondAttribute="bottom" constant="64" id="Ea3-Hr-3k0"/>
                             <constraint firstItem="UKh-7q-iqS" firstAttribute="centerX" secondItem="PVt-UI-btE" secondAttribute="centerX" id="Ksr-Ig-VQD"/>
+                            <constraint firstItem="Wth-WX-lsy" firstAttribute="top" secondItem="Tsh-Ul-AK0" secondAttribute="top" id="Rp5-Vq-nlU"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="trailing" secondItem="PVt-UI-btE" secondAttribute="trailingMargin" id="TZI-nO-SmZ"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="leading" secondItem="RdU-Fj-b3K" secondAttribute="leading" id="Vta-Oe-A8d"/>
                             <constraint firstItem="UKh-7q-iqS" firstAttribute="leading" secondItem="PVt-UI-btE" secondAttribute="leadingMargin" constant="93" id="W52-Fd-ywS"/>
                             <constraint firstItem="RdU-Fj-b3K" firstAttribute="leading" secondItem="XPq-K2-AiT" secondAttribute="leading" id="cNv-Eo-Z33"/>
+                            <constraint firstItem="Wth-WX-lsy" firstAttribute="leading" secondItem="PzQ-jQ-ucl" secondAttribute="leading" id="ctg-sA-tsd"/>
                             <constraint firstItem="XPq-K2-AiT" firstAttribute="centerX" secondItem="PVt-UI-btE" secondAttribute="centerX" id="di0-nH-uyF"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="top" secondItem="HUT-TT-Ivf" secondAttribute="bottom" constant="8" symbolic="YES" id="eP8-hq-gdv"/>
                             <constraint firstItem="UKh-7q-iqS" firstAttribute="top" secondItem="PzQ-jQ-ucl" secondAttribute="bottom" constant="59" id="eqa-56-QWA"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="trailing" secondItem="PzQ-jQ-ucl" secondAttribute="trailing" id="eur-be-nlE"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="centerX" secondItem="UKh-7q-iqS" secondAttribute="centerX" id="ghE-HR-PCQ"/>
-                            <constraint firstItem="UKh-7q-iqS" firstAttribute="centerX" secondItem="Tsh-Ul-AK0" secondAttribute="centerX" id="jwG-rK-P9i"/>
+                            <constraint firstItem="UKh-7q-iqS" firstAttribute="centerX" secondItem="Tsh-Ul-AK0" secondAttribute="centerX" constant="92.5" id="jwG-rK-P9i"/>
                             <constraint firstItem="RdU-Fj-b3K" firstAttribute="top" secondItem="jvf-NA-6EZ" secondAttribute="bottom" constant="64" id="lAa-Qa-Hyc"/>
                             <constraint firstItem="PzQ-jQ-ucl" firstAttribute="leading" secondItem="RdU-Fj-b3K" secondAttribute="trailing" constant="31" id="mNL-jf-CcN"/>
                             <constraint firstItem="RdU-Fj-b3K" firstAttribute="top" secondItem="PzQ-jQ-ucl" secondAttribute="top" id="p1A-6D-r61"/>
+                            <constraint firstItem="Wth-WX-lsy" firstAttribute="trailing" secondItem="XPq-K2-AiT" secondAttribute="trailing" id="pYa-x0-Nbt"/>
                             <constraint firstItem="UKh-7q-iqS" firstAttribute="top" secondItem="RdU-Fj-b3K" secondAttribute="bottom" constant="59" id="qGu-NO-CyW"/>
+                            <constraint firstItem="XPq-K2-AiT" firstAttribute="top" secondItem="Wth-WX-lsy" secondAttribute="bottom" constant="42" id="rVK-qY-pmJ"/>
                             <constraint firstItem="eei-po-EsT" firstAttribute="top" secondItem="XPq-K2-AiT" secondAttribute="bottom" constant="37" id="spq-RX-pKJ"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="centerX" secondItem="PVt-UI-btE" secondAttribute="centerX" id="tBy-Nm-CXg"/>
                             <constraint firstItem="PzQ-jQ-ucl" firstAttribute="baseline" secondItem="RdU-Fj-b3K" secondAttribute="firstBaseline" id="tRR-8g-W4Q"/>
                             <constraint firstItem="jvf-NA-6EZ" firstAttribute="leading" secondItem="PVt-UI-btE" secondAttribute="leadingMargin" id="w0M-gs-jCt"/>
-                            <constraint firstItem="Tsh-Ul-AK0" firstAttribute="centerX" secondItem="PVt-UI-btE" secondAttribute="centerX" id="xJb-f4-Fq1"/>
-                            <constraint firstItem="XPq-K2-AiT" firstAttribute="top" secondItem="Tsh-Ul-AK0" secondAttribute="bottom" constant="58" id="zQt-Xi-yoe"/>
+                            <constraint firstItem="Tsh-Ul-AK0" firstAttribute="centerX" secondItem="PVt-UI-btE" secondAttribute="centerX" constant="-93" id="xJb-f4-Fq1"/>
+                            <constraint firstItem="XPq-K2-AiT" firstAttribute="top" secondItem="Tsh-Ul-AK0" secondAttribute="bottom" constant="42" id="zQt-Xi-yoe"/>
+                            <constraint firstItem="Wth-WX-lsy" firstAttribute="leading" secondItem="Tsh-Ul-AK0" secondAttribute="trailing" constant="68" id="zhK-FI-i5v"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1673,6 +1691,7 @@
                         <outlet property="challongeLinkLabel" destination="XPq-K2-AiT" id="tkm-TK-gLd"/>
                         <outlet property="poolPlayButton" destination="RdU-Fj-b3K" id="Tr7-hC-i4I"/>
                         <outlet property="refreshButton" destination="Tsh-Ul-AK0" id="Yhb-s3-Jcs"/>
+                        <outlet property="saveToChallongeButton" destination="Wth-WX-lsy" id="lZV-t3-cdc"/>
                         <outlet property="settingsButton" destination="UKh-7q-iqS" id="s3b-1x-gKD"/>
                         <outlet property="tournamentNameLabel" destination="jvf-NA-6EZ" id="FCy-3q-SKX"/>
                     </connections>

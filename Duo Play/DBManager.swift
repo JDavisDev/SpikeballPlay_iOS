@@ -18,9 +18,7 @@ class DBManager {
 	}
 	
 	func beginWrite() {
-		DispatchQueue.main.sync {
-			database.beginWrite()
-		}
+		database.beginWrite()
 	}
 	
 	func commitWrite() {

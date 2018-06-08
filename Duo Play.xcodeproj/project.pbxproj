@@ -369,7 +369,6 @@
 				47C13A522000275000CE886D /* LiveBracketViewController.swift */,
 				472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */,
 				47D6BB962047835C003AC6AB /* TournamentsTabBarViewController.swift */,
-				47E894B3205626E500F9CEE8 /* TournamentLandingViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -431,6 +430,7 @@
 			children = (
 				47DE963E1F3E425700F944F0 /* TournamentSettingsView.swift */,
 				47DE96321F3E2AE100F944F0 /* TournamentsHomeView.swift */,
+				47E894B3205626E500F9CEE8 /* TournamentLandingViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";

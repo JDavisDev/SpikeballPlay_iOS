@@ -14,7 +14,7 @@ public class Team : Object {
     @objc dynamic public var seed = 1
     @objc dynamic public var id = 1
     @objc dynamic public var name = ""
-    @objc dynamic var pool = Pool()
+	@objc dynamic var pool: Pool? = Pool()
 	@objc dynamic public var isCheckedIn = false
     @objc dynamic public var wins = 0
     @objc dynamic public var losses = 0
@@ -42,8 +42,9 @@ public class Team : Object {
 		pointsFor = dictionary["pointsFor"] as! Int
 		pointsAgainst = dictionary["pointsAgainst"] as! Int
 		tournament_id = dictionary["tournament_id"] as! Int
-		pool.name = dictionary["pool_name"] as! String
-		pool.id = dictionary["pool_id"] as! Int
+		pool = Pool()
+		pool?.name = dictionary["pool_name"] as! String
+		pool?.id = dictionary["pool_id"] as! Int
 		//let roundsArray = (dictionary["bracketRounds"] as! [Int])
 		bracketRounds = dictionary["bracketRounds"] as! List<Int>
 		bracketVerticalPositions = dictionary["bracketRounds"] as! List<Int>
@@ -63,10 +64,10 @@ public class Team : Object {
 			"pointsFor":pointsFor,
 			"pointsAgainst":pointsAgainst,
 			"tournament_id":tournament_id,
-			"pool_name":pool.name,
-			"pool_id":pool.id,
-			"bracketRounds":bracketRounds,
-			"bracketVerticalPositions":bracketVerticalPositions
+			"pool_name":pool!.name,
+			"pool_id":pool!.id,
+			"bracketRounds":Array(bracketRounds),
+			"bracketVerticalPositions":Array(bracketVerticalPositions)
 		]
 	}
 }

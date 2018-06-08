@@ -29,7 +29,11 @@ class ChallongeTeamsAPI {
 		if let myURL = URL(string: urlString!) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "POST"
-			let session = URLSession.shared
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+                session.configuration.waitsForConnectivity = true
+            } else {
+                // Fallback on earlier versions
+            }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {

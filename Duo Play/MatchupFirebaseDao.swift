@@ -16,10 +16,9 @@ class MatchupFirebaseDao {
 	func addFirebaseBracketMatchup(matchup: BracketMatchup) {
 		// Add a new document
 		// Create an initial document to update.
-		let bracketMatchupRef = fireDB.collection("bracket_matchups")
-			.document(
-				String(matchup.tournament_id) + " : " + String(matchup.round) + "-" + String(matchup.round_position))
-		bracketMatchupRef.setData(matchup.dictionary)
+		fireDB.collection("bracket_matchups")
+			.document(String(matchup.tournament_id) + " : " + String(matchup.round) + "-" + String(matchup.round_position))
+			.setData(matchup.dictionary)
 			/*
 			"id": matchup.id,
 			"teamOneId" : matchup.teamOne?.id ?? 0,
@@ -32,6 +31,16 @@ class MatchupFirebaseDao {
 			"isReported" : matchup.isReported,
 			"tournament_id": matchup.tournament_id])
 		*/
+	}
+	
+	func addFirebasePoolMatchup(matchup: PoolPlayMatchup) {
+		// Add a new document
+		// Create an initial document to update.
+		let oneName = matchup.teamOne?.name ?? "null"
+		let twoName = matchup.teamTwo?.name ?? "null"
+		fireDB.collection("pool_play_matchups")
+			.document("\(matchup.tournament_id) : \(matchup.round) - \(oneName) vs. \(twoName)")
+			.setData(matchup.dictionary)
 	}
 
 	func getOnlineBracketMatchups(tournament: Tournament) {

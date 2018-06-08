@@ -9,5 +9,5 @@
 import Foundation
 
 protocol ChallongeTournamentAPIDelegate {
-	func didCreateChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament)
+	func didCreateChallongeTournament(onlineTournament: [String: Any]?, localTournament: Tournament?, success: Bool)
 }

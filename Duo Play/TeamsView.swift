@@ -19,6 +19,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     let poolsController = PoolsController()
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
+	let tournamentFirebaseDao = TournamentFirebaseDao()
 	
 	@IBOutlet weak var searchBar: UISearchBar!
 	var teamList = [Team]()
@@ -40,11 +41,20 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		searchController.searchBar.placeholder = "Search Teams"
 		teamsTableView.tableHeaderView = searchController.searchBar
 		definesPresentationContext = true
+		
+		updateTeamList()
 	}
-    
-    override func viewDidAppear(_ animated: Bool) {
-        updateTeamList()
-    }
+	
+	func updateTeamList() {
+		teamList.removeAll()
+		
+		for team in tournament.teamList {
+			teamList.append(team)
+		}
+		
+		tournamentFirebaseDao.updateFirebaseTournament(tournament: tournament)
+		teamsTableView.reloadData()
+	}
 	
 	func longPressGesture() -> UILongPressGestureRecognizer {
 		let lpg = UILongPressGestureRecognizer(target: self, action: #selector(self.teamLongPress))
@@ -57,7 +67,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		if let label = sender.view?.subviews[0].subviews[0] as? UILabel {
 			let name = label.text
-			selectedTeam = teamsController.getTeamByName(name: name!, tournamentId: tournament.id)
+			selectedTeam = teamsController.getTeamByName(name: name!, tournamentId: tournament.id)!
 		} else {
 			return
 		}
@@ -66,7 +76,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	}
 	
 	func showMoveTeamDialog(selectedTeam: Team) {
-		if (selectedTeam.pool.isStarted) || (selectedTeam.pool.isFinished) || self.tournament.isReadOnly || self.tournament.isStarted {
+		if (selectedTeam.pool?.isStarted)! || (selectedTeam.pool?.isFinished)! || self.tournament.isReadOnly || self.tournament.isStarted {
 			self.showPoolStartedAlert()
 			return
 		}
@@ -76,7 +86,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		alert.addTextField { (textField) in
 			textField.placeholder = "Pool Name"
-			textField.text = selectedTeam.pool.name
+			textField.text = selectedTeam.pool?.name
 		}
 		
 		let moveToPoolAction = UIAlertAction(title: "Save", style: .default) { (alertAction) in
@@ -118,7 +128,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	}
 	
 	func deleteTeam(team: Team) {
-		if (team.pool.isStarted) || (team.pool.isFinished) || self.tournament.isReadOnly || self.tournament.isStarted {
+		if (team.pool?.isStarted)! || (team.pool?.isFinished)! || self.tournament.isReadOnly || self.tournament.isStarted {
 			self.showPoolStartedAlert()
 			return
 		}
@@ -126,8 +136,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		try! realm.write {
 			//self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
 			let pool = team.pool
-			let index = pool.teamList.index(of: team)
-			team.pool.teamList.remove(at: index!)
+			let index = pool?.teamList.index(of: team)
+			team.pool?.teamList.remove(at: index!)
 			
 			let tourneyIndex = tournament.teamList.index(of: team)
 			tournament.teamList.remove(at: tourneyIndex!)
@@ -147,7 +157,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
 			try! self.realm.write {
 				// assign new pool to team
-				team.pool.teamList.remove(at: (team.pool.teamList.index(of: team))!)
+				team.pool?.teamList.remove(at: (team.pool?.teamList.index(of: team))!)
 				self.poolsController.addTeamToPool(pool: pool, team: team)
 			}
 			
@@ -172,16 +182,6 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		present(alert, animated: true, completion: nil)
 	}
-    
-    func updateTeamList() {
-        teamList.removeAll()
-        
-        for team in tournament.teamList {
-            teamList.append(team)
-        }
-        
-        teamsTableView.reloadData()
-    }
     
     @IBAction func addTeam(_ sender: UIButton) {
         teamsTableView.setEditing(false, animated: true)
@@ -219,6 +219,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			
 			self.updateTeamList()
             self.teamsController.addTeam(team: team)
+			let teamDao = TeamFirebaseDao()
+			teamDao.addFirebaseTeam(team: team)
             self.teamsTableView.reloadData()
         }
         
@@ -316,7 +318,11 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 				tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
 				sourcePool.teamList.remove(at: sourceIndexPath.row)
 				destPool.teamList.append(movedObject)
+				movedObject.pool = destPool
 			}
+			
+			let teamFirebaseDao = TeamFirebaseDao()
+			teamFirebaseDao.addFirebaseTeam(team: movedObject)
 		}
 		
 		updateTeamList()

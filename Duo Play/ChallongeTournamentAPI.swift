@@ -26,7 +26,11 @@ public class ChallongeTournamentAPI {
 //        //ChallongeAPI.challongeBaseUrl + "tournaments.json?api_key=" + ChallongeAPI.API_KEY)
 //        var request = URLRequest(url: URL(string: ChallongeAPI.challongeBaseUrl + "tournaments.json?api_key=" + ChallongeAPI.TEST_API_KEY)!)
 //        request.httpMethod = "GET"
-//        let session = URLSession.shared
+//        let session = URLSession.shared; if #available(iOS 11.0, *) {
+//				session.configuration.waitsForConnectivity = true
+//			} else {
+// Fallback on earlier versions
+//			}
 //        let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 //            print(response!)
 //            do {
@@ -38,7 +42,7 @@ public class ChallongeTournamentAPI {
 //
 //        task.resume()
 //    }
-	
+
 	func startTournament(tournament: Tournament) {
 		let tournamentParser = TournamentParser()
 		
@@ -47,7 +51,11 @@ public class ChallongeTournamentAPI {
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "POST"
-			let session = URLSession.shared
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+				session.configuration.waitsForConnectivity = true
+			} else {
+				// Fallback on earlier versions
+			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				print(error ?? "No Error Here!")
 				print(response ?? "No response :(")
@@ -96,19 +104,29 @@ public class ChallongeTournamentAPI {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "POST"
 			let session = URLSession.shared
+			if #available(iOS 11.0, *) {
+				session.configuration.waitsForConnectivity = true
+			} else {
+				// Fallback on earlier versions
+			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
 					if data != nil {
 						if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-							/* json[0] == key"tournament" and value: Any */
 							if let tournamentObject = json["tournament"] as? [String: Any] {
-								let tourney = Tournament(dictionary: tournamentObject)
-								self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
+								self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament, success: true)
+							} else {
+								self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
 							}
+						} else {
+							self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
 						}
+					} else {
+						self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
 					}
 				} catch {
 					print("create challonge tournament error")
+					self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
 				}
 			})
 
@@ -131,13 +149,17 @@ public class ChallongeTournamentAPI {
 		if let myURL = URL(string: urlString!) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "PUT"
-			let session = URLSession.shared
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+				session.configuration.waitsForConnectivity = true
+			} else {
+				// Fallback on earlier versions
+			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 						/* json[0] == key"tournament" and value: Any */
 						if let tournamentObject = json["tournament"] as? [String: Any] {
-							tournamentParser.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament)
+							self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament, success: true)
 						}
 					}
 				} catch {
@@ -161,7 +183,11 @@ public class ChallongeTournamentAPI {
 		if let myURL = URL(string: urlString!) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "DELETE"
-			let session = URLSession.shared
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+				session.configuration.waitsForConnectivity = true
+			} else {
+				// Fallback on earlier versions
+			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				// eat the response?
 			})

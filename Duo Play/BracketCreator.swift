@@ -173,12 +173,12 @@ class BracketCreator {
 				
 				game.tournament_id = tournament.id
 				game.teamOne = bracketController.getTeamBySeed(seed: node.value[0])
-				bracketController.resetTeamValues(team: (game.teamOne))
+				bracketController.resetTeamValues(team: (game.teamOne)!)
 				
 				game.division = "Advanced"
 				game.round = 1
 				game.round_position = verticalPositionCounter
-				game.teamOne.bracketVerticalPositions.append(game.round_position)
+				game.teamOne?.bracketVerticalPositions.append(game.round_position)
 				
 				// check if a node value exceeds our teams, in which case, it's a bye.
 				let seedInt = Int(node.value[1])!
@@ -186,8 +186,8 @@ class BracketCreator {
 					// teamOne will get a bye here.
 					game.teamTwo = nil
 					game.isReported = true
-					bracketController.reportByeMatch(teamToAdvance: game.teamOne)
-					teamFirebaseDao.updateFirebaseTeam(team: game.teamOne)
+					bracketController.reportByeMatch(teamToAdvance: game.teamOne!)
+					teamFirebaseDao.updateFirebaseTeam(team: game.teamOne!)
 				} else {
 					// not a bye, proceed normally
 					game.teamTwo = bracketController.getTeamBySeed(seed: node.value[1])

@@ -26,7 +26,11 @@ public class ChallongeMatchupAPI : MatchupParserDelegate {
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "GET"
-			let session = URLSession.shared
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+                session.configuration.waitsForConnectivity = true
+            } else {
+                // Fallback on earlier versions
+            }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
@@ -74,7 +78,11 @@ match[winner_id]	The participant ID of the winner or "tie" if applicable (Round 
 		if let myURL = URL(string: urlString!) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "PUT"
-			let session = URLSession.shared
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+                session.configuration.waitsForConnectivity = true
+            } else {
+                // Fallback on earlier versions
+            }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				print(error ?? "No Error Here!")
 				print(response ?? "No response :(")

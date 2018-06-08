@@ -108,6 +108,9 @@ class SeedsViewController: UIViewController, UITableViewDelegate, UITableViewDat
 		self.teamList.insert(movedObject, at: destinationIndexPath.row)
 		didSeedsChange = true
 		self.teamSeedsTableView.reloadData()
+		
+		let teamFirebaseDao = TeamFirebaseDao()
+		teamFirebaseDao.updateFirebaseTeam(team: movedObject)
 	}
 	
 	func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {

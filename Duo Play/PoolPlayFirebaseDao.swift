@@ -15,7 +15,8 @@ class PoolPlayFirebaseDao {
 	func addFirebasePool(pool: Pool) {
 		// Add a new document
 		// Create an initial document to update.
-		let poolsRef = fireDB.collection("pools").document("\(pool.tournament_id) - \(pool.name)")
-		poolsRef.setData(pool.dictionary)
+		fireDB.collection("pools")
+			.document("\(pool.tournament_id) - \(pool.name)")
+			.setData(pool.dictionary)
 	}
 }

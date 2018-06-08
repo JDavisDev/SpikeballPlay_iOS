@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 import RealmSwift
 
 class Tournament : Object {
@@ -31,8 +32,8 @@ class Tournament : Object {
 	@objc dynamic public var isPoolPlayFinished = false
     @objc dynamic public var playersPerPool = 8
 	@objc dynamic public var swissRounds = 0
-	@objc dynamic public var created_date = Date()
-	@objc dynamic public var updated_date = Date()
+	@objc dynamic public var created_date = ""
+	@objc dynamic public var updated_date = ""
 	@objc dynamic public var creatorUserName = ""
 	@objc dynamic public var challonge_tournament_id: Int = 0
 	@objc dynamic public var isStarted = false
@@ -45,27 +46,30 @@ class Tournament : Object {
 	}
 	
 	// creating a tournament based on incoming firebase/challonge datas
+	// data could come from challonge or firebase
+	// provide default values if needed
+	// id is overridden if posted to challonge
 	convenience init(dictionary: [String : Any]) {
 		self.init()
-		name = dictionary["name"] as! String
-		id = dictionary["id"] as! Int
-		url = dictionary["url"] as! String
-		tournament_type = dictionary["tournament_type"] as! String
-		isPoolPlay = dictionary["isPoolPlay"] as! Bool
-		playersPerPool = dictionary["playersPerPool"] as! Int
-		isStarted = dictionary["isStarted"] as! Bool
-		participants_count = dictionary["participants_count"] as! Int
-		password = dictionary["password"] as! String
-		state = dictionary["state"] as! String
-		progress_meter = dictionary["progress_meter"] as! Int
-		isQuickReport = dictionary["quick_advance"] as! Bool
-		swissRounds = dictionary["swiss_rounds"] as! Int
-		full_challonge_url = dictionary["full_challonge_url"] as! String
-		live_image_url = dictionary["live_image_url"] as! String
-		userID = dictionary["user_id"] as! String
-		isReadOnly = dictionary["is_read_only"] as! Bool
-		created_date = dictionary["created_date"] as! Date
-		updated_date = dictionary["updated_date"] as! Date
+		name = dictionary["name"] as? String ?? ""
+		id = dictionary["id"] as? Int ?? 0
+		url = dictionary["url"] as? String ?? ""
+		tournament_type = dictionary["tournament_type"] as? String ?? ""
+		isPoolPlay = dictionary["isPoolPlay"] as? Bool ?? false
+		playersPerPool = dictionary["playersPerPool"] as? Int ?? 0
+		isStarted = dictionary["isStarted"] as? Bool ?? false
+		participants_count = dictionary["participants_count"] as? Int ?? teamList.count
+		password = dictionary["password"] as? String ?? ""
+		state = dictionary["state"] as? String ?? ""
+		progress_meter = dictionary["progress_meter"] as? Int ?? 0
+		isQuickReport = dictionary["quick_advance"] as? Bool ?? false
+		swissRounds = dictionary["swiss_rounds"] as? Int ?? 0
+		full_challonge_url = dictionary["full_challonge_url"] as? String ?? ""
+		live_image_url = dictionary["live_image_url"] as? String ?? ""
+		userID = dictionary["user_id"] as? String ?? ""
+		isReadOnly = dictionary["is_read_only"] as? Bool ?? false
+		created_date = dictionary["created_date"] as? String ?? ""
+		updated_date = dictionary["updated_date"] as? String ?? ""
 	}
 	
 	// returned to post to firebase
@@ -77,7 +81,7 @@ class Tournament : Object {
 			"playersPerPool": playersPerPool,
 			"tournament_type": tournament_type,
 			"isStarted": isStarted,
-			"participants_count": participants_count,
+			"participants_count": teamList.count,
 			"password": password,
 			"url":url,
 			"progress_meter":progress_meter,
