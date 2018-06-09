@@ -9,10 +9,11 @@
 import Foundation
 import RealmSwift
 
-class TournamentController {
+class TournamentController : ChallongeTournamentAPIDelegate {
     static public var currentTournamentId: Int = 0
     static public var IS_QUICK_REPORT = false
     let realm = try! Realm()
+	let challongeTournamentAPI = ChallongeTournamentAPI()
     
     static func getCurrentTournament() -> Tournament {
         let realm = try! Realm()
@@ -28,4 +29,21 @@ class TournamentController {
     static func getCurrentTournamentId() -> Int {
         return TournamentController.currentTournamentId
     }
+	
+	func postStartChallongeTournament(tournament: Tournament) {
+		self.challongeTournamentAPI.startTournament(tournament: tournament)
+	}
+	
+	// challonge delegate
+	func didCreateChallongeTournament(onlineTournament: [String : Any]?, localTournament: Tournament?, success: Bool) {
+		if success {
+			DispatchQueue.main.sync {
+				try! realm.write {
+					<#code#>
+				}
+				
+				// challonge match api, get matchups
+			}
+		}
+	}
 }

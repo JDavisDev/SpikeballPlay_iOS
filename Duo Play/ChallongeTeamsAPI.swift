@@ -37,10 +37,9 @@ class ChallongeTeamsAPI {
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-						/* json[0] == key"tournament" and value: Any */
 						if let teamObject = json["participant"] as? [String: Any] {
 							// send to delegate to parse and save that dude
-							self.delegate?.didPostChallongeParticipant(team: team, teamObject: teamObject)
+							self.delegate?.didPostChallongeParticipant(team: team, teamObject: teamObject, success: true)
 						}
 					}
 				} catch {

@@ -10,12 +10,15 @@ import UIKit
 import RealmSwift
 import Crashlytics
 
-class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TournamentTeamsViewController: UIViewController, UITableViewDataSource,
+	UITableViewDelegate {
+	
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     let teamsController = TeamsController()
 	let tournamentDAO = TournamentFirebaseDao()
 	let challongeTeamsAPI = ChallongeTeamsAPI()
+	let teamFirebaseDao = TeamFirebaseDao()
 	
 	@IBOutlet weak var editSeedsButton: UIButton!
 	@IBOutlet weak var teamsTableView: UITableView!
@@ -89,17 +92,7 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 		}
 	
 		self.teamsController.addTeam(team: team)
-		
-		let teamFirebaseDao = TeamFirebaseDao()
 		teamFirebaseDao.addFirebaseTeam(team: team)
-	}
-	
-	func saveTeamToChallonge(team: Team) {
-		// challonge additions
-		// idk if ill need these parsers since i have dictionaries
-		//let teamsParser = TeamParser()
-		//self.challongeTeamsAPI.delegate = teamsParser
-		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
 	}
 	
 	@IBAction func editSeedsClicked(_ sender: UIButton) {

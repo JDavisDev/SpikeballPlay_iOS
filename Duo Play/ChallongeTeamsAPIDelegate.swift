@@ -9,5 +9,5 @@
 import Foundation
 
 protocol ChallongeTeamsAPIDelegate {
-	func didPostChallongeParticipant(team: Team, teamObject: [String:Any])
+	func didPostChallongeParticipant(team: Team, teamObject: [String:Any], success: Bool)
 }

@@ -9,13 +9,24 @@
 import Foundation
 import RealmSwift
 
-class TeamsController {
+class TeamsController: ChallongeTeamsAPIDelegate {
     var playersPerPool = 8
     let realm = try! Realm()
     let tournamentController = TournamentController()
     var isNewPool = false
     let poolController = PoolsController()
-    
+	let challongeTeamsAPI = ChallongeTeamsAPI()
+	let challongeTournamentAPI = ChallongeTournamentAPI()
+	
+	var tournament: Tournament?
+	var teamsCount = 0
+	var teamsChallongeSavedCount = 0
+	
+	init() {
+		challongeTeamsAPI.delegate = self
+		tournament = TournamentController.getCurrentTournament()
+		teamsCount = (tournament?.teamList.count)!
+	}
     
     func addTeam(team: Team) {
         let newPool = getAvailablePool()
@@ -86,5 +97,30 @@ class TeamsController {
 		return poolController.addNewPool()!
     }
     
-    
+	// challonge stuffs
+	func saveTeamToChallonge(team: Team, tournament: Tournament) {
+		// challonge additions
+		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
+	}
+	
+	// Teams Challonge Delegate method
+	func didPostChallongeParticipant(team: Team, teamObject: [String : Any], success: Bool) {
+		if success {
+			let newTeam = Team(dictionary: teamObject)
+			DispatchQueue.main.sync {
+				try! realm.write {
+					// update the new team with the challonge team data
+					team.challonge_participant_id = newTeam.challonge_participant_id
+					team.challonge_tournament_id = newTeam.challonge_tournament_id
+					teamsChallongeSavedCount += 1
+				}
+				
+				if teamsChallongeSavedCount == teamsChallongeSavedCount {
+					// all finished, start tournament
+					let tournamentController = TournamentController()
+					tournamentController.postStartChallongeTournament(tournament: tournament!)
+				}
+			}
+		}
+	}
 }

@@ -19,6 +19,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	let challongeMatchupAPI = ChallongeMatchupAPI()
 	let realm = try! Realm()
 	let challongeTournamentAPI = ChallongeTournamentAPI()
+	let teamsController = TeamsController()
     var tournament = Tournament()
 	// used for quick report
 	var selectedMatchup = BracketMatchup()
@@ -562,12 +563,17 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	}
 	
 	func startTournament() {
-		let db = DBManager()
-		db.beginWrite()
-		tournament.isStarted = true
-		db.commitWrite()
-		//self.challongeTournamentAPI.startTournament(tournament: self.tournament)
-		//self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
+		activityIndicator.isHidden = false
+		activityIndicator.startAnimating()
+		
+		try! realm.write {
+			tournament.isStarted = true
+		}
+		
+		// add teams in current order as tournament starts. will prevent later calls when editing
+		for team in tournament.teamList {
+			teamsController.saveTeamToChallonge(team: team, tournament: tournament)
+		}
 	}
 	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
