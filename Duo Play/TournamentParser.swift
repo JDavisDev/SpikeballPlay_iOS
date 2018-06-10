@@ -220,15 +220,4 @@ class TournamentParser {
 			isBracketMatchupsFinished = false
 		}
 	}
-	
-	// we should have a list of included matchups and participants
-	// map our teams to participants
-	// map
-	func parseStartedTournament(localTournament: Tournament, challongeParticipants: [[String:Any]], challongeMatchups: [[String:Any]]) {
-		
-		let matchupParser = MatchupParser()
-		let teamParser = TeamParser()
-		teamParser.parseIncludedTeams(tournament: localTournament, challongeParticipants: challongeParticipants)
-		matchupParser.parseIncludedMatchups(tournament: localTournament, challongeMatchups: challongeMatchups)
-	}
 }

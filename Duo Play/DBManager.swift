@@ -46,25 +46,4 @@ class DBManager {
 		
 		return teamList.count > 0 ? teamList : List<Team>()
 	}
-	
-	func getTournamentMatchupWithTeams(tournament: Tournament, teamOne: Team, teamTwo: Team) -> BracketMatchup {
-		let predicate = NSPredicate(format: "tournament_id = \(tournament.id) AND teamOne == \(teamOne) AND teamTwo == \(teamTwo)")
-		let result = database.objects(BracketMatchup.self).filter(predicate)
-		if result.count > 0 {
-			return result.first!
-		} else {
-			print("Cannot fetch bracket matchup from challonge")
-			return BracketMatchup()
-		}
-	}
-	
-	func getTournamentTeamFromChallonge(tournamentId: Int, teamChallongeId: Int) -> Team {
-		let result = database.objects(Team.self).filter("tournament_id = \(tournamentId) AND challonge_participant_id = \(teamChallongeId)")
-		if result.count > 0 {
-			return result.first!
-		} else {
-			print("Cannot fetch bracket matchup from challonge")
-			return Team()
-		}
-	}
 }

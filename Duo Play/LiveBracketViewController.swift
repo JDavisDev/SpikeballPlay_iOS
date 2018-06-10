@@ -11,7 +11,7 @@ import RealmSwift
 import Crashlytics
 import Firebase
 
-class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBracketViewDelegate, ChallongeMatchupAPIDelegate {
+class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBracketViewDelegate, ChallongeTournamentStarterDelegate {
 	
 	var pinch = UIPinchGestureRecognizer()
 	
@@ -37,8 +37,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     var teamCount = 0
 	var frameWidth: CGFloat = 0
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
 		initBracketView()
 		Answers.logContentView(withName: "Bracket Page View",
 							   contentType: "Bracket Page View",
@@ -68,12 +68,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		
 		// every view, let's refetch and redraw.
 		// make this less dependent on other functions updating things.
-		if tournament.isStarted {
-			//challongeMatchupAPI.getMatchupsForTournament(tournament: tournament)
-			createBracket()
-		} else {
-			createBracket()
-		}
+		createBracket()
 	}
 	
 	func createBracket() {
@@ -111,15 +106,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		}
 		
 	}
-	// END BRACKET DELEGATE
-	
-	// MATCHUP DELEGATE
-	func didGetChallongeMatchups() {
-		// may not use this? could be fire and forget? Assuming it works...
-		// could use the highlighting here, if we have a match id, color it up
-		createBracket()
-	}
-	// END MATCHUP DELEGATE
 	
 	// Pinch Controls
 	@objc func pinch(sender:UIPinchGestureRecognizer) {
@@ -149,21 +135,17 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     func createBracketView() {
 		clearView()
 		
-		let db = DBManager()
-		db.beginWrite()
-		
-		self.bracketCellWidth = self.getMaxBracketWidth()
-		self.teamCount = self.tournament.teamList.count
-		self.bracketMatchCount = self.teamCount - 1
-		self.roundCount = self.bracketController.getRoundCount()
-		self.byeCount = self.bracketController.getByeCount()
-		
-		db.commitWrite()
+		try! realm.write {
+			self.bracketCellWidth = self.getMaxBracketWidth()
+			self.teamCount = self.tournament.teamList.count
+			self.bracketMatchCount = self.teamCount - 1
+			self.roundCount = self.bracketController.getRoundCount()
+			self.byeCount = self.bracketController.getByeCount()
+		}
 		
 		Answers.logCustomEvent(withName: "Bracket Drawn",
 									   customAttributes: [
 										"Team Count": teamCount])
-		
 		
 		createFirstRoundBracketCells()
 		createAdditionalBracketCells()
@@ -209,7 +191,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                         let teamTwo = tournament.matchupList[game - 1].teamTwo
 						
 						if tournament.matchupList[game - 1].challongeId != 0 {
-							bracketCell.layer.shadowColor = (UIColor.yellow as! CGColor)
+							//bracketCell.layer.shadowColor
 							bracketCell.layer.shadowOpacity = 1
 							bracketCell.layer.shadowOffset = CGSize.zero
 							bracketCell.layer.shadowRadius = 6
@@ -446,15 +428,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                 return true
             }
         } else {
-            // if first round, teams with higher seeds are always on top
-            // so higher seed will be the teams lower than half the count of teams.
-//			if team.seed <= byeCount() return false?
-//			if team.seed <= bracketController.baseBracketSize/2 {
-//				return false
-//			} else {
-//				return true
-//			}
-			
 			if tournament.teamList.count % 2 == 1 {
 				// odd number
 				// need a new calc method here..
@@ -563,16 +536,31 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	}
 	
 	func startTournament() {
-		activityIndicator.isHidden = false
-		activityIndicator.startAnimating()
-		
-		try! realm.write {
-			tournament.isStarted = true
-		}
+		createBracket()
+		activityIndicator?.isHidden = false
+		activityIndicator?.startAnimating()
 		
 		// add teams in current order as tournament starts. will prevent later calls when editing
-		for team in tournament.teamList {
-			teamsController.saveTeamToChallonge(team: team, tournament: tournament)
+		let challongeTournamentStarter = ChallongeTournamentStarter()
+		challongeTournamentStarter.delegate = self
+		challongeTournamentStarter.startChallongeTournament(tournament: tournament)
+	}
+	
+	// continue UI Execution, we should be on the main thread already by now
+	// may need to alter threading here a bit or do it back in the challonge classes.
+	func didFinishStartingTournament(success: Bool) {
+		activityIndicator?.isHidden = true
+		activityIndicator?.stopAnimating()
+		
+		if success {
+			try! realm.write {
+				tournament.isStarted = true
+			}
+			
+			updateBracketView()
+			showAlert(title: "Success", message: "Tournament started and synced with Challonge!")
+		} else {
+			showAlert(title: "Challonge Error", message: "Failed to sync with Challonge. Would you like to continue offline?")
 		}
 	}
 	
@@ -582,5 +570,36 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 				nextVC.selectedMatchup = sender as! BracketMatchup
 			}
 		}
+	}
+	
+	func showAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func showOkCancelAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			// ok
+			try! self.realm.write {
+				self.tournament.isStarted = true
+			}
+		}))
+		
+		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
 	}
 }

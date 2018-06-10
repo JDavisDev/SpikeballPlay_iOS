@@ -18,11 +18,10 @@ class ChallongeTeamsAPI {
 	let SPIKEBALL_API_KEY = ""
 	
 	func createChallongeParticipant(tournament: Tournament, team: Team) {
-		let teamName = team.name
+		var participants = [[String:Any]]()
 		let finalString = challongeBaseUrl + tournament.url +
-			"/participants.json?api_key=" + PERSONAL_API_KEY +
-			"&participant[name]=" + teamName + "&" + "participant[seed]=" + String(team.seed)
-		
+			"/participants/bulk_add.json?api_key=" + PERSONAL_API_KEY + getParticipantsBulkUrl(tournament: tournament)
+
 		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
 		
 		let urlString = finalString.addingPercentEncoding(withAllowedCharacters: squareBracketSet)
@@ -36,11 +35,17 @@ class ChallongeTeamsAPI {
             }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
-					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-						if let teamObject = json["participant"] as? [String: Any] {
-							// send to delegate to parse and save that dude
-							self.delegate?.didPostChallongeParticipant(team: team, teamObject: teamObject, success: true)
+					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
+						for obj in json {
+							if let teams = obj as? [String:Any] {
+								if let team = teams["participant"] {
+									participants.append(team as! [String : Any])
+								}
+							}
 						}
+						
+						// send to delegate to parse and save that dude
+						self.delegate?.didBulkAddParticipants(participants: participants, success: true)
 					}
 				} catch {
 					print("create challonge team error")
@@ -49,6 +54,18 @@ class ChallongeTeamsAPI {
 			
 			task.resume()
 		}
+	}
+	
+	
+	
+	func getParticipantsBulkUrl(tournament: Tournament) -> String {
+		var returnString = ""
+		
+		for team in tournament.teamList {
+			returnString.append("&participants[][name]=\(team.name)")
+		}
+		
+		return returnString
 	}
 }
 

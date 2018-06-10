@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ChallongeMatchupAPI : MatchupParserDelegate {
+public class ChallongeMatchupAPI {
 	let challongeBaseUrl = "https://api.challonge.com/v1/"
 	let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
 	let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
@@ -19,33 +19,32 @@ public class ChallongeMatchupAPI : MatchupParserDelegate {
 	
 	func getMatchupsForTournament(tournament: Tournament) {
 		var challongeMatchups = [[String:Any]]()
-		let matchParser = MatchupParser()
 		let urlString = challongeBaseUrl + "tournaments/" +
 			tournament.url + "/matches.json?" + "api_key=" + PERSONAL_API_KEY
 		
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
 			request.httpMethod = "GET"
-			let session = URLSession.shared; if #available(iOS 11.0, *) {
+			let session = URLSession.shared;
+			session.configuration.timeoutIntervalForResource = TimeInterval(10)
+			if #available(iOS 11.0, *) {
                 session.configuration.waitsForConnectivity = true
             } else {
                 // Fallback on earlier versions
             }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
+					if error != nil || data == nil { return }
 					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
 						for obj in json {
-							if let match = obj as? [String:Any] {
-								if let match = match["match"] {
-									challongeMatchups.append(match as! [String : Any])
+							if let matches = obj as? [String:Any] {
+								if let match = matches["match"] as? [String:Any] {
+									challongeMatchups.append(match)
 								}
 							}
 						}
 						
-						// Note, you want to update the property inside the async closure to make sure that you don’t update the property from a background thread.
-						matchParser.delegate = self
-						
-						matchParser.parseIncludedMatchups(tournament: tournament, challongeMatchups: challongeMatchups)
+						self.delegate?.didGetChallongeMatchups(challongeMatchups: challongeMatchups)
 					}
 				} catch {
 					print("create challonge tournament error")
@@ -56,16 +55,12 @@ public class ChallongeMatchupAPI : MatchupParserDelegate {
 		}
 	}
 	
-	func didParseMatchups() {
-		delegate?.didGetChallongeMatchups()
-	}
-	
 	/*
 match[scores_csv]	Comma separated set/game scores with player 1 score first (e.g. "1-3,3-0,3-2")
 match[winner_id]	The participant ID of the winner or "tie" if applicable (Round Robin and Swiss). NOTE: If you change the outcome of a completed match, all matches in the bracket that branch from the updated match will be reset.
 */
 	func updateChallongeMatch(tournament: Tournament, match: BracketMatchup, winnerId: Int) {
-		let baseUrl = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/matches/" + String(match.id)
+		let baseUrl = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/matches/" + String(match.challongeId)
 		let apiUrl = ".json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY
 		let matchUrl = "&match[scores_csv]="
 		let scoreString = String(match.teamOneScores[0]) + "-" + String(match.teamTwoScores[0]) + "," + String(match.teamOneScores[1]) + "-" + String(match.teamTwoScores[1]) + "," + String(match.teamOneScores[2]) + "-" + String(match.teamTwoScores[2])
@@ -84,19 +79,15 @@ match[winner_id]	The participant ID of the winner or "tie" if applicable (Round 
                 // Fallback on earlier versions
             }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-				print(error ?? "No Error Here!")
-				print(response ?? "No response :(")
-				print(data ?? "No data")
-//				do {
-//					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-//						/* json[0] == key"tournament" and value: Any */
-//						if let matchupList = json["match"] as? [[String: Any]] {
-//							//matchupParser.parseChallongeMatchups(onlineMatchups: matchupList, localTournament: tournament)
-//						}
-//					}
-//				} catch {
-//					print("create challonge tournament error")
-//				}
+				if error == nil {
+					do {
+						DispatchQueue.main.sync {
+							self.getMatchupsForTournament(tournament: tournament)
+						}
+					} catch {
+						print("Challonge match submission error")
+					}
+				}
 			})
 			
 			task.resume()

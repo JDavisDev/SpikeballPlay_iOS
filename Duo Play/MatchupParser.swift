@@ -13,33 +13,24 @@ public class MatchupParser {
 	var delegate : MatchupParserDelegate?
 	weak var db: DBManager?
 	
-	func parseIncludedMatchups(tournament: Tournament, challongeMatchups: [[String:Any]]) {
-		// assign retrieved matchups from challonge to our local matchups so we can report them later!
-		let db = DBManager()
-		db.beginWrite()
-		for matchup in challongeMatchups {
-			let localMatchup = getRealmMatchupFromChallongeData(tournament: tournament, data: matchup)
-			// same match... parse!
-			// basically, I'm reassigning the challonge IDs to overwrite these ids so they match
-			localMatchup.id = matchup["id"] as! Int
-			localMatchup.challongeId = matchup["id"] as! Int
-			localMatchup.tournament_id = matchup["tournament_id"] as! Int
-
-			db.updateRealmObject(object: localMatchup)
-		}
-		
-		db.commitWrite()
-		self.delegate?.didParseMatchups()
-	}
-	
-	func getRealmMatchupFromChallongeData(tournament: Tournament, data: [String: Any]) -> BracketMatchup {
-		let teamOne = db?.getTournamentTeamFromChallonge(tournamentId: tournament.id, teamChallongeId: data["player1_id"] as! Int)
-		let teamTwo = db?.getTournamentTeamFromChallonge(tournamentId: tournament.id, teamChallongeId: data["player2_id"] as! Int)
-		
-		let matchup = db?.getTournamentMatchupWithTeams(tournament: tournament, teamOne: teamOne!, teamTwo: teamTwo!)
-		
-		return matchup ?? BracketMatchup()
-	}
+//	func parseIncludedMatchups(tournament: Tournament, challongeMatchups: [[String:Any]]) {
+//		// assign retrieved matchups from challonge to our local matchups so we can report them later!
+//		let db = DBManager()
+//		db.beginWrite()
+//		for matchup in challongeMatchups {
+//			let localMatchup = getRealmMatchupFromChallongeData(tournament: tournament, data: matchup)
+//			// same match... parse!
+//			// basically, I'm reassigning the challonge IDs to overwrite these ids so they match
+//			localMatchup.id = matchup["id"] as! Int
+//			localMatchup.challongeId = matchup["id"] as! Int
+//			localMatchup.tournament_id = matchup["tournament_id"] as! Int
+//
+//			db.updateRealmObject(object: localMatchup)
+//		}
+//		
+//		db.commitWrite()
+//		self.delegate?.didParseMatchups()
+//	}
 }
 
 /**

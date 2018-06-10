@@ -1650,6 +1650,10 @@
                                     <action selector="didTapSaveToChallonge:" destination="uue-fQ-IDZ" eventType="touchUpInside" id="tOK-bS-hEM"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="4LP-wf-aUO">
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -1687,6 +1691,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="4LP-wf-aUO" id="rrK-5g-fjq"/>
                         <outlet property="bracketButton" destination="PzQ-jQ-ucl" id="Qkj-I1-Tmk"/>
                         <outlet property="challongeLinkLabel" destination="XPq-K2-AiT" id="tkm-TK-gLd"/>
                         <outlet property="poolPlayButton" destination="RdU-Fj-b3K" id="Tr7-hC-i4I"/>

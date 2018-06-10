@@ -142,10 +142,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		
 		TournamentController.setTournamentId(id: id)
 		
-		// do online saving
-		//let challongeAPI = ChallongeTournamentAPI()
-		//challongeAPI.createChallongeTournament(tournament: tournament)
-		
 		tournamentFbDao.addFirebaseTournament(tournament: tournament)
 	}
 	

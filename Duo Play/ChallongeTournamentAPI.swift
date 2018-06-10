@@ -44,8 +44,6 @@ public class ChallongeTournamentAPI {
 //    }
 
 	func startTournament(tournament: Tournament) {
-		let tournamentParser = TournamentParser()
-		
 		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY + "&include_participants=1" + "&include_matches=1"
 		
 		if let myURL = URL(string: urlString) {
@@ -57,9 +55,6 @@ public class ChallongeTournamentAPI {
 				// Fallback on earlier versions
 			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-				print(error ?? "No Error Here!")
-				print(response ?? "No response :(")
-				print(data ?? "No data")
 				do {
 					var challongeMatchups = [[String:Any]]()
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
@@ -74,7 +69,7 @@ public class ChallongeTournamentAPI {
 								}
 							}
 						
-							tournamentParser.parseStartedTournament(localTournament: tournament, challongeParticipants: [[String:Any]](), challongeMatchups: challongeMatchups)
+							self.delegate?.didStartChallongeTournament!(tournament: tournament, challongeMatchups: challongeMatchups, success: true)
 						}
 					} else {
 						print("Failed to parse started tournament")
@@ -110,23 +105,23 @@ public class ChallongeTournamentAPI {
 				// Fallback on earlier versions
 			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+				if error != nil || data == nil {
+					self.delegate?.didCreateChallongeTournament!(onlineTournament: nil, localTournament: nil, success: false)
+				}
+				
 				do {
-					if data != nil {
-						if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-							if let tournamentObject = json["tournament"] as? [String: Any] {
-								self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament, success: true)
-							} else {
-								self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
-							}
+					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+						if let tournamentObject = json["tournament"] as? [String: Any] {
+							self.delegate?.didCreateChallongeTournament!(onlineTournament: tournamentObject, localTournament: tournament, success: true)
 						} else {
-							self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
+							self.delegate?.didCreateChallongeTournament!(onlineTournament: nil, localTournament: nil, success: false)
 						}
 					} else {
-						self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
+						self.delegate?.didCreateChallongeTournament!(onlineTournament: nil, localTournament: nil, success: false)
 					}
 				} catch {
 					print("create challonge tournament error")
-					self.delegate?.didCreateChallongeTournament(onlineTournament: nil, localTournament: nil, success: false)
+					self.delegate?.didCreateChallongeTournament!(onlineTournament: nil, localTournament: nil, success: false)
 				}
 			})
 
@@ -135,7 +130,6 @@ public class ChallongeTournamentAPI {
     }
 	
 	func updateChallongeTournament(tournament: Tournament) {
-		let tournamentParser = TournamentParser()
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
 		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
 		let finalString = baseUrl +
@@ -159,7 +153,7 @@ public class ChallongeTournamentAPI {
 					if let json = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
 						/* json[0] == key"tournament" and value: Any */
 						if let tournamentObject = json["tournament"] as? [String: Any] {
-							self.delegate?.didCreateChallongeTournament(onlineTournament: tournamentObject, localTournament: tournament, success: true)
+							self.delegate?.didCreateChallongeTournament!(onlineTournament: tournamentObject, localTournament: tournament, success: true)
 						}
 					}
 				} catch {

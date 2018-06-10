@@ -19,6 +19,8 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 	@IBOutlet weak var challongeLinkLabel: UITextField!
 	@IBOutlet weak var saveToChallongeButton: UIButton!
 	
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+	
 	let tournamentFirebaseDao = TournamentFirebaseDao()
 	let tournamentChallongeDao = ChallongeTournamentAPI()
 	let realm = try! Realm()
@@ -43,12 +45,6 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		updateView()
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(true)
-		
-		
-	}
-	
 	// make it so user can't change the text, it just allows copying!
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		return false
@@ -66,11 +62,12 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		// check if teamlist is > 0, if it is, sync those teams at this time
 		// matches can be manually synced later  ?
 		
+		
 		// live_image_url is the only property ONLY coming from challonge
 		if tournament.live_image_url.isEmpty {
+			activityIndicator?.startAnimating()
+			activityIndicator?.isHidden = false
 			tournamentChallongeDao.createChallongeTournament(tournament: tournament)
-			
-			// on success. add other objects to the challonge tournament.
 		}
 	}
 	
@@ -120,18 +117,27 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 	// created challonge tournamented
 	func didCreateChallongeTournament(onlineTournament: [String : Any]?, localTournament: Tournament?, success: Bool) {
 		// got the tournament back from challonge
-		let updatedTournament = Tournament(dictionary: onlineTournament!)
-		
 		DispatchQueue.main.sync {
-			try! realm.write {
-				localTournament?.challonge_tournament_id = updatedTournament.id
-				localTournament?.live_image_url = updatedTournament.live_image_url
-				localTournament?.state = updatedTournament.state
-				localTournament?.tournament_type = updatedTournament.tournament_type
-				localTournament?.full_challonge_url = updatedTournament.full_challonge_url
+			if success {
+				let updatedTournament = Tournament(dictionary: onlineTournament!)
+					try! realm.write {
+						localTournament?.challonge_tournament_id = updatedTournament.id
+						localTournament?.live_image_url = updatedTournament.live_image_url
+						localTournament?.state = updatedTournament.state
+						localTournament?.tournament_type = updatedTournament.tournament_type
+						localTournament?.full_challonge_url = updatedTournament.full_challonge_url
+						localTournament?.url = updatedTournament.url
+					}
+				
+					updateView()
+					showAlertMessage(title: "Success", message: "Tournament saved to Challonge!")
+			} else {
+				showAlertMessage(title: "Challonge Error", message: "Could not connect to Challonge. Please check your network connection and try again.")
 			}
+			
+			activityIndicator?.isHidden = true
+			activityIndicator?.stopAnimating()
 		}
-		_ = "HI"
 	}
 	
 	// we got the tournament
