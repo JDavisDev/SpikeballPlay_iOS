@@ -469,8 +469,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 						teamOneLabel.text != teamTwoLabel.text {
 						
 						for matchup in tournament.matchupList {
-							if	!matchup.isReported &&
-								matchup.teamTwo != nil &&
+							if	matchup.teamTwo != nil &&
 								(matchup.teamOne?.name == teamOneLabel.text || matchup.teamTwo!.name == teamOneLabel.text) &&
 								(matchup.teamTwo!.name == teamTwoLabel.text || matchup.teamOne?.name == teamTwoLabel.text) {
 								selectedMatchup = matchup
@@ -509,6 +508,13 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 												   customAttributes: [:])
 							Analytics.logEvent("Live_Bracket_Match_Tapped", parameters: nil)
 							performSegue(withIdentifier: "bracketReporterOnTouchSegue", sender: selectedMatchup)
+						} else if matchupFound && selectedMatchup.isReported {
+							// let's just show the score so they can view it!
+							var message = "\(selectedMatchup.teamOne?.name ?? "nil") - \(selectedMatchup.teamOneScores[0]), "
+							message.append("\(selectedMatchup.teamOneScores[1]), \(selectedMatchup.teamOneScores[2])\n")
+							message.append("\(selectedMatchup.teamTwo?.name ?? "nil") - \(selectedMatchup.teamTwoScores[0]), ")
+							message.append("\(selectedMatchup.teamTwoScores[1]), \(selectedMatchup.teamTwoScores[2])")
+							showAlert(title: "Match Score", message: message)
 						}
 					}
 				}
