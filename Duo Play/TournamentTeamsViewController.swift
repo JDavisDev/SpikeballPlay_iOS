@@ -20,9 +20,9 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource,
 	let challongeTeamsAPI = ChallongeTeamsAPI()
 	let teamFirebaseDao = TeamFirebaseDao()
 	
+	@IBOutlet weak var addTeamButton: UIButton!
 	@IBOutlet weak var editSeedsButton: UIButton!
 	@IBOutlet weak var teamsTableView: UITableView!
-	@IBOutlet weak var teamsSearchBar: UISearchBar!
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +38,11 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource,
 							   contentType: "Bracket Teams View",
 							   contentId: "7",
 							   customAttributes: [:])
+		
+		if tournament.isStarted || tournament.isReadOnly {
+			editSeedsButton.isEnabled = false
+			addTeamButton.isEnabled = false
+		}
 	}
     
     @IBAction func addTeam(_ sender: UIButton) {

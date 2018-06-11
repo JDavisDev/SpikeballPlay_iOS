@@ -151,22 +151,53 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 		if teamOneGameOneScore != teamTwoGameOneScore {
 			numOfGamesPlayed += 1
 		} else  {
-			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			showAlert(title: "Error", message: "Game scores cannot match.")
 			return
 		}
 		
 		if teamOneGameTwoScore != teamTwoGameTwoScore {
 			numOfGamesPlayed += 1
 		} else if teamOneGameTwoScore != 0 {
-			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			showAlert(title: "Error", message: "Game scores cannot match.")
 			return
 		}
 		
 		if teamOneGameThreeScore != teamTwoGameThreeScore {
 			numOfGamesPlayed += 1
 		} else if teamOneGameThreeScore != 0 {
-			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			showAlert(title: "Error", message: "Game scores cannot match.")
 			return
+		}
+		
+		let reporterController = BracketController()
+		
+		var teamOneScores = [Int]()
+		teamOneScores.append(teamOneGameOneScore!)
+		teamOneScores.append(teamOneGameTwoScore!)
+		teamOneScores.append(teamOneGameThreeScore!)
+		
+		var teamTwoScores = [Int]()
+		teamTwoScores.append(teamTwoGameOneScore!)
+		teamTwoScores.append(teamTwoGameTwoScore!)
+		teamTwoScores.append(teamTwoGameThreeScore!)
+		
+		var teamOneWins = 0
+		var teamTwoWins = 0
+		for score in 0..<teamOneScores.count {
+			if teamOneScores[score] > teamTwoScores[score] {
+				teamOneWins += 1
+			} else if teamTwoScores[score] > teamOneScores[score] {
+				teamTwoWins += 1
+			}
+		}
+		
+		var winnerId = 0
+		if teamOneWins > teamTwoWins {
+			winnerId = (self.selectedMatchup.teamOne?.challonge_participant_id)!
+		} else if teamOneWins == teamTwoWins {
+			self.showAlert(title: "Error", message: "There is no clear winner of this match.")
+		} else {
+			winnerId = (self.selectedMatchup.teamTwo?.challonge_participant_id)!
 		}
 		
 		let message = "Games to report: \(numOfGamesPlayed) \n Please set scores to 0 if you do not wish to report the game."
@@ -176,34 +207,7 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
 			// move on
-			let reporterController = BracketController()
 			
-			var teamOneScores = [Int]()
-			teamOneScores.append(teamOneGameOneScore!)
-			teamOneScores.append(teamOneGameTwoScore!)
-			teamOneScores.append(teamOneGameThreeScore!)
-			
-			var teamTwoScores = [Int]()
-			teamTwoScores.append(teamTwoGameOneScore!)
-			teamTwoScores.append(teamTwoGameTwoScore!)
-			teamTwoScores.append(teamTwoGameThreeScore!)
-			
-			var teamOneWins = 0
-			var teamTwoWins = 0
-			for score in 0..<teamOneScores.count {
-				if teamOneScores[score] > teamTwoScores[score] {
-					teamOneWins += 1
-				} else if teamTwoScores[score] > teamOneScores[score] {
-					teamTwoWins += 1
-				}
-			}
-			
-			var winnerId = 0
-			if teamOneWins > teamTwoWins {
-				winnerId = (self.selectedMatchup.teamOne?.challonge_participant_id)!
-			} else {
-				winnerId = (self.selectedMatchup.teamTwo?.challonge_participant_id)!
-			}
 			
 			reporterController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: numOfGamesPlayed, teamOneScores: teamOneScores, teamTwoScores: teamTwoScores)
 			

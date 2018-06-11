@@ -10,7 +10,6 @@ import Foundation
 
 public class ChallongeMatchupAPI {
 	let challongeBaseUrl = "https://api.challonge.com/v1/"
-	let matchupParser = MatchupParser()
 	
 	var delegate : ChallongeMatchupAPIDelegate?
 	
