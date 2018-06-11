@@ -14,7 +14,8 @@ class BracketController {
 	static var hasDrawn = false
     let realm = try! Realm()
     let tournament: Tournament
-	let tournamentDAO = TournamentDAO()
+	let tournamentDAO = TournamentFirebaseDao()
+	let matchupFirebaseDao = MatchupFirebaseDao()
 	
     var nodeList = [Node]()
     var isEnd = false
@@ -167,7 +168,7 @@ class BracketController {
 	// calculate tourney size and how much each match is worth
 	// then add them up, not including byes!
     func updateTournamentProgress() {
-        if tournament.teamList.count > 0 {
+        if tournament.teamList.count > 1 {
 			var currentPoints = Float(0)
 			var pointsPerMatchup: Float
 			
@@ -214,7 +215,9 @@ class BracketController {
 			tournament.progress_meter = tournamentProgress
 		}
 		
-		tournamentDAO.addOnlineTournament(tournament: tournament)
+		if tournament.isOnline {
+			tournamentDAO.addFirebaseTournament(tournament: tournament)
+		}
     }
 	
 	func isIdUnique(id: Int) -> Bool {
@@ -361,7 +364,8 @@ class BracketController {
 			if isGameUnique(game: game) {
 				realm.add(game)
 				tournament.matchupList.append(game)
-				tournamentDAO.addOnlineMatchup(matchup: game)
+				let matchupFirebaseDao = MatchupFirebaseDao()
+				matchupFirebaseDao.addFirebaseBracketMatchup(matchup: game)
 			}
 		}
 	}
@@ -435,29 +439,29 @@ class BracketController {
             }
 			
             if teamOneWins > teamTwoWins {
-                selectedMatchup.teamOne?.wins += 1
+				selectedMatchup.teamOne?.wins += 1
                 selectedMatchup.teamTwo?.losses += 1
                 selectedMatchup.teamTwo?.isEliminated = true
-                selectedMatchup.teamOne?.bracketRounds.append(selectedMatchup.round + 1)
+				selectedMatchup.teamOne?.bracketRounds.append(selectedMatchup.round + 1)
 				winnerId = (selectedMatchup.teamOne?.challonge_participant_id)!
-                advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne!)
+				advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne!)
             } else {
-                selectedMatchup.teamOne?.losses += 1
+				selectedMatchup.teamOne?.losses += 1
                 selectedMatchup.teamTwo?.wins += 1
-                selectedMatchup.teamOne?.isEliminated = true
+				selectedMatchup.teamOne?.isEliminated = true
 				winnerId = (selectedMatchup.teamTwo?.challonge_participant_id)!
                 selectedMatchup.teamTwo?.bracketRounds.append(selectedMatchup.round + 1)
                 advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamTwo!)
             }
             
             // point accumulation for seeding.
-            selectedMatchup.teamOne?.pointsFor += teamOneScores[0]
-            selectedMatchup.teamOne?.pointsFor += teamOneScores[1]
-            selectedMatchup.teamOne?.pointsFor += teamOneScores[2]
+			selectedMatchup.teamOne?.pointsFor += teamOneScores[0]
+			selectedMatchup.teamOne?.pointsFor += teamOneScores[1]
+			selectedMatchup.teamOne?.pointsFor += teamOneScores[2]
             
-            selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[0]
-            selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[1]
-            selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[2]
+			selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[0]
+			selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[1]
+			selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[2]
             
             selectedMatchup.teamOneScores.append(objectsIn: teamOneScores)
             selectedMatchup.teamTwoScores.append(objectsIn: teamTwoScores)
@@ -471,18 +475,27 @@ class BracketController {
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[2]
             
             selectedMatchup.isReported = true
-			//tournamentDAO.addOnlineMatchup(matchup: selectedMatchup)
         }
 		
-//		let challongeMatchAPI = ChallongeMatchupAPI()
-//		challongeMatchAPI.updateChallongeMatch(tournament: tournament, match: selectedMatchup, winnerId: winnerId)
         updateTournamentProgress()
 		
 		// a new matchup may be ready!
 		updateMatchups()
 		
-//		tournamentDAO.addOnlineTournamentTeam(team: selectedMatchup.teamOne!)
-//		tournamentDAO.addOnlineTournamentTeam(team: selectedMatchup.teamTwo!)
+		if (self.tournament.isOnline) && !(self.tournament.isReadOnly) {
+			matchupFirebaseDao.addFirebaseBracketMatchup(matchup: selectedMatchup)
+			
+			let teamFirebaseDao = TeamFirebaseDao()
+			teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamOne!)
+			teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamTwo!)
+			
+			// update challonge match THEN fetch new ones.
+			// it returns all matchups with given participant id, but if it's null, I dont' save it.
+			// so get them again and re pair them if we have new ones.
+			let challongeMatchAPI = ChallongeMatchupAPI()
+			//challongeMatchAPI.delegate = self
+			challongeMatchAPI.updateChallongeMatch(tournament: tournament, match: selectedMatchup, winnerId: winnerId)
+		}
 	}
     
     // based on previous position, determine next position

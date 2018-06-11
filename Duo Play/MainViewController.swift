@@ -54,6 +54,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 	}
 	
 	func getAnnouncements() {
+		let defaults = UserDefaults.standard
+		let announcementDayBuffer = 3
+		// get date components for checking
+		// so we don't fetch from announcements so often
+		let date = Date()
+		let calendar = Calendar.current
+		//let year = calendar.component(.year, from: date)
+		//let month = calendar.component(.month, from: date)
+		let day = calendar.component(.day, from: date)
+		
+		let savedDay = defaults.value(forKey: "ann_day") as? Int ?? 0
+		
+		if savedDay == 0 || savedDay + announcementDayBuffer > day {
+			defaults.set(day, forKey: "ann_day")
+			return
+		} else {
+			defaults.set(day, forKey: "ann_day")
+		}
+		
 		let fireDB = Firestore.firestore()
 		fireDB.collection("announcements").getDocuments { (querySnapshot, err) in
 			if let err = err {
@@ -61,11 +80,25 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 			} else {
 				let obj = querySnapshot!.documents.first?.data()
 				if((obj) != nil) {
+					
 					let title = obj!["title"] as! String
 					let message = obj!["message"] as! String
-					
-					if title.count > 0 && message.count > 0 {
-						self.showAlertMessage(title: title, message: message)
+						
+					// check if user has seen this message
+					// if not, save it so they won't see it again
+					// then show the announcement dialog
+					if let annDict = defaults.value(forKey: "announcements") as? [String: String] {
+						if !annDict.keys.contains(title) || !annDict.values.contains(message) {
+							if title.count > 0 && message.count > 0 {
+								let dict = [title: message]
+								defaults.set(dict, forKey: "announcements")
+								self.showAlertMessage(title: title, message: message)
+							}
+						}
+					} else {
+						// doesn't exist. save it.
+						let dict = ["": ""]
+						defaults.set(dict, forKey: "announcements")
 					}
 				}
 			}

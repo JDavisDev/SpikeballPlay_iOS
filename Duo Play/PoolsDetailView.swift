@@ -95,9 +95,17 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 		try! realm.write {
 			for matchup in pool.matchupList {
 				matchup.isReported = true
+				
+				let matchupDao = MatchupFirebaseDao()
+				matchupDao.addFirebasePoolMatchup(matchup: matchup)
 			}
 			
 			pool.isFinished = true
+			
+			let poolDao = PoolPlayFirebaseDao()
+			if tournament.isPoolPlay {
+				poolDao.addFirebasePool(pool: pool)
+			}
 		}
 		
 		checkIfPoolPlayFinished()

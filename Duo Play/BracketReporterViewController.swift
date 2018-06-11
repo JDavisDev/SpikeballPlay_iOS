@@ -10,9 +10,12 @@ import UIKit
 import RealmSwift
 import Crashlytics
 
-class BracketReporterViewController: UIViewController {    
-    let realm = try! Realm()
+class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelegate {
 	
+    let realm = try! Realm()
+	let challongeMatchupAPI = ChallongeMatchupAPI()
+	
+	var tournament: Tournament?
     // the selected matchup gets stored here.
     var selectedMatchup = BracketMatchup()
     var didTournamentJustStart = false
@@ -31,16 +34,12 @@ class BracketReporterViewController: UIViewController {
     @IBOutlet weak var teamTwoGameThreeScoreLabel: UILabel!
     
     override func viewDidLoad() {
-		if selectedMatchup.teamOne != nil && selectedMatchup.teamTwo != nil {
-        	teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
-        	teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
-		}
+		super.viewDidLoad()
+		checkSelectedMatchup()
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		
-		if selectedMatchup.teamOne != nil && selectedMatchup.teamTwo != nil {
+	func checkSelectedMatchup() {
+		if (selectedMatchup.teamOne?.name.count)! > 0 && selectedMatchup.teamTwo != nil {
 			teamOneNameLabel.text = (selectedMatchup.teamOne?.name)!
 			teamTwoNameLabel.text = (selectedMatchup.teamTwo?.name)!
 		} else {
@@ -86,7 +85,8 @@ class BracketReporterViewController: UIViewController {
     
     
     @IBAction func submitButtonClicked(_ sender: UIButton) {
-		if(TournamentController.getCurrentTournament().isStarted == false) {
+		self.tournament = TournamentController.getCurrentTournament()
+		if(tournament?.isStarted == false) {
 			checkStartTournament()
 		} else {
 			checkViewValues()
@@ -137,7 +137,8 @@ class BracketReporterViewController: UIViewController {
 	}
 	
 	func submitGame() {
-		var numOfGamesPlayed = 1
+		// show loading indicator for challonge stuffs
+		var numOfGamesPlayed = 0
 		let teamOneGameOneScore = Int(teamOneGameOneScoreLabel.text!)
 		let teamOneGameTwoScore = Int(teamOneGameTwoScoreLabel.text!)
 		let teamOneGameThreeScore = Int(teamOneGameThreeScoreLabel.text!)
@@ -146,13 +147,26 @@ class BracketReporterViewController: UIViewController {
 		let teamTwoGameTwoScore = Int(teamTwoGameTwoScoreLabel.text!)
 		let teamTwoGameThreeScore = Int(teamTwoGameThreeScoreLabel.text!)
 		
-		// confirm game
+		// validate and confirm game
+		if teamOneGameOneScore != teamTwoGameOneScore {
+			numOfGamesPlayed += 1
+		} else {
+			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			return
+		}
+		
 		if teamOneGameTwoScore != teamTwoGameTwoScore {
 			numOfGamesPlayed += 1
+		} else {
+			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			return
 		}
 		
 		if teamOneGameThreeScore != teamTwoGameThreeScore {
 			numOfGamesPlayed += 1
+		} else {
+			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			return
 		}
 		
 		let message = "Games to report: \(numOfGamesPlayed) \n Please set scores to 0 if you do not wish to report the game."
@@ -174,7 +188,29 @@ class BracketReporterViewController: UIViewController {
 			teamTwoScores.append(teamTwoGameTwoScore!)
 			teamTwoScores.append(teamTwoGameThreeScore!)
 			
+			var teamOneWins = 0
+			var teamTwoWins = 0
+			for score in 0..<teamOneScores.count {
+				if teamOneScores[score] > teamTwoScores[score] {
+					teamOneWins += 1
+				} else if teamTwoScores[score] > teamOneScores[score] {
+					teamTwoWins += 1
+				}
+			}
+			
+			var winnerId = 0
+			if teamOneWins > teamTwoWins {
+				winnerId = (self.selectedMatchup.teamOne?.challonge_participant_id)!
+			} else {
+				winnerId = (self.selectedMatchup.teamTwo?.challonge_participant_id)!
+			}
+			
 			reporterController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: numOfGamesPlayed, teamOneScores: teamOneScores, teamTwoScores: teamTwoScores)
+			
+			if (self.tournament?.isOnline)! && !(self.tournament?.isReadOnly)! && (self.tournament?.live_image_url.count)! > 0 {
+				self.challongeMatchupAPI.delegate = self
+				self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: self.selectedMatchup, winnerId: winnerId)
+			}
 			
 			Answers.logCustomEvent(withName: "Bracket Match Reported",
 								   customAttributes: [
@@ -185,6 +221,118 @@ class BracketReporterViewController: UIViewController {
 		
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
 			// cancel
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func didGetChallongeMatchups(challongeMatchups: [[String : Any]]) {
+		// re parse the tournament matches and save!
+		DispatchQueue.main.sync {
+			parseChallongeMatchups(tournament: tournament!, challongeMatchups: challongeMatchups)
+		}
+	}
+	
+	func parseChallongeMatchups(tournament: Tournament, challongeMatchups: [[String:Any]]) {
+		try! realm.write {
+			for dictObject in challongeMatchups {
+				guard let localMatchup = getRealmMatchupFromChallongeData(tournament: tournament, data: dictObject) else { continue }
+				// same match... parse!
+				localMatchup.challongeId = dictObject["id"] as! Int
+				localMatchup.tournament_id = dictObject["tournament_id"] as! Int
+				
+				// if our local match is reported but the winner id is 0/nil
+				// re report that match to challonge.
+				if localMatchup.isReported {
+					if let winnerId = dictObject["winner_id"] as? Int {
+						if  winnerId <= 0 {
+							self.challongeMatchupAPI.delegate = self
+							self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: localMatchup, winnerId: winnerId)
+						}
+					} else {
+						let id = getMatchupWinnerId(matchup: localMatchup)
+						self.challongeMatchupAPI.delegate = self
+						self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: localMatchup, winnerId: id)
+					}
+				}
+				
+				realm.add(localMatchup, update: true)
+			}
+		}
+	}
+	
+	func getMatchupWinnerId(matchup: BracketMatchup) -> Int {
+		var winnerId = 0
+		var teamOneWins = 0
+		var teamTwoWins = 0
+		for score in 0..<matchup.teamOneScores.count {
+			if matchup.teamOneScores[score] > matchup.teamTwoScores[score] {
+				teamOneWins += 1
+			} else if matchup.teamTwoScores[score] > matchup.teamOneScores[score] {
+				teamTwoWins += 1
+			}
+		}
+		
+		if teamOneWins > teamTwoWins {
+			winnerId = (matchup.teamOne?.challonge_participant_id)!
+		} else {
+			winnerId = (matchup.teamTwo?.challonge_participant_id)!
+		}
+		
+		return winnerId
+	}
+	
+	func getRealmMatchupFromChallongeData(tournament: Tournament, data: [String: Any]) -> BracketMatchup? {
+		var matchup: BracketMatchup?
+		if let oneId = data["player1_id"] as? Int {
+			if let twoId = data["player2_id"] as? Int {
+				guard let teamOne = getTournamentTeamFromChallonge(tournamentId: tournament.id, teamChallongeId: oneId) else { return nil }
+				guard let teamTwo = getTournamentTeamFromChallonge(tournamentId: tournament.id, teamChallongeId: twoId)
+					else { return nil }
+				
+				matchup = getTournamentMatchupWithTeams(tournament: tournament, teamOne: teamOne, teamTwo: teamTwo)
+				return matchup
+			}
+		}
+		
+		return nil
+	}
+	
+	func getTournamentTeamFromChallonge(tournamentId: Int, teamChallongeId: Int) -> Team? {
+		let result = realm.objects(Team.self).filter("tournament_id = \(tournamentId) AND challonge_participant_id = \(teamChallongeId)")
+		if result.count > 0 {
+			return result.first!
+		} else {
+			print("Cannot fetch team from realm")
+			return Team()
+		}
+	}
+	
+	func getTournamentMatchupWithTeams(tournament: Tournament, teamOne: Team, teamTwo: Team) -> BracketMatchup? {
+		let predicate = NSPredicate(format: "tournament_id = \(tournament.id)")
+		let result = realm.objects(BracketMatchup.self).filter(predicate)
+		if result.count > 0 {
+			// we have all match ups in the tournament
+			for obj in result {
+				if (obj.teamOne?.name == teamOne.name && obj.teamTwo?.name == teamTwo.name) ||
+					(obj.teamTwo?.name == teamOne.name && obj.teamOne?.name == teamTwo.name) {
+					return obj
+				}
+			}
+		} else {
+			print("Cannot fetch bracket matchup from realm")
+		}
+		
+		return nil
+	}
+	
+	func showAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
 			return
 		}))
 		

@@ -9,27 +9,27 @@
 import Foundation
 import RealmSwift
 
-class TeamParser : ChallongeTeamsAPIDelegate {
+class TeamParser {
 	
 	
-	func didPostChallongeParticipant(team: Team, teamObject: [String:Any]) {
-		Realm.asyncOpen() { realm, error in
-			if let realm = realm {
-				// Realm successfully opened
-				try! realm.write {
-					team.challonge_participant_id = teamObject["id"] as! Int
-					//team.challonge_group_id = teamObject["group_id"] as! Int
-					team.challonge_tournament_id = teamObject["tournament_id"] as! Int
-				}
-			} else if error != nil {
-				// Handle error that occurred while opening the Realm
-			}
-		}
-	}
-	
-	func parseIncludedTeams(tournament: Tournament, challongeParticipants: [[String: Any]]) {
-		
-	}
+//	func didPostChallongeParticipant(team: Team, teamObject: [String:Any]) {
+//		Realm.asyncOpen() { realm, error in
+//			if let realm = realm {
+//				// Realm successfully opened
+//				try! realm.write {
+//					team.challonge_participant_id = teamObject["id"] as! Int
+//					//team.challonge_group_id = teamObject["group_id"] as! Int
+//					team.challonge_tournament_id = teamObject["tournament_id"] as! Int
+//				}
+//			} else if error != nil {
+//				// Handle error that occurred while opening the Realm
+//			}
+//		}
+//	}
+//	
+//	func parseIncludedTeams(tournament: Tournament, challongeParticipants: [[String: Any]]) {
+//		
+//	}
 }
 
 /*

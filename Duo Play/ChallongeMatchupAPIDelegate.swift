@@ -9,5 +9,5 @@
 import Foundation
 
 protocol ChallongeMatchupAPIDelegate {
-	func didGetChallongeMatchups()
+	func didGetChallongeMatchups(challongeMatchups: [[String:Any]])
 }

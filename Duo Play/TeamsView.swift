@@ -19,6 +19,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
     let poolsController = PoolsController()
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
+	let tournamentFirebaseDao = TournamentFirebaseDao()
 	
 	@IBOutlet weak var searchBar: UISearchBar!
 	var teamList = [Team]()
@@ -40,11 +41,20 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		searchController.searchBar.placeholder = "Search Teams"
 		teamsTableView.tableHeaderView = searchController.searchBar
 		definesPresentationContext = true
+		
+		updateTeamList()
 	}
-    
-    override func viewDidAppear(_ animated: Bool) {
-        updateTeamList()
-    }
+	
+	func updateTeamList() {
+		teamList.removeAll()
+		
+		for team in tournament.teamList {
+			teamList.append(team)
+		}
+		
+		tournamentFirebaseDao.updateFirebaseTournament(tournament: tournament)
+		teamsTableView.reloadData()
+	}
 	
 	func longPressGesture() -> UILongPressGestureRecognizer {
 		let lpg = UILongPressGestureRecognizer(target: self, action: #selector(self.teamLongPress))
@@ -57,7 +67,7 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		
 		if let label = sender.view?.subviews[0].subviews[0] as? UILabel {
 			let name = label.text
-			selectedTeam = teamsController.getTeamByName(name: name!, tournamentId: tournament.id)
+			selectedTeam = teamsController.getTeamByName(name: name!, tournamentId: tournament.id)!
 		} else {
 			return
 		}
@@ -173,16 +183,6 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		present(alert, animated: true, completion: nil)
 	}
     
-    func updateTeamList() {
-        teamList.removeAll()
-        
-        for team in tournament.teamList {
-            teamList.append(team)
-        }
-        
-        teamsTableView.reloadData()
-    }
-    
     @IBAction func addTeam(_ sender: UIButton) {
         teamsTableView.setEditing(false, animated: true)
 		
@@ -219,6 +219,8 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 			
 			self.updateTeamList()
             self.teamsController.addTeam(team: team)
+			let teamDao = TeamFirebaseDao()
+			teamDao.addFirebaseTeam(team: team)
             self.teamsTableView.reloadData()
         }
         
@@ -316,7 +318,11 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 				tournament.teamList.insert(movedObject, at: destinationIndexPath.row)
 				sourcePool.teamList.remove(at: sourceIndexPath.row)
 				destPool.teamList.append(movedObject)
+				movedObject.pool = destPool
 			}
+			
+			let teamFirebaseDao = TeamFirebaseDao()
+			teamFirebaseDao.addFirebaseTeam(team: movedObject)
 		}
 		
 		updateTeamList()

@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TournamentLandingViewController: UIViewController, TournamentDAODelegate, UITextFieldDelegate {
+class TournamentLandingViewController: UIViewController, TournamentDAODelegate, UITextFieldDelegate, ChallongeTournamentAPIDelegate {
 	@IBOutlet weak var poolPlayButton: UIButton!
 	
 	@IBOutlet weak var settingsButton: UIButton!
@@ -17,8 +17,12 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 	@IBOutlet weak var bracketButton: UIButton!
 	@IBOutlet weak var refreshButton: UIButton!
 	@IBOutlet weak var challongeLinkLabel: UITextField!
+	@IBOutlet weak var saveToChallongeButton: UIButton!
 	
-	let tournamentDao = TournamentDAO()
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+	
+	let tournamentFirebaseDao = TournamentFirebaseDao()
+	let tournamentChallongeDao = ChallongeTournamentAPI()
 	let realm = try! Realm()
 	var tournament = Tournament()
 	let bracketController = BracketController()
@@ -27,15 +31,9 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
         super.viewDidLoad()
 
         tournament = TournamentController.getCurrentTournament()
-		tournamentDao.delegate = self
-		updateButtons()
-		updateView()
-	
+		tournamentFirebaseDao.delegate = self
+		tournamentChallongeDao.delegate = self
 		bracketController.updateTournamentProgress()
-    }
-	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(true)
 		
 		// could make this a button... a click takes them to the page.
 		challongeLinkLabel.delegate = self
@@ -43,23 +41,36 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 			challongeLinkLabel.text = "www.challonge.com/" + tournament.url
 		}
 		
+		updateButtons()
 		updateView()
-	}
+    }
 	
 	// make it so user can't change the text, it just allows copying!
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		return false
 	}
 	
-	@IBAction func teamsButtonClicked(_ sender: UIButton) {
-		// go to teams page.
-	}
-	
-	
 	@IBAction func refreshButtonClicked(_ sender: UIButton) {
-		// refresh tournament data and reload.
-		tournamentDao.getOnlineTournamentById(id: tournament.id)
+		// refresh tournament data from FIREBASE and reload.
+		//tournamentDao.getFirebaseTournamentById(id: tournament.id)
 	}
+	
+	@IBAction func didTapSaveToChallonge(_ sender: UIButton) {
+		// show loading indicator and wait for response
+		// if failure, show dialog and allow them to move on.
+		// check if tournament has been synced before
+		// check if teamlist is > 0, if it is, sync those teams at this time
+		// matches can be manually synced later  ?
+		
+		
+		// live_image_url is the only property ONLY coming from challonge
+		if tournament.live_image_url.isEmpty && tournament.isOnline && !tournament.isReadOnly {
+			activityIndicator?.startAnimating()
+			activityIndicator?.isHidden = false
+			tournamentChallongeDao.createChallongeTournament(tournament: tournament)
+		}
+	}
+	
 	
 	func updateButtons() {
 		poolPlayButton.layer.cornerRadius = 20
@@ -73,6 +84,10 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		settingsButton.layer.cornerRadius = 20
 		settingsButton.layer.borderColor = UIColor.white.cgColor
 		settingsButton.layer.borderWidth = 1
+		
+		saveToChallongeButton.layer.cornerRadius = 20
+		saveToChallongeButton.layer.borderColor = UIColor.white.cgColor
+		saveToChallongeButton.layer.borderWidth = 1
 	}
 	
 	func updateView() {
@@ -89,14 +104,46 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		} else {
 			bracketButton.isEnabled = false
 		}
+		
+		if tournament.isOnline && !tournament.isReadOnly && tournament.live_image_url.isEmpty {
+			saveToChallongeButton.isHidden = false
+		} else {
+			saveToChallongeButton.isHidden = true
+		}
 	}
 	
 	// DAO DELEGATION METHODS
 	
+	// created challonge tournamented
+	func didCreateChallongeTournament(onlineTournament: [String : Any]?, localTournament: Tournament?, success: Bool) {
+		// got the tournament back from challonge
+		DispatchQueue.main.sync {
+			if success {
+				let updatedTournament = Tournament(dictionary: onlineTournament!)
+					try! realm.write {
+						localTournament?.challonge_tournament_id = updatedTournament.id
+						localTournament?.live_image_url = updatedTournament.live_image_url
+						localTournament?.state = updatedTournament.state
+						localTournament?.tournament_type = updatedTournament.tournament_type
+						localTournament?.full_challonge_url = updatedTournament.full_challonge_url
+						localTournament?.url = updatedTournament.url
+					}
+				
+					updateView()
+					showAlertMessage(title: "Success", message: "Tournament saved to Challonge!")
+			} else {
+				showAlertMessage(title: "Challonge Error", message: "Could not connect to Challonge. Please check your network connection and try again.")
+			}
+			
+			activityIndicator?.isHidden = true
+			activityIndicator?.stopAnimating()
+		}
+	}
+	
 	// we got the tournament
 	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
 		if let tournament = onlineTournamentList.first {
-			tournamentDao.getTournamentData(tournament: tournament)
+			tournamentFirebaseDao.getTournamentData(tournament: tournament)
 		}
 	}
 	

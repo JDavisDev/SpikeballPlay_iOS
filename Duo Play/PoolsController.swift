@@ -11,7 +11,9 @@ import RealmSwift
 
 class PoolsController {
 	static public var selectedPoolName = ""
-	
+	let poolFirebaseDao = PoolPlayFirebaseDao()
+	let matchupDao = MatchupFirebaseDao()
+	let teamDao = TeamFirebaseDao()
     let realm = try! Realm()
 	var tournament = Tournament()
 	
@@ -69,7 +71,9 @@ class PoolsController {
     }
 	
 	// add blank new pool
-	func addNewPool() {
+	func addNewPool() -> Pool? {
+		var poolRef: Pool?
+		
 		try! realm.write {
 			let poolCount = tournament.poolList.count
 			let name = "Pool " + String(format: "%c", poolCount + 65) as String
@@ -81,9 +85,19 @@ class PoolsController {
 			pool.isPowerPool = false
 			pool.matchupList = List<PoolPlayMatchup>()
 			
+			// set pool id
+			poolRef = pool
 			realm.add(pool)
 			tournament.poolList.append(pool)
 		}
+		
+		if let newPool = poolRef {
+			if tournament.isPoolPlay {
+				poolFirebaseDao.addFirebasePool(pool: newPool)
+			}
+		}
+		
+		return poolRef
 	}
 	
 	func getProgressOfPool(pool: Pool) -> Float {
@@ -160,18 +174,22 @@ class PoolsController {
 				// if tournament has begun, don't change their seeds!
 				if tournament.progress_meter <= 0 {
 					team.seed = seed
+					teamDao.updateFirebaseTeam(team: team)
 				}
 				
 				tournament.teamList.append(team)
 				seed += 1
 			}
 		}
+		
+		let tournamentDao = TournamentFirebaseDao()
+		tournamentDao.updateFirebaseTournament(tournament: tournament)
 	}
 	
 	private func tieBreaker(teams: [Team]) -> [Team] {
 		var array = teams
 		for index in 0..<teams.count-1 {
-			if teams[index].pool?.name == teams[index+1].pool?.name &&
+			if teams[index].pool?.name == (teams[index+1].pool?.name)! &&
 				teams[index].wins == teams[index+1].wins &&
 				teams[index].losses == teams[index+1].losses {
 				// we have a win/loss tie, check for head to head
@@ -228,6 +246,7 @@ class PoolsController {
 			tournament.poolList.remove(at: index!)
 			pool.matchupList.removeAll()
 			pool.teamList.removeAll()
+			poolFirebaseDao.deleteFirebasePool(pool: pool)
 			realm.delete(pool)
 		}
 	}
@@ -242,6 +261,8 @@ class PoolsController {
 			tournament.isPoolPlayFinished = true
 		}
 		
+		let tournamentDao = TournamentFirebaseDao()
+		tournamentDao.updateFirebaseTournament(tournament: tournament)
 		seedTeams()
 	}
 	
@@ -250,6 +271,7 @@ class PoolsController {
 		try! realm.write {
 			for matchup in pool.matchupList {
 				matchup.isReported = true
+				matchupDao.addFirebasePoolMatchup(matchup: matchup)
 			}
 		}
 	}

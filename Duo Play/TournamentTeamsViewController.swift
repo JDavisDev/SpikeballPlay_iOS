@@ -10,12 +10,15 @@ import UIKit
 import RealmSwift
 import Crashlytics
 
-class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TournamentTeamsViewController: UIViewController, UITableViewDataSource,
+	UITableViewDelegate {
+	
     let realm = try! Realm()
     let tournament = TournamentController.getCurrentTournament()
     let teamsController = TeamsController()
-	let tournamentDAO = TournamentDAO()
+	let tournamentDAO = TournamentFirebaseDao()
 	let challongeTeamsAPI = ChallongeTeamsAPI()
+	let teamFirebaseDao = TeamFirebaseDao()
 	
 	@IBOutlet weak var editSeedsButton: UIButton!
 	@IBOutlet weak var teamsTableView: UITableView!
@@ -28,8 +31,8 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         teamsTableView.dataSource = self
     }
 	
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(true)
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
 		
 		Answers.logContentView(withName: "Bracket Teams View",
 							   contentType: "Bracket Teams View",
@@ -87,13 +90,9 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
 			self.tournament.teamList.append(team)
 			team.tournament_id = self.tournament.id
 		}
-		
-// challonge stuff comes later.
-//		let teamsParser = TeamParser()
-//		self.challongeTeamsAPI.delegate = teamsParser
-//		self.challongeTeamsAPI.createChallongeParticipant(tournament: tournament, team: team)
-//		self.tournamentDAO.addOnlineTournamentTeam(team: team)
+	
 		self.teamsController.addTeam(team: team)
+		teamFirebaseDao.addFirebaseTeam(team: team)
 	}
 	
 	@IBAction func editSeedsClicked(_ sender: UIButton) {
@@ -124,8 +123,10 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
     }
     
     func deleteTeam(team: Team) {
+		let teamFirebaseDao = TeamFirebaseDao()
+		
         try! realm.write {
-			self.tournamentDAO.deleteOnlineTournamentTeam(team: team, tournament: tournament)
+			teamFirebaseDao.deleteFirebaseTeam(team: team, tournament: tournament)
             realm.delete(team.poolPlayGameList)
             realm.delete(team)
         }
@@ -203,8 +204,6 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource, UI
         let cell = tableView.dequeueReusableCell(withIdentifier: "teamCell")
         let button = cell?.contentView.subviews[0] as! UIButton
         let team = tournament.teamList[indexPath.row]
-        //cell!.textLabel?.text = team.name
-		//cell!.textLabel?.textColor = UIColor.white
         button.setTitle(team.value(forKeyPath: "name") as? String,
                         for: .normal)
         

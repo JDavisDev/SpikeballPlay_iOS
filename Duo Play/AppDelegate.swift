@@ -32,7 +32,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
 		
 		FirebaseApp.configure()
-		let _ = Firestore.firestore()
+		let db = Firestore.firestore()
+		let settings = db.settings
+		settings.areTimestampsInSnapshotsEnabled = true
+		db.settings = settings
+		
 		Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
         return true
     }

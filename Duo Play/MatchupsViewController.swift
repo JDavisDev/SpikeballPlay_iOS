@@ -9,14 +9,17 @@
 import UIKit
 import Crashlytics
 import Firebase
+import RealmSwift
 
-class MatchupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MatchupsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ChallongeTournamentStarterDelegate {
 
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var matchupsTableView: UITableView!
 	let tournament = TournamentController.getCurrentTournament()
 	let challongeTournamentAPI = ChallongeTournamentAPI()
-	
-    var matchupList = [BracketMatchup]()
+	let realm = try! Realm()
+
+	var matchupList = [BracketMatchup]()
     var roundCount = 3
 	
     
@@ -71,8 +74,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.matchupList.removeAll()
         
         for matchup in tournament.matchupList {
-            if !matchup.isReported && matchup.teamOne != nil &&
-                matchup.teamTwo != nil {
+            if !matchup.isReported && matchup.teamTwo != nil {
                 self.matchupList.append(matchup)
             }
         }
@@ -100,12 +102,46 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
 	}
 	
 	func startTournament() {
-		let db = DBManager()
-		db.beginWrite()
-		tournament.isStarted = true
-		db.commitWrite()
-		//self.challongeTournamentAPI.startTournament(tournament: self.tournament)
-		//self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament)
+		if tournament.isOnline && !tournament.isReadOnly {
+			activityIndicator?.isHidden = false
+			activityIndicator?.startAnimating()
+			
+			// add teams in current order as tournament starts. will prevent later calls when editing
+			let challongeTournamentStarter = ChallongeTournamentStarter()
+			challongeTournamentStarter.delegate = self
+			challongeTournamentStarter.startChallongeTournament(tournament: tournament)
+		} else {
+			try! realm.write {
+				tournament.isStarted = true
+			}
+		}
+	}
+	
+	func didFinishStartingTournament(success: Bool) {
+		activityIndicator?.isHidden = true
+		activityIndicator?.stopAnimating()
+		
+		if success {
+			try! realm.write {
+				tournament.isStarted = true
+			}
+			
+			showAlert(title: "Success", message: "Tournament started and synced with Challonge!")
+		} else {
+			showAlert(title: "Challonge Error", message: "Failed to sync with Challonge. Would you like to continue offline?")
+		}
+	}
+	
+	func showAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
 	}
     
     // MARK: - Table View methods
@@ -117,7 +153,7 @@ class MatchupsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "matchupCell")
         let matchup = matchupList[indexPath.row]
-        if !matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
+        if !matchup.isReported && matchup.teamTwo != nil {
 			cell!.textLabel?.text = "Round \(matchup.round) : " + (matchup.teamOne?.name)! + "  vs.  " + (matchup.teamTwo?.name)!
         }
         

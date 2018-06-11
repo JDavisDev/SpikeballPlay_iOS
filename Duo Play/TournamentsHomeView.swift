@@ -19,11 +19,12 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	let tournamentController = TournamentController()
     var tournamentList = [Tournament]()
     let realm = try! Realm()
-	let tournamentDao = TournamentDAO()
+	let tournamentFbDao = TournamentFirebaseDao()
 	let fireDB = Firestore.firestore()
 	var handle: AuthStateDidChangeListenerHandle?
 	var onlineTournamentList = [[String:Any]]()
 	
+	var tournamentReference: DocumentReference?
 	
     @IBOutlet weak var tournamentNameTextField: UITextField!
     @IBOutlet weak var tournamentTableView: UITableView!
@@ -31,7 +32,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         tournamentTableView.delegate = self
         tournamentTableView.dataSource = self
-		tournamentDao.delegate = self
+		tournamentFbDao.delegate = self
 		super.viewDidLoad()
     }
     
@@ -53,17 +54,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			Auth.auth().removeStateDidChangeListener(handle)
 		}
 		// [END remove_auth_listener]
-	}
-	
-	func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
-		// handle user and error as necessary
-//		if let error = error {
-//			showAlertMessage(message: "authUI : " + error.localizedDescription)
-//		}
-//
-//		if let user = user {
-//			showAlertMessage(message: "authUI : " + user.email!)
-//		}
 	}
 	
 	func showAlertMessage(title: String, message: String) {
@@ -117,11 +107,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	// Create tournament from dialog
 	func createNewTournament(newName: String, password: String) {
 		let tournament = Tournament()
-//		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-//		let cdTournament = CDTournament(context: context)
-//		cdTournament.name = "CD TEST"
-//		// Save the data to coredata
-//		(UIApplication.shared.delegate as! AppDelegate).saveContext()
 		
 		if newName.count > 0 {
 			tournament.name = newName
@@ -144,7 +129,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournament.teamList = List<Team>()
 		tournament.url = getRandomStringForUrl(length: 12)
 		tournament.userID = Auth.auth().currentUser?.uid ?? Analytics.appInstanceID()
-		tournament.created_date = Date()
+		tournament.created_date = Date().description(with: Locale.autoupdatingCurrent)
 		tournament.creatorUserName = Auth.auth().currentUser?.displayName ?? ""
 		
 		try! self.realm.write {
@@ -157,12 +142,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		
 		TournamentController.setTournamentId(id: id)
 		
-		// do online saving
-		//let challongeAPI = ChallongeTournamentAPI()
-		//challongeAPI.createChallongeTournament(tournament: tournament)
-		
-		//let tournamentDao = TournamentDAO()
-		//tournamentDao.addOnlineTournament(tournament: tournament)
+		tournamentFbDao.addFirebaseTournament(tournament: tournament)
 	}
 	
 	func getRandomStringForUrl(length: Int) -> String {
@@ -182,10 +162,17 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     
     func isIdUnique(id: Int) -> Bool {
         var count = 0
-        let db = DBManager()
-		db.beginWrite()
-		count = realm.objects(Tournament.self).filter("id = \(id)").count
-		db.commitWrite()
+		if !Thread.isMainThread {
+			DispatchQueue.main.sync {
+				try! realm.write {
+					count = realm.objects(Tournament.self).filter("id = \(id)").count
+				}
+			}
+		} else {
+			try! realm.write {
+				count = realm.objects(Tournament.self).filter("id = \(id)").count
+			}
+		}
         return count == 0
     }
     
@@ -273,7 +260,15 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
     }
 	
 	func getOnlineTournaments() {
-		tournamentDao.getOnlineTournaments()
+		tournamentFbDao.getFirebaseTournaments()
+	}
+	
+	// MARK - Firebase
+	
+	// listen for new tournaments to be created
+	// maybe limit to 'official spikeball' tournaments.
+	func initFbTournamentListener() {
+		
 	}
 	
 	// DELEGATION METHODS
@@ -288,21 +283,23 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	
 	func didGetOnlineTournaments(onlineTournamentList: [Tournament]) {
-		for tournament in onlineTournamentList {
-			if isTournamentUnique(tournament: tournament) {
-				if realm.isInWriteTransaction {
-					realm.add(tournament)
-				} else {
-					try! realm.write {
+		//DispatchQueue.main.sync {
+			for tournament in onlineTournamentList {
+				if isTournamentUnique(tournament: tournament) {
+					if realm.isInWriteTransaction {
 						realm.add(tournament)
+					} else {
+						try! realm.write {
+							realm.add(tournament)
+						}
 					}
+					
+					tournamentList.append(tournament)
+				} else {
+					// not unique.. let's... overwrite it?
+					overwriteTournamentInRealm(newTournament: tournament)
 				}
-				
-				tournamentList.append(tournament)
-			} else {
-				// not unique.. let's... overwrite it?
-				overwriteTournamentInRealm(newTournament: tournament)
-			}
+			//}
 		}
 		
 		updateTournamentList()
@@ -357,10 +354,10 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 						} else {
 							// we are online, but it's public, fetch the data.
 							activityIndicator.startAnimating()
-							
+							didGetOnlineTournamentData()
 							// let's go tournamentDAO.getTournamentData. the fetch will call parse
 							// parse calls back to DAO, DAO finishes and passses back to this view.
-							tournamentDao.getTournamentData(tournament: tournament)
+							//tournamentFbDao.getTournamentData(tournament: tournament)
 						}
 					} else {
 						// didn't need to download data, just move forward like normal
@@ -387,7 +384,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 				}
 				
 				self.activityIndicator.startAnimating()
-				self.tournamentDao.getTournamentData(tournament: tournament)
+				self.tournamentFbDao.getTournamentData(tournament: tournament)
 			} else {
 				self.showPasswordResultAlert(isSuccess: false)
 			}
@@ -402,7 +399,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			}
 			
 			self.activityIndicator.startAnimating()
-			self.tournamentDao.getTournamentData(tournament: tournament)
+			self.tournamentFbDao.getTournamentData(tournament: tournament)
 		}))
 		
 		alert.addTextField { (textField) in

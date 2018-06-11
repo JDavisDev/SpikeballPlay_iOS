@@ -12,7 +12,8 @@ import RealmSwift
 class BracketCreator {
 	
 	let realm = try! Realm()
-	let tournamentDAO = TournamentDAO()
+	let teamFirebaseDao = TeamFirebaseDao()
+	let matchupFirebaseDao = MatchupFirebaseDao()
 	
 	var bracketController: BracketController
 	var tournament: Tournament
@@ -148,6 +149,8 @@ class BracketCreator {
 		}
 	}
 	
+	// I believe this creates the first round from the nodes.
+	// update matchups will create future matchups
 	private func createMatchupsFromNodeList(nodes: [Node]) {
 		var verticalPositionCounter: Int = 1
 		
@@ -184,19 +187,17 @@ class BracketCreator {
 					game.teamTwo = nil
 					game.isReported = true
 					bracketController.reportByeMatch(teamToAdvance: game.teamOne!)
-					tournamentDAO.addOnlineTournamentTeam(team: game.teamOne!)
+					teamFirebaseDao.updateFirebaseTeam(team: game.teamOne!)
 				} else {
 					// not a bye, proceed normally
 					game.teamTwo = bracketController.getTeamBySeed(seed: node.value[1])
 					bracketController.resetTeamValues(team: (game.teamTwo)!)
 					game.teamTwo?.bracketVerticalPositions.append(game.round_position)
-					//tournamentDAO.addOnlineTournamentTeam(team: game.teamOne!)
-					//tournamentDAO.addOnlineTournamentTeam(team: game.teamTwo!)
 				}
 				
 				realm.add(game)
 				tournament.matchupList.append(game)
-				//tournamentDAO.addOnlineMatchup(matchup: game)
+				matchupFirebaseDao.addFirebaseBracketMatchup(matchup: game)
 				verticalPositionCounter += 1
 			}
 		}

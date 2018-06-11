@@ -10,6 +10,7 @@ import Foundation
 import RealmSwift
 
 public class Pool : Object {
+	@objc dynamic var id = 0
     @objc dynamic public var name = ""
     @objc dynamic var division = ""
     @objc dynamic var isPowerPool = false
@@ -18,4 +19,16 @@ public class Pool : Object {
 	@objc dynamic var isStarted = false
     var matchupList = List<PoolPlayMatchup>()
 	var teamList = List<Team>()
+	
+	var dictionary: [String: Any] {
+		return [
+			"id":id,
+			"name": name,
+			"tournament_id": tournament_id,
+			"isFinished": isFinished,
+			"isStarted": isStarted,
+			"isPowerPool": isPowerPool,
+			"division": division
+		]
+	}
 }

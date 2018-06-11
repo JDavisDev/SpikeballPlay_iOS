@@ -78,7 +78,7 @@ class PoolPlayMatchGenerator {
 		
 		let count = isOddNumber ? teamCount/2 + 1 : teamCount/2
 		
-		for _ in 0..<teamCount - 1 {
+		for round in 0..<teamCount - 1 {
 			for column in 0..<count {
 				try! realm.write {
 					let matchup = PoolPlayMatchup()
@@ -96,12 +96,14 @@ class PoolPlayMatchGenerator {
 						matchup.teamTwo = nil
 					}
 					
-				
-					matchup.round = currentRound
+					matchup.tournament_id = pool.tournament_id
+					matchup.round = round + 1
 					matchup.division = "Advanced"
 					matchup.isReported = false
 					realm.add(matchup)
 					pool.matchupList.append(matchup)
+					let matchupDao = MatchupFirebaseDao()
+					matchupDao.addFirebasePoolMatchup(matchup: matchup)
 				}
 			}
             

@@ -10,7 +10,7 @@ import Foundation
 import Firebase
 import RealmSwift
 
-class TournamentParser : ChallongeTournamentAPIDelegate {
+class TournamentParser {
 	
 	let fireDB = Firestore.firestore()
 	let realm = try! Realm()
@@ -160,7 +160,10 @@ class TournamentParser : ChallongeTournamentAPIDelegate {
 			matchup.isReported = obj["isReported"] as! Bool
 			matchup.round = obj["round"] as! Int
 			matchup.round_position = obj["round_position"] as! Int
-			matchup.teamOne = teamsController.getTeamById(id: obj["teamOneId"] as! Int, tournamentId: obj["tournament_id"] as! Int)
+			if let team = teamsController.getTeamById(id: obj["teamOneId"] as! Int, tournamentId: obj["tournament_id"] as! Int) {
+				matchup.teamOne = team
+			}
+			
 			matchup.teamTwo = teamsController.getTeamById(id: obj["teamTwoId"] as! Int, tournamentId: obj["tournament_id"] as! Int)
 			matchup.tournament_id = obj["tournament_id"] as! Int
 		
@@ -216,32 +219,5 @@ class TournamentParser : ChallongeTournamentAPIDelegate {
 			isTeamsFinished = false
 			isBracketMatchupsFinished = false
 		}
-	}
-	
-	func didCreateChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament) {
-		let db = DBManager()
-		
-		localTournament.id = onlineTournament["id"] as! Int
-		localTournament.full_challonge_url = onlineTournament["full_challonge_url"] as! String
-		localTournament.isPrivate = onlineTournament["private"] as! Bool
-		localTournament.live_image_url = onlineTournament["live_image_url"]as! String
-		localTournament.participants_count = onlineTournament["participants_count"] as! Int
-		localTournament.progress_meter = onlineTournament["progress_meter"] as! Int
-		localTournament.state = onlineTournament["state"] as! String
-		localTournament.url = onlineTournament["url"] as! String
-		localTournament.tournament_type = onlineTournament["tournament_type"] as! String
-		
-		db.updateRealmObject(object: localTournament)
-	}
-	
-	// we should have a list of included matchups and participants
-	// map our teams to participants
-	// map
-	func parseStartedTournament(localTournament: Tournament, challongeParticipants: [[String:Any]], challongeMatchups: [[String:Any]]) {
-		
-		let matchupParser = MatchupParser()
-		let teamParser = TeamParser()
-		teamParser.parseIncludedTeams(tournament: localTournament, challongeParticipants: challongeParticipants)
-		matchupParser.parseIncludedMatchups(tournament: localTournament, challongeMatchups: challongeMatchups)
 	}
 }

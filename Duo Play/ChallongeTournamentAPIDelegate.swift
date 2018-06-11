@@ -8,6 +8,7 @@
 
 import Foundation
 
-protocol ChallongeTournamentAPIDelegate {
-	func didCreateChallongeTournament(onlineTournament: [String: Any], localTournament: Tournament)
+@objc protocol ChallongeTournamentAPIDelegate {
+	@objc optional func didCreateChallongeTournament(onlineTournament: [String: Any]?, localTournament: Tournament?, success: Bool)
+	@objc optional func didStartChallongeTournament(tournament: Tournament, challongeMatchups: [[String: Any]], success: Bool)
 }
