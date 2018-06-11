@@ -273,7 +273,7 @@ class BracketController {
         let availableTeams = List<Team>()
 		
 		for team in tournament.teamList {
-			if !team.isEliminated && team.bracketRounds.count > 1 {
+			if team.losses == 0 && team.bracketRounds.count > 1 {
 				availableTeams.append(team)
 			}
 		}
@@ -413,7 +413,6 @@ class BracketController {
 			advanceTeamToNextBracketPosition(winningTeam: teamToAdvance)
 			
 			losingTeam.losses += 1
-			losingTeam.isEliminated = true
 		}
 		
 		updateTournamentProgress()
@@ -441,14 +440,12 @@ class BracketController {
             if teamOneWins > teamTwoWins {
 				selectedMatchup.teamOne?.wins += 1
                 selectedMatchup.teamTwo?.losses += 1
-                selectedMatchup.teamTwo?.isEliminated = true
 				selectedMatchup.teamOne?.bracketRounds.append(selectedMatchup.round + 1)
 				winnerId = (selectedMatchup.teamOne?.challonge_participant_id)!
 				advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne!)
             } else {
 				selectedMatchup.teamOne?.losses += 1
                 selectedMatchup.teamTwo?.wins += 1
-				selectedMatchup.teamOne?.isEliminated = true
 				winnerId = (selectedMatchup.teamTwo?.challonge_participant_id)!
                 selectedMatchup.teamTwo?.bracketRounds.append(selectedMatchup.round + 1)
                 advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamTwo!)

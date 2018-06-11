@@ -378,9 +378,10 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 						teamLabel.text = team.name
 						
 						// this means that the team moved on, color the cell accordingly
+						// if they don't have enough wins, they could have lost here.
 						if team.wins >= coord.x {
 							teamLabel.textColor = UIColor.yellow
-						} else if team.isEliminated {
+						} else if team.losses > 0 {
 							teamLabel.textColor = UIColor.black
 						} else {
 							teamLabel.textColor = UIColor.white
@@ -395,7 +396,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                 var nonElimTeamName = "null"
                 
                 for team in tournament.teamList {
-                    if !team.isEliminated {
+                    if team.losses == 0 {
                         if nonElimTeamsCount == 0 {
                             nonElimTeamName = team.name
                             nonElimTeamsCount += 1

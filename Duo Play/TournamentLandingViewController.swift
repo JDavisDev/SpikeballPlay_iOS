@@ -37,13 +37,21 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		
 		// could make this a button... a click takes them to the page.
 		challongeLinkLabel.delegate = self
+		
+		updateButtons()
+		updateView()
+    }
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		
 		if tournament.url.count > 0 {
 			challongeLinkLabel.text = "www.challonge.com/" + tournament.url
 		}
 		
 		updateButtons()
 		updateView()
-    }
+	}
 	
 	// make it so user can't change the text, it just allows copying!
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

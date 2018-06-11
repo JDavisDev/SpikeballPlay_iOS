@@ -59,7 +59,7 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
 		// get date components for checking
 		// so we don't fetch from announcements so often
 		let date = Date()
-		let calendar = Calendar.current
+		let calendar = Calendar.autoupdatingCurrent
 		//let year = calendar.component(.year, from: date)
 		//let month = calendar.component(.month, from: date)
 		let day = calendar.component(.day, from: date)
