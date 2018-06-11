@@ -30,12 +30,12 @@ ChallongeTournamentAPIDelegate {
 
 	}
 	
-	func didBulkAddParticipants(participants: [[String:Any]], success: Bool) {
+	func didBulkAddParticipants(participants: [[String:Any]]?, success: Bool) {
 		if success {
 			//will have to fetch realm objects to match returned participants
 			DispatchQueue.main.sync {
 				try! realm.write {
-					for team in participants {
+					for team in participants! {
 						let onlineTeam = Team(dictionary: team)
 						let realmTeam = getRealmTeam(tournamentId: (self.tournament?.id)!, teamName: team["name"] as! String)
 						// update the new team with the challonge team data
@@ -52,6 +52,10 @@ ChallongeTournamentAPIDelegate {
 					tournamentChallongeAPI.startTournament(tournament: tournament!)
 				}
 			}
+		} else {
+			DispatchQueue.main.sync {
+				self.delegate?.didFinishStartingTournament(success: false)
+			}
 		}
 	}
 	
@@ -67,18 +71,22 @@ ChallongeTournamentAPIDelegate {
 	
 	// challonge start challonge delegate
 	// will return the started tournament AND included match ups
-	func didStartChallongeTournament(tournament: Tournament, challongeMatchups: [[String: Any]], success: Bool) {
+	func didStartChallongeTournament(tournament: Tournament, challongeMatchups: [[String: Any]]?, success: Bool) {
 		if success && teamsChallongeSavedCount >= teamCount {
 			DispatchQueue.main.sync {
 				parseChallongeMatchups(tournament: tournament, challongeMatchups: challongeMatchups)
 				self.delegate?.didFinishStartingTournament(success: success)
 			}
+		} else {
+			DispatchQueue.main.sync {
+					self.delegate?.didFinishStartingTournament(success: false)
+			}
 		}
 	}
 	
-	func parseChallongeMatchups(tournament: Tournament, challongeMatchups: [[String:Any]]) {
+	func parseChallongeMatchups(tournament: Tournament, challongeMatchups: [[String:Any]]?) {
 		try! realm.write {
-			for dictObject in challongeMatchups {
+			for dictObject in challongeMatchups! {
 				guard let localMatchup = getRealmMatchupFromChallongeData(tournament: tournament, data: dictObject) else { continue }
 				// same match... parse!
 				// basically, I'm reassigning the challonge IDs to overwrite these ids so they match

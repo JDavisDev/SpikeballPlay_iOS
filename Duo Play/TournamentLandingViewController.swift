@@ -64,7 +64,7 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 		
 		
 		// live_image_url is the only property ONLY coming from challonge
-		if tournament.live_image_url.isEmpty {
+		if tournament.live_image_url.isEmpty && tournament.isOnline && !tournament.isReadOnly {
 			activityIndicator?.startAnimating()
 			activityIndicator?.isHidden = false
 			tournamentChallongeDao.createChallongeTournament(tournament: tournament)

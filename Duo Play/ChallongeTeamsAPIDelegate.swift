@@ -9,5 +9,5 @@
 import Foundation
 
 protocol ChallongeTeamsAPIDelegate {
-	func didBulkAddParticipants(participants: [[String:Any]], success: Bool)
+	func didBulkAddParticipants(participants: [[String:Any]]?, success: Bool)
 }

@@ -138,7 +138,7 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 	
 	func submitGame() {
 		// show loading indicator for challonge stuffs
-		var numOfGamesPlayed = 1
+		var numOfGamesPlayed = 0
 		let teamOneGameOneScore = Int(teamOneGameOneScoreLabel.text!)
 		let teamOneGameTwoScore = Int(teamOneGameTwoScoreLabel.text!)
 		let teamOneGameThreeScore = Int(teamOneGameThreeScoreLabel.text!)
@@ -147,13 +147,26 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 		let teamTwoGameTwoScore = Int(teamTwoGameTwoScoreLabel.text!)
 		let teamTwoGameThreeScore = Int(teamTwoGameThreeScoreLabel.text!)
 		
-		// confirm game
+		// validate and confirm game
+		if teamOneGameOneScore != teamTwoGameOneScore {
+			numOfGamesPlayed += 1
+		} else {
+			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			return
+		}
+		
 		if teamOneGameTwoScore != teamTwoGameTwoScore {
 			numOfGamesPlayed += 1
+		} else {
+			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			return
 		}
 		
 		if teamOneGameThreeScore != teamTwoGameThreeScore {
 			numOfGamesPlayed += 1
+		} else {
+			showAlert(title: "Error", message: "Game scores cannot be equal.")
+			return
 		}
 		
 		let message = "Games to report: \(numOfGamesPlayed) \n Please set scores to 0 if you do not wish to report the game."
@@ -194,8 +207,10 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 			
 			reporterController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: numOfGamesPlayed, teamOneScores: teamOneScores, teamTwoScores: teamTwoScores)
 			
-			self.challongeMatchupAPI.delegate = self
-			self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: self.selectedMatchup, winnerId: winnerId)
+			if (self.tournament?.isOnline)! && !(self.tournament?.isReadOnly)! && (self.tournament?.live_image_url.count)! > 0 {
+				self.challongeMatchupAPI.delegate = self
+				self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: self.selectedMatchup, winnerId: winnerId)
+			}
 			
 			Answers.logCustomEvent(withName: "Bracket Match Reported",
 								   customAttributes: [
@@ -310,5 +325,17 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 		}
 		
 		return nil
+	}
+	
+	func showAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
 	}
 }

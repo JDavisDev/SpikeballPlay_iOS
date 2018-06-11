@@ -13,14 +13,11 @@ class ChallongeTeamsAPI {
 	let realm = try! Realm()
 	var delegate: ChallongeTeamsAPIDelegate?
 	let challongeBaseUrl = "https://api.challonge.com/v1/tournaments/"
-	let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
-	let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
-	let SPIKEBALL_API_KEY = ""
 	
 	func createChallongeParticipant(tournament: Tournament, team: Team) {
 		var participants = [[String:Any]]()
 		let finalString = challongeBaseUrl + tournament.url +
-			"/participants/bulk_add.json?api_key=" + PERSONAL_API_KEY + getParticipantsBulkUrl(tournament: tournament)
+			"/participants/bulk_add.json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY + getParticipantsBulkUrl(tournament: tournament)
 
 		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
 		
@@ -33,8 +30,14 @@ class ChallongeTeamsAPI {
             } else {
                 // Fallback on earlier versions
             }
+		
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				do {
+					if error != nil || data == nil {
+						self.delegate?.didBulkAddParticipants(participants: nil, success: false)
+						
+					}
+					
 					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
 						for obj in json {
 							if let teams = obj as? [String:Any] {
@@ -44,11 +47,18 @@ class ChallongeTeamsAPI {
 							}
 						}
 						
-						// send to delegate to parse and save that dude
-						self.delegate?.didBulkAddParticipants(participants: participants, success: true)
+						if participants.count > 0 {
+							self.delegate?.didBulkAddParticipants(participants: nil, success: false)
+						} else {
+							// send to delegate to parse and save that dude
+							self.delegate?.didBulkAddParticipants(participants: participants, success: true)
+						}
+					} else {
+						self.delegate?.didBulkAddParticipants(participants: nil, success: false)
 					}
 				} catch {
 					print("create challonge team error")
+					self.delegate?.didBulkAddParticipants(participants: nil, success: false)
 				}
 			})
 			

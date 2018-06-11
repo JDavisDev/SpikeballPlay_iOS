@@ -537,13 +537,22 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	
 	func startTournament() {
 		createBracket()
-		activityIndicator?.isHidden = false
-		activityIndicator?.startAnimating()
 		
-		// add teams in current order as tournament starts. will prevent later calls when editing
-		let challongeTournamentStarter = ChallongeTournamentStarter()
-		challongeTournamentStarter.delegate = self
-		challongeTournamentStarter.startChallongeTournament(tournament: tournament)
+		if tournament.isOnline {
+			activityIndicator?.isHidden = false
+			activityIndicator?.startAnimating()
+		
+			// add teams in current order as tournament starts. will prevent later calls when editing
+			let challongeTournamentStarter = ChallongeTournamentStarter()
+			challongeTournamentStarter.delegate = self
+			challongeTournamentStarter.startChallongeTournament(tournament: tournament)
+		} else {
+			try! realm.write {
+				tournament.isStarted = true
+			}
+			
+			updateBracketView()
+		}
 	}
 	
 	// continue UI Execution, we should be on the main thread already by now
@@ -560,7 +569,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 			updateBracketView()
 			showAlert(title: "Success", message: "Tournament started and synced with Challonge!")
 		} else {
-			showAlert(title: "Challonge Error", message: "Failed to sync with Challonge. Would you like to continue offline?")
+			showOkCancelAlert(title: "Challonge Error", message: "Failed to sync with Challonge. Would you like to continue offline? You must first save the tournament to Challonge.")
 		}
 	}
 	

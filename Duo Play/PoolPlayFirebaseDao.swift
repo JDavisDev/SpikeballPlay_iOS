@@ -19,4 +19,19 @@ class PoolPlayFirebaseDao {
 			.document("\(pool.tournament_id) - \(pool.name)")
 			.setData(pool.dictionary)
 	}
+	
+	func deleteFirebasePool(pool: Pool) {
+		fireDB.collection("pools").whereField("tournament_id", isEqualTo: pool.tournament_id)
+			.whereField("name", isEqualTo: pool.name)
+			.whereField("id", isEqualTo: pool.id)
+			.getDocuments() { (querySnapshot, err) in
+				if let err = err {
+					print("Error getting pools: \(err)")
+				} else {
+					for document in querySnapshot!.documents {
+						document.reference.delete()
+					}
+				}
+		}
+	}
 }

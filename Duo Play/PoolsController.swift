@@ -92,7 +92,9 @@ class PoolsController {
 		}
 		
 		if let newPool = poolRef {
-			poolFirebaseDao.addFirebasePool(pool: newPool)
+			if tournament.isPoolPlay {
+				poolFirebaseDao.addFirebasePool(pool: newPool)
+			}
 		}
 		
 		return poolRef
@@ -244,7 +246,7 @@ class PoolsController {
 			tournament.poolList.remove(at: index!)
 			pool.matchupList.removeAll()
 			pool.teamList.removeAll()
-			poolFirebaseDao.addFirebasePool(pool: pool)
+			poolFirebaseDao.deleteFirebasePool(pool: pool)
 			realm.delete(pool)
 		}
 	}

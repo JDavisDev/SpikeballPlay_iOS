@@ -215,7 +215,9 @@ class BracketController {
 			tournament.progress_meter = tournamentProgress
 		}
 		
-		tournamentDAO.addFirebaseTournament(tournament: tournament)
+		if tournament.isOnline {
+			tournamentDAO.addFirebaseTournament(tournament: tournament)
+		}
     }
 	
 	func isIdUnique(id: Int) -> Bool {
@@ -480,18 +482,20 @@ class BracketController {
 		// a new matchup may be ready!
 		updateMatchups()
 		
-		matchupFirebaseDao.addFirebaseBracketMatchup(matchup: selectedMatchup)
-		
-		let teamFirebaseDao = TeamFirebaseDao()
-		teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamOne!)
-		teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamTwo!)
-		
-		// update challonge match THEN fetch new ones.
-		// it returns all matchups with given participant id, but if it's null, I dont' save it.
-		// so get them again and re pair them if we have new ones.
-		let challongeMatchAPI = ChallongeMatchupAPI()
-		//challongeMatchAPI.delegate = self
-		challongeMatchAPI.updateChallongeMatch(tournament: tournament, match: selectedMatchup, winnerId: winnerId)
+		if (self.tournament.isOnline) && !(self.tournament.isReadOnly) {
+			matchupFirebaseDao.addFirebaseBracketMatchup(matchup: selectedMatchup)
+			
+			let teamFirebaseDao = TeamFirebaseDao()
+			teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamOne!)
+			teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamTwo!)
+			
+			// update challonge match THEN fetch new ones.
+			// it returns all matchups with given participant id, but if it's null, I dont' save it.
+			// so get them again and re pair them if we have new ones.
+			let challongeMatchAPI = ChallongeMatchupAPI()
+			//challongeMatchAPI.delegate = self
+			challongeMatchAPI.updateChallongeMatch(tournament: tournament, match: selectedMatchup, winnerId: winnerId)
+		}
 	}
     
     // based on previous position, determine next position

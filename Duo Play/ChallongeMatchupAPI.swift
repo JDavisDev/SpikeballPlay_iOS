@@ -10,9 +10,6 @@ import Foundation
 
 public class ChallongeMatchupAPI {
 	let challongeBaseUrl = "https://api.challonge.com/v1/"
-	let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
-	let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
-	let SPIKEBALL_API_KEY = ""
 	let matchupParser = MatchupParser()
 	
 	var delegate : ChallongeMatchupAPIDelegate?
@@ -20,7 +17,7 @@ public class ChallongeMatchupAPI {
 	func getMatchupsForTournament(tournament: Tournament) {
 		var challongeMatchups = [[String:Any]]()
 		let urlString = challongeBaseUrl + "tournaments/" +
-			tournament.url + "/matches.json?" + "api_key=" + PERSONAL_API_KEY
+			tournament.url + "/matches.json?" + "api_key=" + ChallongeUtil.ROUNDNET_API_KEY
 		
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
@@ -61,7 +58,7 @@ match[winner_id]	The participant ID of the winner or "tie" if applicable (Round 
 */
 	func updateChallongeMatch(tournament: Tournament, match: BracketMatchup, winnerId: Int) {
 		let baseUrl = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/matches/" + String(match.challongeId)
-		let apiUrl = ".json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY
+		let apiUrl = ".json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY
 		let matchUrl = "&match[scores_csv]="
 		let scoreString = String(match.teamOneScores[0]) + "-" + String(match.teamTwoScores[0]) + "," + String(match.teamOneScores[1]) + "-" + String(match.teamTwoScores[1]) + "," + String(match.teamOneScores[2]) + "-" + String(match.teamTwoScores[2])
 		let winnerIdString = "&match[winner_id]=" + String(winnerId)

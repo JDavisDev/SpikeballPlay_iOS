@@ -103,7 +103,9 @@ class PoolsDetailView: UIViewController, UITableViewDelegate, UITableViewDataSou
 			pool.isFinished = true
 			
 			let poolDao = PoolPlayFirebaseDao()
-			poolDao.addFirebasePool(pool: pool)
+			if tournament.isPoolPlay {
+				poolDao.addFirebasePool(pool: pool)
+			}
 		}
 		
 		checkIfPoolPlayFinished()

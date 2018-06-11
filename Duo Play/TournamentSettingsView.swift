@@ -67,6 +67,8 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 		
 		setPoolPlayOn(isOn: tournament.isPoolPlay && !tournament.isPoolPlayFinished)
 		
+		isOnlineSwitch.setOn(tournament.isOnline, animated: true)
+		
 		if isPoolPlaySwitch.isOn {
 			playersPerPoolSegementedControl.isHidden = false
 			playersPerPoolLabel.isHidden = false
@@ -81,7 +83,8 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 			playersPerPoolSegementedControl.isEnabled = false
 			isPoolPlaySwitch.isEnabled = false
 			tournamentStylePicker.isUserInteractionEnabled = false
-			// maybe show a message as to why everything is disabled.
+			isOnlineSwitch.isEnabled = false
+			isPublicSwitch.isEnabled = false
 		}
 		
 		// tournament is read only, let's hide everything!
@@ -254,25 +257,25 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 		let realm = try! Realm()
         TournamentController.IS_QUICK_REPORT = false //isQuickReportSwitch.isOn
 		// set a param here to ONLY send up a tournament once, otherwise update the tournament
-		if !tournament.isReadOnly {
+		if !tournament.isReadOnly && !tournament.isStarted {
         	try! realm.write {
 				tournament.isPoolPlay = isPoolPlaySwitch.isOn
 				tournament.isOnline = isOnlineSwitch.isOn
 				tournament.isPrivate = !isPublicSwitch.isOn
 				tournament.isQuickReport = false //isQuickReportSwitch.isOn
 				tournament.playersPerPool = playersPerPoolSegementedControl.selectedSegmentIndex + 4
-				tournament.name = (tournamentNameTextField.text?.count.magnitude)! > 0 ?
+				tournament.name = (tournamentNameTextField.text?.count)! > 0 ?
 					tournamentNameTextField.text! :
 					tournament.name
 			}
+			
+			Answers.logCustomEvent(withName: "Tournament Settings Saved",
+								   customAttributes: [
+									"isPoolPlay": String(tournament.isPoolPlay),
+									"isOnline": String(tournament.isOnline),
+									"isPublic": String(!tournament.isPrivate),
+									"isPassword": String(tournament.password.count > 0)])
         }
-		
-		Answers.logCustomEvent(withName: "Tournament Settings Saved",
-		   customAttributes: [
-			"isPoolPlay": String(tournament.isPoolPlay),
-			"isOnline": String(tournament.isOnline),
-			"isPublic": String(!tournament.isPrivate),
-			"isPassword": String(tournament.password.count > 0)])
     }
 	
 	func setPoolPlayOn(isOn: Bool) {

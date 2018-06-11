@@ -12,9 +12,6 @@ import RealmSwift
 public class ChallongeTournamentAPI {
 	var delegate: ChallongeTournamentAPIDelegate?
     static let challongeBaseUrl = "https://api.challonge.com/v1/"
-    static let PERSONAL_API_KEY = "dtxaTM8gb4BRN13yLxwlbFmaYcteFxWwLrmAJV3h"
-    static let TEST_API_KEY = "obUAOsG1dCV2bTpLqPvGy6IIB3MzF4o4TYUkze7M"
-    static let SPIKEBALL_API_KEY = ""
 	
 	let matchupAPI = ChallongeMatchupAPI()
 	
@@ -44,7 +41,7 @@ public class ChallongeTournamentAPI {
 //    }
 
 	func startTournament(tournament: Tournament) {
-		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeTournamentAPI.PERSONAL_API_KEY + "&include_participants=1" + "&include_matches=1"
+		let urlString = "https://api.challonge.com/v1/tournaments/" + tournament.url + "/start.json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY + "&include_participants=1" + "&include_matches=1"
 		
 		if let myURL = URL(string: urlString) {
 			var request = URLRequest(url: myURL)
@@ -86,10 +83,10 @@ public class ChallongeTournamentAPI {
     // Takes tournament object passed in and sends it to Challonge
     func createChallongeTournament(tournament: Tournament) {
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
-		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
+		let personalAPIKey = ChallongeUtil.PERSONAL_API_KEY
 		let tournamentName = tournament.name
 		let finalString = baseUrl +
-			"tournaments.json?api_key=" + personalAPIKey +
+			"tournaments.json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY +
 			"&tournament[name]=" + tournamentName + "&" + "tournament[url]=" + tournament.url
 		
 		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
@@ -131,9 +128,9 @@ public class ChallongeTournamentAPI {
 	
 	func updateChallongeTournament(tournament: Tournament) {
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
-		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
+		let personalAPIKey = ChallongeUtil.PERSONAL_API_KEY
 		let finalString = baseUrl +
-			tournament.url + ".json?api_key=" + personalAPIKey +
+			tournament.url + ".json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY +
 			""
 			// params go here
 		
@@ -167,9 +164,9 @@ public class ChallongeTournamentAPI {
 	
 	func deleteChallongeTournament(tournament: Tournament) {
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
-		let personalAPIKey = ChallongeTournamentAPI.PERSONAL_API_KEY
+		let personalAPIKey = ChallongeUtil.PERSONAL_API_KEY
 		let finalString = baseUrl + "tournaments/" +
-			tournament.url + ".json?api_key=" + personalAPIKey
+			tournament.url + ".json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY
 		
 		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
 		
