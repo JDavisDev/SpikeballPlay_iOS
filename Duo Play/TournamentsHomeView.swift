@@ -129,7 +129,14 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournament.teamList = List<Team>()
 		tournament.url = getRandomStringForUrl(length: 12)
 		tournament.userID = Auth.auth().currentUser?.uid ?? Analytics.appInstanceID()
-		tournament.created_date = Date().description(with: Locale.autoupdatingCurrent)
+		
+		let date = Date()
+		let calendar = Calendar.autoupdatingCurrent
+		let year = calendar.component(.year, from: date)
+		let month = calendar.component(.month, from: date)
+		let day = calendar.component(.day, from: date)
+		
+		tournament.created_date = "\(year)/\(month)/\(day)"
 		tournament.creatorUserName = Auth.auth().currentUser?.displayName ?? ""
 		
 		try! self.realm.write {
@@ -185,40 +192,6 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 			self.getOnlineTournaments()
 		}
     }
-
-	// CHALLONGE STUFF
-//    func parseOnlineTournaments() {
-//        challongeConnector.getTournaments()
-//        let onlineTournaments = challongeConnector.tournamentList
-//
-//        for tournament in onlineTournaments {
-//            let newTournament = Tournament()
-//
-//            // assign properties from online tournament to realm tournament for local storage
-//            newTournament.name = tournament.value(forKey: "name") as! String
-//            newTournament.id = tournament.value(forKey: "id") as! Int
-//            newTournament.poolList = List<Pool>()
-//            newTournament.teamList = List<Team>()
-//            newTournament.full_challonge_url = tournament.value(forKey: "full_challonge_url") as! String
-//            newTournament.game_id = tournament.value(forKey: "game_id") as! Int
-//            newTournament.isPrivate = tournament.value(forKey: "private") as! Bool
-//            newTournament.live_image_url = tournament.value(forKey: "live_image_url") as! String
-//            newTournament.participants_count = tournament.value(forKey: "participants_count") as! Int
-//            newTournament.progress_meter = tournament.value(forKey: "progress_meter") as! Int
-//            newTournament.state = tournament.value(forKey: "state") as! String
-//            newTournament.teams = tournament.value(forKey: "teams") as! Bool
-//            newTournament.url = tournament.value(forKey: "url") as! String
-//            newTournament.tournament_type = tournament.value(forKey: "tournament_type") as! String
-//
-//            try! realm.write {
-//                realm.add(newTournament)
-//                tournamentList.append(newTournament)
-//            }
-//        }
-//        updateTournamentList()
-//
-//    }
-// END CHALLONGE STUFF
 	
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tournamentButtonCell")

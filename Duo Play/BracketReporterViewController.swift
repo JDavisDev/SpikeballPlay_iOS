@@ -150,21 +150,21 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 		// validate and confirm game
 		if teamOneGameOneScore != teamTwoGameOneScore {
 			numOfGamesPlayed += 1
-		} else {
+		} else  {
 			showAlert(title: "Error", message: "Game scores cannot be equal.")
 			return
 		}
 		
 		if teamOneGameTwoScore != teamTwoGameTwoScore {
 			numOfGamesPlayed += 1
-		} else {
+		} else if teamOneGameTwoScore != 0 {
 			showAlert(title: "Error", message: "Game scores cannot be equal.")
 			return
 		}
 		
 		if teamOneGameThreeScore != teamTwoGameThreeScore {
 			numOfGamesPlayed += 1
-		} else {
+		} else if teamOneGameThreeScore != 0 {
 			showAlert(title: "Error", message: "Game scores cannot be equal.")
 			return
 		}

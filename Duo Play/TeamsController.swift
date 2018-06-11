@@ -29,13 +29,14 @@ class TeamsController {
 		try! realm.write() {
             if team.name.count == 0 {
 				team.name = "Team #" + getNextTeamNameId(tournament: tournament)
+				team.division = newPool.division
+				team.pool = newPool
             }
 			
 			playersPerPool = tournament.playersPerPool
-            
+			
             realm.add(team)
             newPool.teamList.append(team)
-            team.pool = newPool
         }
     }
 	
@@ -77,7 +78,7 @@ class TeamsController {
 		}
 	}
     
-    func getAvailablePool() -> Pool {
+	func getAvailablePool() -> Pool {
         let tournament = TournamentController.getCurrentTournament()
         for pool in tournament.poolList {
             if pool.teamList.count < playersPerPool && !pool.isStarted {
@@ -88,6 +89,6 @@ class TeamsController {
         
         // no available pool, create one, append it, and return it
         isNewPool = true
-		return poolController.addNewPool()!
+		return poolController.addNewPool(division: Division.Advanced)!
     }
 }

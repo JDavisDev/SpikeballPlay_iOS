@@ -61,6 +61,7 @@ class PoolsController {
     func addTeamToPool(pool: Pool, team: Team) {
 		if realm.isInWriteTransaction {
 			team.pool = pool
+			team.division = pool.division
 			pool.teamList.append(team)
 		} else {
 			try! realm.write {
@@ -71,7 +72,7 @@ class PoolsController {
     }
 	
 	// add blank new pool
-	func addNewPool() -> Pool? {
+	func addNewPool(division: Division) -> Pool? {
 		var poolRef: Pool?
 		
 		try! realm.write {
@@ -81,7 +82,7 @@ class PoolsController {
 			pool.tournament_id = tournament.id
 			pool.name = name
 			pool.teamList = List<Team>()
-			pool.division = "Advanced"
+			pool.division = division.value()
 			pool.isPowerPool = false
 			pool.matchupList = List<PoolPlayMatchup>()
 			

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PoolsView: UIViewController {
     
     @IBOutlet weak var poolsTableView: UITableView!
     var tournament = TournamentController.getCurrentTournament()
@@ -31,10 +31,33 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
         poolsTableView.reloadData()
         super.viewDidAppear(true)
     }
-    
+	
+	// Specify a division here
 	@IBAction func addPoolButtonClick(_ sender: UIButton) {
-		poolsController.addNewPool()
-		poolsTableView.reloadData()
+		// let's do a action sheet here to select division?
+		showPoolDivisionActionSheet()
+	}
+	
+	func showPoolDivisionActionSheet() {
+		let actionSheet = UIAlertController(title: "Select Division", message: "", preferredStyle: .actionSheet)
+		
+		for division in Division.allValues {
+			let action = UIAlertAction(title: "\(division.value())", style: .default) { (action: UIAlertAction) in
+				let _ = self.poolsController.addNewPool(division: Division.Advanced)
+				self.poolsTableView.reloadData()
+			}
+			actionSheet.addAction(action)
+		}	
+		
+		let actionCancel = UIAlertAction(title: "Cancel", style: .cancel) { (action: UIAlertAction) in
+			// do nothing
+			return
+		}
+		
+		
+		actionSheet.addAction(actionCancel)
+		actionSheet.popoverPresentationController?.sourceView = self.view
+		present(actionSheet, animated: true, completion: nil)
 	}
 	
 	func deletePool(pool: Pool) {
@@ -54,47 +77,6 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
 		PoolsController.setSelectedPoolName(name: pool.name)
         controller?.pool = pool
     }
-    
-    // MARK: - Pools Table View
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "poolCell")
-		// check if pool is finished
-		if !tournament.poolList[indexPath.row].isFinished {
-        	cell!.textLabel?.text = tournament.poolList[indexPath.row].name
-        	cell?.detailTextLabel?.text = String(describing: tournament.poolList[indexPath.row].division)
-		} else {
-			cell!.textLabel?.text = "Finished " + tournament.poolList[indexPath.row].name
-		}
-		
-		return cell!
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tournament.poolList.count
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let pool = tournament.poolList[indexPath.row]
-		
-		if !pool.isFinished {
-        	performSegue(withIdentifier: "poolDetailSegue", sender: self)
-		}
-    }
-	
-	func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
-			let pool = self.tournament.poolList[index.row]
-			self.selectedPool = pool
-			self.showAlert(title: "Delete " + pool.name, message: "Everything in this pool will be deleted.")
-		}
-		
-		return [delete]
-	}
 	
 	func showAlert(title: String, message: String) {
 		let alert = UIAlertController(title: title,
@@ -110,5 +92,48 @@ class PoolsView: UIViewController, UITableViewDelegate, UITableViewDataSource {
 		}))
 		
 		present(alert, animated: true, completion: nil)
+	}
+}
+
+extension PoolsView : UITableViewDelegate, UITableViewDataSource {
+	// MARK: - Pools Table View
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "poolCell")
+		// check if pool is finished
+		if !tournament.poolList[indexPath.row].isFinished {
+			cell!.textLabel?.text = tournament.poolList[indexPath.row].name
+			cell?.detailTextLabel?.text = tournament.poolList[indexPath.row].division
+		} else {
+			cell!.textLabel?.text = "Finished " + tournament.poolList[indexPath.row].name
+		}
+		
+		return cell!
+	}
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return tournament.poolList.count
+	}
+	
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let pool = tournament.poolList[indexPath.row]
+		
+		if !pool.isFinished {
+			performSegue(withIdentifier: "poolDetailSegue", sender: self)
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
+		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+			let pool = self.tournament.poolList[index.row]
+			self.selectedPool = pool
+			self.showAlert(title: "Delete " + pool.name, message: "Everything in this pool will be deleted.")
+		}
+		
+		return [delete]
 	}
 }

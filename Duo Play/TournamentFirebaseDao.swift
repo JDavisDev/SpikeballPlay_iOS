@@ -97,15 +97,32 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 	func addFirebaseTournament(tournament: Tournament) {
 		// Add a new document
 		// Create an initial document to update.
-		if tournament.isOnline && !tournament.isReadOnly {
-			fireDB.collection("tournaments").document("\(tournament.name) - \(tournament.id)")
+		let date = Date()
+		let calendar = Calendar.autoupdatingCurrent
+		let year = calendar.component(.year, from: date)
+		let month = calendar.component(.month, from: date)
+		let day = calendar.component(.day, from: date)
+		
+		if !tournament.isReadOnly {
+			fireDB.collection("tournaments").document("\(year).\(month).\(day): \(tournament.name) - \(tournament.id)")
 			.setData(tournament.dictionary)
 		}
 	}
 	
 	func updateFirebaseTournament(tournament: Tournament) {
-		if tournament.isOnline && !tournament.isReadOnly {
-			fireDB.collection("tournaments").document("\(tournament.name) - \(tournament.id)")
+		let date = Date()
+		let calendar = Calendar.autoupdatingCurrent
+		let year = calendar.component(.year, from: date)
+		let month = calendar.component(.month, from: date)
+		let day = calendar.component(.day, from: date)
+		let realm = try! Realm()
+		
+		try! realm.write {
+			tournament.updated_date = "\(year).\(month).\(day)"
+		}
+		
+		if !tournament.isReadOnly {
+			fireDB.collection("tournaments").document("\(year).\(month).\(day): \(tournament.name) - \(tournament.id)")
 			.updateData(tournament.dictionary)
 		}
 	}
