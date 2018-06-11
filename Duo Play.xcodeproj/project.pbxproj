@@ -90,6 +90,9 @@
 		47FB185D2089042900631AAA /* ChallongeMatchupAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FB185C2089042900631AAA /* ChallongeMatchupAPI.swift */; };
 		47FB185F2089043900631AAA /* ChallongeMatchupAPIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FB185E2089043900631AAA /* ChallongeMatchupAPIDelegate.swift */; };
 		47FB18612089093B00631AAA /* MatchupParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FB18602089093B00631AAA /* MatchupParser.swift */; };
+		47FD94CE20CECF7C00385BD3 /* LosersBracketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FD94CD20CECF7C00385BD3 /* LosersBracketViewController.swift */; };
+		47FD94D020CECFE800385BD3 /* LosersBracketCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FD94CF20CECFE800385BD3 /* LosersBracketCreator.swift */; };
+		47FD94D220CED1A800385BD3 /* LosersBracketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FD94D120CED1A800385BD3 /* LosersBracketController.swift */; };
 		47FF2D79206810B200712D83 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47FF2D78206810B100712D83 /* AdSupport.framework */; };
 		47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FF2D7A2068A14700712D83 /* TournamentParser.swift */; };
 		47FF2D7D2068A39500712D83 /* TournamentParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */; };
@@ -212,6 +215,9 @@
 		47FB185C2089042900631AAA /* ChallongeMatchupAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallongeMatchupAPI.swift; sourceTree = "<group>"; };
 		47FB185E2089043900631AAA /* ChallongeMatchupAPIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallongeMatchupAPIDelegate.swift; sourceTree = "<group>"; };
 		47FB18602089093B00631AAA /* MatchupParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchupParser.swift; sourceTree = "<group>"; };
+		47FD94CD20CECF7C00385BD3 /* LosersBracketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LosersBracketViewController.swift; sourceTree = "<group>"; };
+		47FD94CF20CECFE800385BD3 /* LosersBracketCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LosersBracketCreator.swift; sourceTree = "<group>"; };
+		47FD94D120CED1A800385BD3 /* LosersBracketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LosersBracketController.swift; sourceTree = "<group>"; };
 		47FF2D78206810B100712D83 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		47FF2D7A2068A14700712D83 /* TournamentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentParser.swift; sourceTree = "<group>"; };
 		47FF2D7C2068A39500712D83 /* TournamentParserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentParserDelegate.swift; sourceTree = "<group>"; };
@@ -362,6 +368,8 @@
 				47967CC11FF9E710007E67E4 /* BracketController.swift */,
 				47BE733220507FF9003C100B /* Node.swift */,
 				4725DDA520BB1C4B005198E0 /* BracketCreator.swift */,
+				47FD94CF20CECFE800385BD3 /* LosersBracketCreator.swift */,
+				47FD94D120CED1A800385BD3 /* LosersBracketController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -375,6 +383,7 @@
 				47C13A522000275000CE886D /* LiveBracketViewController.swift */,
 				472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */,
 				47D6BB962047835C003AC6AB /* TournamentsTabBarViewController.swift */,
+				47FD94CD20CECF7C00385BD3 /* LosersBracketViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -917,11 +926,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47FD94D020CECFE800385BD3 /* LosersBracketCreator.swift in Sources */,
 				4733A910206C07B000B25395 /* TournamentDAODelegate.swift in Sources */,
 				4720BE201F37E06B006E55C5 /* History.swift in Sources */,
 				47967CCA1FFA1AE7007E67E4 /* BracketReporterViewController.swift in Sources */,
 				47967CC21FF9E710007E67E4 /* BracketController.swift in Sources */,
 				47F9F8141F3414E000C88DEA /* RPGameController.swift in Sources */,
+				47FD94CE20CECF7C00385BD3 /* LosersBracketViewController.swift in Sources */,
 				47967CC81FFA1AB9007E67E4 /* MatchupsViewController.swift in Sources */,
 				47D6BB972047835C003AC6AB /* TournamentsTabBarViewController.swift in Sources */,
 				47716ED320C624EF0012A19E /* LocalCollection.swift in Sources */,
@@ -987,6 +998,7 @@
 				47F9F8101F33B51400C88DEA /* RPController.swift in Sources */,
 				479BBCFF208A7AA400275A4E /* LiveBracketViewDelegate.swift in Sources */,
 				47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */,
+				47FD94D220CED1A800385BD3 /* LosersBracketController.swift in Sources */,
 				47F01A9F209CC412008B7CD1 /* DBManager.swift in Sources */,
 				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
 				47E894BA2056D3EA00F9CEE8 /* TGPlayersViewController.swift in Sources */,
