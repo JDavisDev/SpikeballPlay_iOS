@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		47035AA020D0366700AD0188 /* BracketMatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47035A9F20D0366700AD0188 /* BracketMatchCell.swift */; };
+		47035AA220D0389600AD0188 /* BracketMatchupCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 47035AA120D0389600AD0188 /* BracketMatchupCellView.xib */; };
+		47035AA420D0B77500AD0188 /* BracketHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47035AA320D0B77500AD0188 /* BracketHistoryViewController.swift */; };
 		4720BE201F37E06B006E55C5 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4720BE1F1F37E06B006E55C5 /* History.swift */; };
 		4720BE221F37E11B006E55C5 /* HistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4720BE211F37E11B006E55C5 /* HistoryCell.swift */; };
 		472103F41F59FF6B00CA76C3 /* TournamentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472103F31F59FF6B00CA76C3 /* TournamentController.swift */; };
@@ -123,6 +126,9 @@
 /* Begin PBXFileReference section */
 		42069046AEC9647B76EBA742 /* Pods-Duo Play Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Duo Play Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Duo Play Tests/Pods-Duo Play Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		457A7B5661BBBF05F3BC23B4 /* Pods-Duo Play.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Duo Play.release.xcconfig"; path = "Pods/Target Support Files/Pods-Duo Play/Pods-Duo Play.release.xcconfig"; sourceTree = "<group>"; };
+		47035A9F20D0366700AD0188 /* BracketMatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketMatchCell.swift; sourceTree = "<group>"; };
+		47035AA120D0389600AD0188 /* BracketMatchupCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BracketMatchupCellView.xib; sourceTree = "<group>"; };
+		47035AA320D0B77500AD0188 /* BracketHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BracketHistoryViewController.swift; sourceTree = "<group>"; };
 		4720BE1F1F37E06B006E55C5 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		4720BE211F37E11B006E55C5 /* HistoryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCell.swift; sourceTree = "<group>"; };
 		472103F31F59FF6B00CA76C3 /* TournamentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TournamentController.swift; sourceTree = "<group>"; };
@@ -374,6 +380,7 @@
 				472C8314204627490067B9C1 /* TournamentTeamsViewController.swift */,
 				47D6BB962047835C003AC6AB /* TournamentsTabBarViewController.swift */,
 				47FD94CD20CECF7C00385BD3 /* LosersBracketViewController.swift */,
+				47035AA320D0B77500AD0188 /* BracketHistoryViewController.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -455,6 +462,7 @@
 		47DE96281F3E074700F944F0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				47035A9F20D0366700AD0188 /* BracketMatchCell.swift */,
 				47DE96291F3E075400F944F0 /* Tournament.swift */,
 				47DE962B1F3E075C00F944F0 /* Pool.swift */,
 				47DE962E1F3E07DD00F944F0 /* Team.swift */,
@@ -557,6 +565,7 @@
 				47F01A9E209CC412008B7CD1 /* DBManager.swift */,
 				47F9F7E41F32814900C88DEA /* MainViewController.swift */,
 				47F9F7E61F32814900C88DEA /* Main.storyboard */,
+				47035AA120D0389600AD0188 /* BracketMatchupCellView.xib */,
 				47F9F7E91F32814900C88DEA /* Assets.xcassets */,
 				47F9F7EB1F32814900C88DEA /* LaunchScreen.storyboard */,
 				474F5E59206AAC090027F57D /* GoogleService-Info.plist */,
@@ -738,6 +747,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47035AA220D0389600AD0188 /* BracketMatchupCellView.xib in Resources */,
 				47F9F7ED1F32814900C88DEA /* LaunchScreen.storyboard in Resources */,
 				474F5E5A206AAC090027F57D /* GoogleService-Info.plist in Resources */,
 				47F9F7EA1F32814900C88DEA /* Assets.xcassets in Resources */,
@@ -946,6 +956,7 @@
 				47C7753F20C79B6B00F4BF09 /* PoolPlayFirebaseDao.swift in Sources */,
 				475FF2831FA96FEC0018BB63 /* Session.swift in Sources */,
 				47E932401F35405600145E28 /* RulesWebView.swift in Sources */,
+				47035AA420D0B77500AD0188 /* BracketHistoryViewController.swift in Sources */,
 				478388B21FBA5DF500D8052E /* PoolsController.swift in Sources */,
 				47FF2D7D2068A39500712D83 /* TournamentParserDelegate.swift in Sources */,
 				475E27EA20CC0E5300E180B2 /* ChallongeTournamentStarter.swift in Sources */,
@@ -987,6 +998,7 @@
 				47FF2D7B2068A14700712D83 /* TournamentParser.swift in Sources */,
 				47FD94D220CED1A800385BD3 /* LosersBracketController.swift in Sources */,
 				47F01A9F209CC412008B7CD1 /* DBManager.swift in Sources */,
+				47035AA020D0366700AD0188 /* BracketMatchCell.swift in Sources */,
 				47E9323C1F35090900145E28 /* RPHistoryController.swift in Sources */,
 				47E894BA2056D3EA00F9CEE8 /* TGPlayersViewController.swift in Sources */,
 				47F9F8121F33E08400C88DEA /* RPNewGameView.swift in Sources */,

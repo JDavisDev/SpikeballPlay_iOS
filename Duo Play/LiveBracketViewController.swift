@@ -29,8 +29,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     
     let bracketController = BracketController()
     
-    var bracketCells = [UIView]()
-    var bracketDict: [UIView : (x: Int, y: Int)] = [:]
+    var bracketCells = [BracketMatchCell]()
+    var bracketDict: [BracketMatchCell : (x: Int, y: Int)] = [:]
     var bracketMatchCount = 0
     var roundCount = 0
     var byeCount = 0
@@ -104,7 +104,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		} else {
 			createBracketView()
 		}
-		
 	}
 	
 	// Pinch Controls
@@ -163,33 +162,25 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                     yPos = ((game - 1) * 110) + 8
                 }
                 let xPos = 8
-                
-                let bracketCell = UIView(frame: CGRect(x: xPos, y: yPos, width: bracketCellWidth, height: 100))
-                bracketCell.backgroundColor = UIColor.darkGray
+				
+                let bracketCell = BracketMatchCell(frame: CGRect(x: xPos, y: yPos, width: BracketMatchCell.width, height: BracketMatchCell.height))
+				let teamOneLabel = bracketCell.teamOneLabel!
+				let teamTwoLabel = bracketCell.teamTwoLabel!
                 
                 bracketCells.append(bracketCell)
                 
                 let bracketPos = (x: 1, y: game)
                 bracketDict[bracketCell] = bracketPos
-                
-                // create team labels inside the cell
-                let teamOneLabel = UILabel(frame: CGRect(x: 8, y: 0, width: labelWidth, height: 50))
-                let teamTwoLabel = UILabel(frame: CGRect(x: 8, y: 50, width: labelWidth, height: 50))
-                
-                // add ui labels to cell
-                bracketCell.addSubview(teamOneLabel)
-                bracketCell.addSubview(teamTwoLabel)
                 scrollView.addSubview(bracketCell)
                 
                 try! realm.write {
-                    // set team labels
-                    
-                    // make sure we have games to fill in teams
+					// make sure we have games to fill in teams
                     // otherwise, just write TBD so they can visualize the entire bracket.
                     if tournament.matchupList.count > (game - 1) && tournament.matchupList[game - 1].round == 1 {
                         let teamOne = tournament.matchupList[game - 1].teamOne
                         let teamTwo = tournament.matchupList[game - 1].teamTwo
 						
+						// check if the tournament is synced with Challonge, update UI
 						if tournament.matchupList[game - 1].challongeId != 0 {
 							//bracketCell.layer.shadowColor
 							bracketCell.layer.shadowOpacity = 1
@@ -202,25 +193,22 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                         if teamTwo == nil || teamTwo?.name == "nil" || teamTwo?.name == nil {
                             teamTwoLabel.text = "BYE"
                             teamTwoLabel.textColor = UIColor.black
+							bracketCell.teamOneWinsLabel.text = "1"
+							bracketCell.setTeamOneWinner()
                         } else {
                             teamTwoLabel.text = teamTwo?.name
 							teamOneLabel.textColor = UIColor.white
 							teamTwoLabel.textColor = UIColor.white
                         }
                     } else {
-                        teamOneLabel.text = "TBD"
-                        teamTwoLabel.text = "TBD"
 						teamOneLabel.textColor = UIColor.black
 						teamTwoLabel.textColor = UIColor.black
                     }
                 }
                 
                 // tap recognizer
-				// only set up if user can edit
-				if !tournament.isReadOnly {
-                	let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
-                	self.view.addGestureRecognizer(gesture)
-				}
+				let gesture = UITapGestureRecognizer(target: self, action: #selector(self.matchTouched(sender:)))
+				self.view.addGestureRecognizer(gesture)
             }
         }
 	
@@ -231,8 +219,6 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     
     // sets position of bracket cells for each subsequent match up
     // get bracketCells[x].frame to get x/y position, then set next bracketCells accordingly
-    
-    // matchups still are correct, but the display is wrong.
     func createAdditionalBracketCells() {
 		if roundCount < 2 { return }
 		
@@ -243,7 +229,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                     var coord = (x: 0, y: 0)
                     var yPos = 0
                     var xPos = 0
-                    var prevCells = [UIView]()
+                    var prevCells = [BracketMatchCell]()
                     
                     for bracketView in bracketDict.keys {
                         coord = bracketDict[bracketView]!
@@ -280,26 +266,13 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                             yPos = midPoint + maxY - 50
                         }
                         
-                        let bracketCell = UIView(frame: CGRect(x: xPos, y: yPos, width: bracketCellWidth, height: 100))
-                        bracketCell.backgroundColor = UIColor.darkGray
+						let bracketCell = BracketMatchCell(frame: CGRect(x: xPos, y: yPos, width: BracketMatchCell.width, height: BracketMatchCell.height))
                         
                         bracketCells.append(bracketCell)
                         
                         let bracketPos = (x: round, y: game)
                         bracketDict[bracketCell] = bracketPos
-                        
-                        // create team labels inside the cell
-                        let teamOneLabel = UILabel(frame: CGRect(x: 8, y: 0, width: labelWidth, height: 50))
-                        let teamTwoLabel = UILabel(frame: CGRect(x: 8, y: 50, width: labelWidth, height: 50))
-                        
-                        teamOneLabel.textColor = UIColor.black
-                        teamTwoLabel.textColor = UIColor.black
-                        teamOneLabel.text = "TBD"
-                        teamTwoLabel.text = "TBD"
-                        
-                        // add ui labels to cell
-                        bracketCell.addSubview(teamOneLabel)
-                        bracketCell.addSubview(teamTwoLabel)
+						
                         scrollView.addSubview(bracketCell)
 						
                         // tap recognizer
@@ -319,25 +292,19 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     func createWinnerCell() {
 		if bracketCells.count > 0 && bracketDict.count > 0 {
 			let prevCell = bracketCells.last!
-			let bracketCell = UIView(frame: CGRect(x: prevCell.frame.maxX + 20, y: prevCell.frame.minY + 25, width: 252, height: 50))
-			bracketCell.backgroundColor = UIColor.darkGray
+			let width = CGFloat(BracketMatchCell.width)
+			let height = CGFloat(BracketMatchCell.height)
+			
+			let bracketCell = BracketMatchCell(frame: CGRect(x: prevCell.frame.maxX + 20, y: prevCell.frame.minY, width: width, height: height))
 			
 			bracketCells.append(bracketCell)
 			let bracketPos = (x: roundCount + 1, y: 1)
 			bracketDict[bracketCell] = bracketPos
 			
-			// create team labels inside the cell
-			// width of 8 less than the winner cell's width
-			let teamOneLabel = UILabel(frame: CGRect(x: 8, y: 0, width: 244, height: 50))
+			bracketCell.setWinnerCell(isWinnerCell: true)
 			
-			// add ui labels to cell
-			bracketCell.addSubview(teamOneLabel)
 			scrollView.addSubview(bracketCell)
 			self.view.addSubview(scrollView)
-			
-			teamOneLabel.text = "TBD"
-			teamOneLabel.textColor = UIColor.black
-			
 			
 			updateBracketView()
 			//grab bracketCells.last OR this one cell to get the first RIGHT a bracket should be.
@@ -356,7 +323,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
         
         for bracketView in bracketDict.keys {
             coord = bracketDict[bracketView]!
-            
+			
             if coord.x >= 1 {
                 // check if we have a matchup with these coords to fill in teams
                 for team in tournament.teamList {
@@ -364,28 +331,31 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                     if team.bracketRounds.count >= 1 && team.bracketRounds.contains(coord.x) &&
                         team.bracketVerticalPositions.count > coord.x - 1 &&
                         team.bracketVerticalPositions[coord.x - 1] == (coord.y) {
-						
-						var textLabelPos = 0
+						var teamLabel: UILabel
                         // this team belongs in this cell!
                         if isTeamOnBottomOfBracketCell(team: team, currentRound: coord.x) {
-							textLabelPos = 1
+							teamLabel = bracketView.teamTwoLabel
+							
+							// this means that teamTwo won, color the cell accordingly
+							// if they don't have enough wins, they could have lost here.
+							if team.wins >= coord.x {
+								bracketView.setTeamTwoWinner()
+							} else {
+								bracketView.teamTwoWinnerBackground.backgroundColor = UIColor.darkGray
+							}
 						} else {
-							textLabelPos = 0
+							teamLabel = bracketView.teamOneLabel
+							
+							// this means that teamOne won, color the cell accordingly
+							// if they don't have enough wins, they could have lost here.
+							if team.wins >= coord.x {
+								bracketView.setTeamOneWinner()
+							} else {
+								bracketView.teamOneWinnerBackground.backgroundColor = UIColor.darkGray
+							}
 						}
 						
-						// has two subviews of labels, team one and team two
-						let teamLabel = bracketView.subviews[textLabelPos] as! UILabel
 						teamLabel.text = team.name
-						
-						// this means that the team moved on, color the cell accordingly
-						// if they don't have enough wins, they could have lost here.
-						if team.wins >= coord.x {
-							teamLabel.textColor = UIColor.yellow
-						} else if team.losses > 0 {
-							teamLabel.textColor = UIColor.black
-						} else {
-							teamLabel.textColor = UIColor.white
-						}
                     }
                 }
             }
@@ -406,17 +376,53 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
                     }
                 }
                 
-                let teamLabel = bracketView.subviews[0] as! UILabel
+                let teamLabel = bracketView.teamOneLabel!
                 
                 if nonElimTeamsCount == 1 && nonElimTeamName != "null" {
                     teamLabel.text = nonElimTeamName
-                    teamLabel.textColor = UIColor.yellow
+                    teamLabel.textColor = UIColor.white
                 }
             }
         }
 		
+		updateBracketCellWinsText()
 		activityIndicator?.stopAnimating()
     }
+	
+	// Find the match where both teams played and then find out how many games each team won.
+	func updateBracketCellWinsText() {
+		
+		for bracketView in bracketDict.keys {
+			let teamOneName = bracketView.teamOneLabel.text
+			let teamTwoName = bracketView.teamTwoLabel.text
+			
+			if teamOneName != nil && (teamOneName?.count)! > 0 && teamOneName != "BYE" &&
+				teamTwoName != nil && (teamTwoName?.count)! > 0 && teamTwoName != "BYE" {
+				
+				for matchup in tournament.matchupList {
+					if (matchup.teamOne?.name == teamOneName || matchup.teamOne?.name == teamTwoName) &&
+						(matchup.teamTwo?.name == teamOneName || matchup.teamTwo?.name == teamTwoName) {
+						
+						var teamOneWins = 0
+						var teamTwoWins = 0
+						
+						for index in 0...2 {
+							if matchup.teamOneScores[index] > matchup.teamTwoScores[index] {
+								teamOneWins += 1
+							} else if matchup.teamTwoScores[index] > matchup.teamOneScores[index] {
+								teamTwoWins += 1
+							}
+						}
+						
+						bracketView.teamOneWinsLabel.text = "\(teamOneWins)"
+						bracketView.teamTwoWinsLabel.text = "\(teamTwoWins)"
+						
+						break
+					}
+				}
+			}
+		}
+	}
     
     func isTeamOnBottomOfBracketCell(team: Team, currentRound: Int) -> Bool {
         if currentRound > 1 {
@@ -454,19 +460,20 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		let touchLocation = sender.location(ofTouch: 0, in: self.view)
 		
 		for cell in bracketCells {
+			let bracketCell = cell
 			// Convert the location of the obstacle view to this view controller's view coordinate system
-			let viewFrame = self.view.convert(cell.frame, from: cell.superview)
+			let viewFrame = self.view.convert(bracketCell.frame, from: bracketCell.superview)
 			
 			// Check if the touch is inside the obstacle view
-			if viewFrame.contains(touchLocation) && cell.subviews.count >= 2 {
+			if viewFrame.contains(touchLocation) {
 				if(!tournament.isStarted) {
 					checkStartTournament()
 				} else {
-					let teamOneLabel = cell.subviews[0] as! UILabel
-					let teamTwoLabel = cell.subviews[1] as! UILabel
+					let teamOneLabel = bracketCell.teamOneLabel!
+					let teamTwoLabel = bracketCell.teamTwoLabel!
 					
-					if teamOneLabel.text != "BYE" && teamOneLabel.text != "TBD" &&
-						teamTwoLabel.text != "BYE" && teamTwoLabel.text != "TBD" &&
+					if teamOneLabel.text != "BYE" && teamOneLabel.text != "" &&
+						teamTwoLabel.text != "BYE" && teamTwoLabel.text != "" &&
 						teamOneLabel.text != teamTwoLabel.text {
 						
 						for matchup in tournament.matchupList {

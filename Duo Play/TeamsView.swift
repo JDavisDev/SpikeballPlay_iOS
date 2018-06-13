@@ -45,6 +45,12 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 		updateTeamList()
 	}
 	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		
+		updateTeamList()
+	}
+	
 	func updateTeamList() {
 		teamList.removeAll()
 		
@@ -65,13 +71,14 @@ class TeamsView: UIViewController, UITableViewDataSource, UITableViewDelegate, U
 	@objc func teamLongPress(_ sender: UILongPressGestureRecognizer) {
 		var selectedTeam = Team()
 		
-		if let label = sender.view?.subviews[0].subviews[0] as? UILabel {
-			let name = label.text
-			selectedTeam = teamsController.getTeamByName(name: name!, tournamentId: tournament.id)!
+		guard let label = sender.view?.subviews[0].subviews[0] as? UILabel else { return }
+		guard let name = label.text else { return }
+		if tournament.id > 0 {
+			selectedTeam = teamsController.getTeamByName(name: name, tournamentId: tournament.id)!
 		} else {
 			return
 		}
-		
+
 		showMoveTeamDialog(selectedTeam: selectedTeam)
 	}
 	

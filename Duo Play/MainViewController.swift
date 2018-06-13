@@ -27,6 +27,21 @@ class ViewController: UIViewController, MFMailComposeViewControllerDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         
         initButtonStyles()
+		
+//		//only apply the blur if the user hasn't disabled transparency effects
+//		if !UIAccessibilityIsReduceTransparencyEnabled() {
+//			view.backgroundColor = .clear
+//			
+//			let blurEffect = UIBlurEffect(style: .dark)
+//			let blurEffectView = UIVisualEffectView(effect: blurEffect)
+//			//always fill the view
+//			blurEffectView.frame = self.view.bounds
+//			blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//			
+//			view.addSubview(blurEffectView) //if you have more UIViews, use an insertSubview API to place it where needed
+//		} else {
+//			view.backgroundColor = .black
+//		}
     }
 	
 	override func viewWillAppear(_ animated: Bool) {

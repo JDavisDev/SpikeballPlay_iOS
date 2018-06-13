@@ -149,9 +149,9 @@ class PoolsController {
 			var array = Array(tournament.teamList)
 			tournament.teamList.removeAll()
 			
-			// seed the teams here based on wins, then point diff, then name
+			// seed the teams here based on win %, then point diff, then name
 			array.sort {
-				if $0.wins == $1.wins {
+				if $0.wins/($0.wins + $0.losses) == $1.wins/($1.wins + $1.losses) {
 					// if tournament has started, sort by wins, then seed.
 					if tournament.progress_meter <= 0 {
 						if ($0.pointsFor - $0.pointsAgainst) == ($1.pointsFor - $1.pointsAgainst) {
@@ -163,7 +163,7 @@ class PoolsController {
 						return $0.seed < $1.seed
 					}
 				} else {
-					return $0.wins > $1.wins
+					return $0.wins/($0.wins + $0.losses) > $1.wins/($1.wins + $1.losses)
 				}
 			}
 			

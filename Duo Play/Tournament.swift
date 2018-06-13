@@ -22,11 +22,9 @@ class Tournament : Object {
     @objc dynamic public var isPrivate = false
     @objc dynamic public var state = ""
     @objc dynamic public var progress_meter = 0
-    @objc dynamic public var game_id = 0
     @objc dynamic public var participants_count = 0
     @objc dynamic public var full_challonge_url = ""
     @objc dynamic public var live_image_url = ""
-    @objc dynamic public var teams = true
     @objc dynamic public var isPoolPlay = false
     @objc dynamic public var isQuickReport = false
 	@objc dynamic public var isPoolPlayFinished = false
@@ -70,6 +68,7 @@ class Tournament : Object {
 		isReadOnly = dictionary["is_read_only"] as? Bool ?? false
 		created_date = dictionary["created_date"] as? String ?? ""
 		updated_date = dictionary["updated_date"] as? String ?? ""
+		isOnline = dictionary["is_online"] as? Bool ?? false
 	}
 	
 	// returned to post to firebase
@@ -92,7 +91,8 @@ class Tournament : Object {
 			"user_id": userID,
 			"created_date":created_date,
 			"updated_date":updated_date,
-			"is_read_only":isReadOnly
+			"is_read_only":isReadOnly,
+			"is_online":isOnline
 		]
 	}
 }
