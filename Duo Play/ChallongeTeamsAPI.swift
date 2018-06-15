@@ -35,7 +35,6 @@ class ChallongeTeamsAPI {
 				do {
 					if error != nil || data == nil {
 						self.delegate?.didBulkAddParticipants(participants: nil, success: false)
-						
 					}
 					
 					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
@@ -47,7 +46,7 @@ class ChallongeTeamsAPI {
 							}
 						}
 						
-						if participants.count > 0 {
+						if participants.count <= 0 {
 							self.delegate?.didBulkAddParticipants(participants: nil, success: false)
 						} else {
 							// send to delegate to parse and save that dude

@@ -76,6 +76,8 @@ class TournamentLandingViewController: UIViewController, TournamentDAODelegate, 
 			activityIndicator?.startAnimating()
 			activityIndicator?.isHidden = false
 			tournamentChallongeDao.createChallongeTournament(tournament: tournament)
+		} else {
+			saveToChallongeButton.isHidden = true
 		}
 	}
 	

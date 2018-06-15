@@ -32,7 +32,12 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
     @IBOutlet weak var teamTwoGameOneScoreLabel: UILabel!
     @IBOutlet weak var teamTwoGameTwoScoreLabel: UILabel!
     @IBOutlet weak var teamTwoGameThreeScoreLabel: UILabel!
-    
+	
+	// saved match values, pending challonge calls.
+	var savedTeamOneScores = [Int]()
+	var savedTeamTwoScores = [Int]()
+	var savedNumOfGamesPlayed = 0
+	
     override func viewDidLoad() {
 		super.viewDidLoad()
 		checkSelectedMatchup()
@@ -169,8 +174,6 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 			return
 		}
 		
-		let reporterController = BracketController()
-		
 		var teamOneScores = [Int]()
 		teamOneScores.append(teamOneGameOneScore!)
 		teamOneScores.append(teamOneGameTwoScore!)
@@ -206,21 +209,32 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 									  preferredStyle: .alert)
 		
 		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-			// move on
+			// save data and then report the match later
+			try! self.realm.write {
+				self.savedTeamOneScores = teamOneScores
+				self.savedTeamTwoScores = teamTwoScores
+				self.savedNumOfGamesPlayed = numOfGamesPlayed
+				self.selectedMatchup.teamOneScores.removeAll()
+				self.selectedMatchup.teamTwoScores.removeAll()
+				self.selectedMatchup.teamOneScores.append(objectsIn: teamOneScores)
+				self.selectedMatchup.teamTwoScores.append(objectsIn: teamTwoScores)
+			}
 			
 			
-			reporterController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: numOfGamesPlayed, teamOneScores: teamOneScores, teamTwoScores: teamTwoScores)
-			
-			if (self.tournament?.isOnline)! && !(self.tournament?.isReadOnly)! && (self.tournament?.live_image_url.count)! > 0 {
+			// online, not read only, and the tournament is already saved to challonge via live_image_url
+			if (self.tournament?.isOnline)!
+				&& !(self.tournament?.isReadOnly)! &&
+				(self.tournament?.live_image_url.count)! > 0 {
+				
 				self.challongeMatchupAPI.delegate = self
 				self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: self.selectedMatchup, winnerId: winnerId)
+			} else {
+				self.reportMatch()
 			}
 			
 			Answers.logCustomEvent(withName: "Bracket Match Reported",
 								   customAttributes: [
 									"Games Submitted": numOfGamesPlayed])
-			
-			self.navigationController?.popViewController(animated: true)
 		}))
 		
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
@@ -231,10 +245,38 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 		present(alert, animated: true, completion: nil)
 	}
 	
+	// reports the match to our local database
+	func reportMatch() {
+		let reporterController = BracketController()
+		
+		reporterController.reportMatch(selectedMatchup: self.selectedMatchup, numOfGamesPlayed: savedNumOfGamesPlayed, teamOneScores: savedTeamOneScores, teamTwoScores: savedTeamTwoScores)
+		
+		self.navigationController?.popViewController(animated: true)
+	}
+	
+	
+	// Challonge matchup delegate methods
+	
+	func didPostGameToChallonge(success: Bool) {
+		DispatchQueue.main.sync {
+			if success {
+				showSuccessAlert(title: "Success", message: "Challonge match submitted")
+				reportMatch()
+			} else {
+				// we failed to post
+				// refetch match ups and try again
+				showTryAgainAlert(title: "Error", message: "Failed to post game to Challonge. Try Again? Click No to move on without Challonge.")
+			}
+		}
+	}
+	
 	func didGetChallongeMatchups(challongeMatchups: [[String : Any]]) {
 		// re parse the tournament matches and save!
 		DispatchQueue.main.sync {
 			parseChallongeMatchups(tournament: tournament!, challongeMatchups: challongeMatchups)
+			submitGame()
+			// maybe add a retry counter here? if it fails once or twice, allow them to rety, otherwise,
+			// move on...
 		}
 	}
 	
@@ -248,6 +290,7 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 				
 				// if our local match is reported but the winner id is 0/nil
 				// re report that match to challonge.
+				// either winnerid is 0 or it was null in the dictObject
 				if localMatchup.isReported {
 					if let winnerId = dictObject["winner_id"] as? Int {
 						if  winnerId <= 0 {
@@ -332,6 +375,38 @@ class BracketReporterViewController: UIViewController, ChallongeMatchupAPIDelega
 	}
 	
 	func showAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action: UIAlertAction!) in
+			// ok
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func showTryAgainAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message, preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: {(action: UIAlertAction!) in
+			self.challongeMatchupAPI.getMatchupsForTournament(tournament: self.tournament!)
+		}))
+		
+		alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (action: UIAlertAction!) in
+			// move on without challonge
+			try! self.realm.write {
+				self.tournament?.isOnline = false
+			}
+			
+			self.reportMatch()
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
+	
+	func showSuccessAlert(title: String, message: String) {
 		let alert = UIAlertController(title: title,
 									  message: message, preferredStyle: .alert)
 		

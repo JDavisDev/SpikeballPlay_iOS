@@ -303,6 +303,13 @@ class TournamentSettingsView: UIViewController, UIPickerViewDelegate, UIPickerVi
 		}
 	}
 	
+	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+		let titleData = tournamentStyles[row]
+		let myTitle = NSAttributedString(string: titleData, attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+
+		return myTitle
+	}
+	
 	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}

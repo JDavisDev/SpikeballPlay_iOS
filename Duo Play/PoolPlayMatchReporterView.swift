@@ -77,22 +77,27 @@ class PoolPlayMatchReporterView : UIViewController {
         let teamTwoGameThreeScore = Int(teamTwoGameThreeScoreLabel.text!)
         
         // Error checking the match before submitting
-        
-        // score isn't the same and ahead by atleast 2
-        if teamOneGameOneScore != teamTwoGameOneScore {
-            // difference of atleast one, all set.
-        } else {
-            //scores match
-            let alert = UIAlertController(title: "Score Error",
-                                          message: "Game One scores cannot match",
-                                          preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
-                return
-            }))
-            
-            present(alert, animated: true, completion: nil)
-        }
+		// validate and confirm game
+		if teamOneGameOneScore != teamTwoGameOneScore {
+			numOfGamesPlayed += 1
+		} else  {
+			showAlert(title: "Error", message: "Game scores cannot match.")
+			return
+		}
+		
+		if teamOneGameTwoScore != teamTwoGameTwoScore {
+			numOfGamesPlayed += 1
+		} else if teamOneGameTwoScore != 0 {
+			showAlert(title: "Error", message: "Game scores cannot match.")
+			return
+		}
+		
+		if teamOneGameThreeScore != teamTwoGameThreeScore {
+			numOfGamesPlayed += 1
+		} else if teamOneGameThreeScore != 0 {
+			showAlert(title: "Error", message: "Game scores cannot match.")
+			return
+		}
         
         // confirm game
         if teamOneGameTwoScore != teamTwoGameTwoScore {
@@ -102,6 +107,37 @@ class PoolPlayMatchReporterView : UIViewController {
         if teamOneGameThreeScore != teamTwoGameThreeScore {
             numOfGamesPlayed += 1
         }
+		
+		let reporterController = PoolPlayMatchReporterController()
+		
+		var teamOneScores = [Int]()
+		teamOneScores.append(teamOneGameOneScore!)
+		teamOneScores.append(teamOneGameTwoScore!)
+		teamOneScores.append(teamOneGameThreeScore!)
+		
+		var teamTwoScores = [Int]()
+		teamTwoScores.append(teamTwoGameOneScore!)
+		teamTwoScores.append(teamTwoGameTwoScore!)
+		teamTwoScores.append(teamTwoGameThreeScore!)
+		
+		var teamOneWins = 0
+		var teamTwoWins = 0
+		for score in 0..<teamOneScores.count {
+			if teamOneScores[score] > teamTwoScores[score] {
+				teamOneWins += 1
+			} else if teamTwoScores[score] > teamOneScores[score] {
+				teamTwoWins += 1
+			}
+		}
+		
+		var winnerId = 0
+		if teamOneWins > teamTwoWins {
+			winnerId = (self.selectedMatchup.teamOne?.challonge_participant_id)!
+		} else if teamOneWins == teamTwoWins {
+			self.showAlert(title: "Error", message: "There is no clear winner of this match.")
+		} else {
+			winnerId = (self.selectedMatchup.teamTwo?.challonge_participant_id)!
+		}
         
         let message = "Games to report: \(numOfGamesPlayed) \n Please set scores to 0 if you do not want the game reported."
         
@@ -110,17 +146,6 @@ class PoolPlayMatchReporterView : UIViewController {
         
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
             // move on
-            let reporterController = PoolPlayMatchReporterController()
-            var teamOneScores = [Int]()
-            teamOneScores.append(teamOneGameOneScore!)
-            teamOneScores.append(teamOneGameTwoScore!)
-            teamOneScores.append(teamOneGameThreeScore!)
-            
-            var teamTwoScores = [Int]()
-            teamTwoScores.append(teamTwoGameOneScore!)
-            teamTwoScores.append(teamTwoGameTwoScore!)
-            teamTwoScores.append(teamTwoGameThreeScore!)
-            
 			reporterController.reportMatch(currentPool: self.currentPool,
 										   selectedMatchup: self.selectedMatchup,
 										   numOfGamesPlayed: numOfGamesPlayed,
@@ -137,4 +162,16 @@ class PoolPlayMatchReporterView : UIViewController {
         
         present(alert, animated: true, completion: nil)
     }
+	
+	func showAlert(title: String, message: String) {
+		let alert = UIAlertController(title: title,
+									  message: message,
+									  preferredStyle: .alert)
+		
+		alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action: UIAlertAction!) in
+			return
+		}))
+		
+		present(alert, animated: true, completion: nil)
+	}
 }

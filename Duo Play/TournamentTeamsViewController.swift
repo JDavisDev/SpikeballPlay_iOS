@@ -40,13 +40,18 @@ class TournamentTeamsViewController: UIViewController, UITableViewDataSource,
 							   customAttributes: [:])
 		
 		if tournament.isStarted || tournament.isReadOnly {
-			editSeedsButton.isEnabled = false
-			addTeamButton.isEnabled = false
+			editSeedsButton.isHidden = true
+			addTeamButton.isHidden = true
 		}
 	}
     
     @IBAction func addTeam(_ sender: UIButton) {
         // check if tournament has started, only add teams if it has not.
+		if editSeedsButton.titleLabel?.text == "Save Seeds" {
+			teamsTableView.setEditing(false, animated: true)
+			editSeedsButton.setTitle("Edit Seeds", for: .normal)
+		}
+		
         if !tournament.isStarted && !tournament.isReadOnly {
             teamsTableView.setEditing(false, animated: true)
             // let's present an alert to enter a team. cleaner ui

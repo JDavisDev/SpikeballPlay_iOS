@@ -13,7 +13,7 @@ class ChallongeTournamentStarter : ChallongeTeamsAPIDelegate,
 ChallongeTournamentAPIDelegate {
 	
 	var delegate: ChallongeTournamentStarterDelegate?
-	
+	let challongeMatchupAPI = ChallongeMatchupAPI()
 	let realm = try! Realm()
 	var tournament: Tournament?
 	var teamsChallongeSavedCount = 0
@@ -39,8 +39,8 @@ ChallongeTournamentAPIDelegate {
 						let onlineTeam = Team(dictionary: team)
 						let realmTeam = getRealmTeam(tournamentId: (self.tournament?.id)!, teamName: team["name"] as! String)
 						// update the new team with the challonge team data
-						realmTeam.challonge_participant_id = onlineTeam.id
-						realmTeam.challonge_tournament_id = onlineTeam.tournament_id
+						realmTeam?.challonge_participant_id = onlineTeam.id
+						realmTeam?.challonge_tournament_id = onlineTeam.tournament_id
 						teamsChallongeSavedCount += 1
 					}
 				}
@@ -54,25 +54,47 @@ ChallongeTournamentAPIDelegate {
 			}
 		} else {
 			DispatchQueue.main.sync {
+				let tournamentChallongeAPI = ChallongeTournamentAPI()
+				tournamentChallongeAPI.delegate = self
+				tournamentChallongeAPI.getParticipantsInTournament(tournament: tournament!)
+			}
+		}
+	}
+	
+	func didGetParticipantsFromTournament(participants: [[String : Any]]?, success: Bool) {
+		if success {
+			//will have to fetch realm objects to match returned participants
+			DispatchQueue.main.sync {
+				if participants != nil && (participants?.count)! >= teamCount {
+					// all finished, start tournament
+					let tournamentChallongeAPI = ChallongeTournamentAPI()
+					tournamentChallongeAPI.delegate = self
+					tournamentChallongeAPI.startTournament(tournament: tournament!)
+				} else {
+					self.delegate?.didFinishStartingTournament(success: false)
+				}
+			}
+		} else {
+			DispatchQueue.main.sync {
 				self.delegate?.didFinishStartingTournament(success: false)
 			}
 		}
 	}
 	
-	func getRealmTeam(tournamentId: Int, teamName: String) -> Team {
+	func getRealmTeam(tournamentId: Int, teamName: String) -> Team? {
 		let result = realm.objects(Team.self).filter("tournament_id = \(tournamentId) AND name = '\(teamName)'")
 		if result.count > 0 {
 			return result.first!
 		} else {
 			print("Cannot fetch team from realm")
-			return Team()
+			return nil
 		}
 	}
 	
 	// challonge start challonge delegate
 	// will return the started tournament AND included match ups
-	func didStartChallongeTournament(tournament: Tournament, challongeMatchups: [[String: Any]]?, success: Bool) {
-		if success && teamsChallongeSavedCount >= teamCount {
+	func didStartChallongeTournament(tournament: Tournament, challongeMatchups: [[String: Any]], success: Bool) {
+		if success && challongeMatchups.count == teamCount-1 {
 			DispatchQueue.main.sync {
 				parseChallongeMatchups(tournament: tournament, challongeMatchups: challongeMatchups)
 				self.delegate?.didFinishStartingTournament(success: success)
@@ -93,9 +115,44 @@ ChallongeTournamentAPIDelegate {
 				localMatchup.challongeId = dictObject["id"] as! Int
 				localMatchup.tournament_id = dictObject["tournament_id"] as! Int
 				
+				// if our local match is reported but the winner id is 0/nil
+				// re report that match to challonge.
+				// either winnerid is 0 or it was null in the dictObject
+				if localMatchup.isReported {
+					if let winnerId = dictObject["winner_id"] as? Int {
+						if  winnerId <= 0 {
+							self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: localMatchup, winnerId: winnerId)
+						}
+					} else {
+						let id = getMatchupWinnerId(matchup: localMatchup)
+						self.challongeMatchupAPI.updateChallongeMatch(tournament: self.tournament!, match: localMatchup, winnerId: id)
+					}
+				}
+				
 				realm.add(localMatchup, update: true)
 			}
 		}
+	}
+	
+	func getMatchupWinnerId(matchup: BracketMatchup) -> Int {
+		var winnerId = 0
+		var teamOneWins = 0
+		var teamTwoWins = 0
+		for score in 0..<matchup.teamOneScores.count {
+			if matchup.teamOneScores[score] > matchup.teamTwoScores[score] {
+				teamOneWins += 1
+			} else if matchup.teamTwoScores[score] > matchup.teamOneScores[score] {
+				teamTwoWins += 1
+			}
+		}
+		
+		if teamOneWins > teamTwoWins {
+			winnerId = (matchup.teamOne?.challonge_participant_id)!
+		} else {
+			winnerId = (matchup.teamTwo?.challonge_participant_id)!
+		}
+		
+		return winnerId
 	}
 	
 	func getRealmMatchupFromChallongeData(tournament: Tournament, data: [String: Any]) -> BracketMatchup? {
@@ -120,7 +177,7 @@ ChallongeTournamentAPIDelegate {
 			return result.first!
 		} else {
 			print("Cannot fetch bracket team from challonge")
-			return Team()
+			return nil
 		}
 	}
 	

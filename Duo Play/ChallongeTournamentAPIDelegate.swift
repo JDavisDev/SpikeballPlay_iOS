@@ -11,4 +11,5 @@ import Foundation
 @objc protocol ChallongeTournamentAPIDelegate {
 	@objc optional func didCreateChallongeTournament(onlineTournament: [String: Any]?, localTournament: Tournament?, success: Bool)
 	@objc optional func didStartChallongeTournament(tournament: Tournament, challongeMatchups: [[String: Any]], success: Bool)
+	@objc optional func didGetParticipantsFromTournament(participants: [[String:Any]]?, success: Bool)
 }

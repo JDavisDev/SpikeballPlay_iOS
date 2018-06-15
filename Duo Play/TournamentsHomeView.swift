@@ -129,6 +129,7 @@ class TournamentsHomeView: UIViewController, UITableViewDataSource, UITableViewD
 		tournament.teamList = List<Team>()
 		tournament.url = getRandomStringForUrl(length: 12)
 		tournament.userID = Auth.auth().currentUser?.uid ?? Analytics.appInstanceID()
+		tournament.isOnline = true
 		
 		let date = Date()
 		let calendar = Calendar.autoupdatingCurrent

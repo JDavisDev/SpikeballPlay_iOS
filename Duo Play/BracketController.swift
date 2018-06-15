@@ -193,20 +193,13 @@ class BracketController {
 			}
 			
 			for matchup in tournament.matchupList {
-				if matchup.isReported {
+				if matchup.isReported && matchup.teamOne != nil && matchup.teamTwo != nil {
 					currentPoints += pointsPerMatchup
 				}
 			}
 			
-			// BYE matchups are counted as reported.
-			// if we ONLY have byes reported, set to zero
-			// when another is reported, we can count them in the progress
-			if getByeCount() == Int(round(currentPoints/pointsPerMatchup)) {
-				tournamentProgress = 0
-			} else {
-				let progress = Int(round(currentPoints))
-				tournamentProgress = progress
-			}
+			let progress = Int(round(currentPoints))
+			tournamentProgress = progress
 		} else {
         	tournamentProgress = 0
 		}
@@ -306,8 +299,8 @@ class BracketController {
 			for team in availableTeams {
 				var canContinue = true
 				for matchup in tournament.matchupList {
-					if !matchup.isReported && matchup.teamOne?.seed == team.seed ||
-						matchup.teamTwo?.seed == team.seed {
+					if ((!matchup.isReported) && (matchup.teamOne?.seed == team.seed ||
+						matchup.teamTwo?.seed == team.seed)) {
 						canContinue = false
 						break
 					}
@@ -423,7 +416,6 @@ class BracketController {
     
     func reportMatch(selectedMatchup: BracketMatchup, numOfGamesPlayed: Int, teamOneScores: [Int], teamTwoScores: [Int]) {
         // save the match!
-		var winnerId: Int = 0
 		
         try! realm.write {
 			selectedMatchup.isReported = true
@@ -441,12 +433,10 @@ class BracketController {
 				selectedMatchup.teamOne?.wins += 1
                 selectedMatchup.teamTwo?.losses += 1
 				selectedMatchup.teamOne?.bracketRounds.append(selectedMatchup.round + 1)
-				winnerId = (selectedMatchup.teamOne?.challonge_participant_id)!
 				advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamOne!)
             } else {
 				selectedMatchup.teamOne?.losses += 1
                 selectedMatchup.teamTwo?.wins += 1
-				winnerId = (selectedMatchup.teamTwo?.challonge_participant_id)!
                 selectedMatchup.teamTwo?.bracketRounds.append(selectedMatchup.round + 1)
                 advanceTeamToNextBracketPosition(winningTeam: selectedMatchup.teamTwo!)
             }
@@ -460,9 +450,6 @@ class BracketController {
 			selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[1]
 			selectedMatchup.teamOne?.pointsAgainst += teamTwoScores[2]
             
-            selectedMatchup.teamOneScores.append(objectsIn: teamOneScores)
-            selectedMatchup.teamTwoScores.append(objectsIn: teamTwoScores)
-            
             selectedMatchup.teamTwo?.pointsAgainst += teamOneScores[0]
             selectedMatchup.teamTwo?.pointsAgainst += teamOneScores[1]
             selectedMatchup.teamTwo?.pointsAgainst += teamOneScores[2]
@@ -470,7 +457,8 @@ class BracketController {
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[0]
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[1]
             selectedMatchup.teamTwo?.pointsFor += teamTwoScores[2]
-            
+			
+			// we appended the scores to the actual matchup in the reporter view controller
             selectedMatchup.isReported = true
         }
 		
@@ -485,13 +473,6 @@ class BracketController {
 			let teamFirebaseDao = TeamFirebaseDao()
 			teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamOne!)
 			teamFirebaseDao.updateFirebaseTeam(team: selectedMatchup.teamTwo!)
-			
-			// update challonge match THEN fetch new ones.
-			// it returns all matchups with given participant id, but if it's null, I dont' save it.
-			// so get them again and re pair them if we have new ones.
-			let challongeMatchAPI = ChallongeMatchupAPI()
-			//challongeMatchAPI.delegate = self
-			challongeMatchAPI.updateChallongeMatch(tournament: tournament, match: selectedMatchup, winnerId: winnerId)
 		}
 	}
     

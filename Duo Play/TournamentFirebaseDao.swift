@@ -122,7 +122,7 @@ class TournamentFirebaseDao : TournamentParserDelegate {
 		}
 		
 		if !tournament.isReadOnly {
-			fireDB.collection("tournaments").document("\(year).\(month).\(day): \(tournament.name) - \(tournament.id)")
+			fireDB.collection("tournaments").document("\(tournament.created_date): \(tournament.name) - \(tournament.id)")
 			.updateData(tournament.dictionary)
 		}
 	}

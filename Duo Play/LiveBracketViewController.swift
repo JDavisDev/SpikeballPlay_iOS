@@ -35,7 +35,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
     var roundCount = 0
     var byeCount = 0
     var teamCount = 0
-	var frameWidth: CGFloat = 0
+	var frameWidth: Int = 0
+	var frameHeight: Int = 0
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -46,6 +47,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 							   customAttributes: [:])
 		
 		Analytics.logEvent("Live_Bracket_View_Viewed", parameters: nil)
+
     }
 	
 	func initBracketView() {
@@ -55,20 +57,21 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		self.view.backgroundColor = UIColor.black
 		self.view.addSubview(scrollView)
 		bracketController.bracketControllerDelegate = self
-		//challongeMatchupAPI.delegate = self
 		self.scrollView.delegate = self
 		self.scrollView.addGestureRecognizer(pinch)
 		pinch = UIPinchGestureRecognizer(target: self, action: #selector(self.pinch(sender:)))
 		self.scrollView.minimumZoomScale = 1
 		self.scrollView.maximumZoomScale = 10
 		self.scrollView.isUserInteractionEnabled = true
-		self.scrollView.contentSize = CGSize(width: 10000, height: 10000)
+		self.scrollView.contentSize = CGSize(width: 5000, height: 5000)
 		
 		tournament = TournamentController.getCurrentTournament()
 		
 		// every view, let's refetch and redraw.
 		// make this less dependent on other functions updating things.
 		createBracket()
+		//self.scrollView.sizeThatFits(CGSize(width: frameWidth, height: frameHeight))
+		
 	}
 	
 	func createBracket() {
@@ -104,6 +107,8 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		} else {
 			createBracketView()
 		}
+		
+		self.scrollView.contentSize = CGSize(width: frameWidth, height: frameHeight)
 	}
 	
 	// Pinch Controls
@@ -183,9 +188,9 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 						// check if the tournament is synced with Challonge, update UI
 						if tournament.matchupList[game - 1].challongeId != 0 {
 							//bracketCell.layer.shadowColor
-							bracketCell.layer.shadowOpacity = 1
-							bracketCell.layer.shadowOffset = CGSize.zero
-							bracketCell.layer.shadowRadius = 6
+//							bracketCell.layer.shadowOpacity = 1
+//							bracketCell.layer.shadowOffset = CGSize.zero
+//							bracketCell.layer.shadowRadius = 6
 						}
 						
 						teamOneLabel.text = teamOne?.name
@@ -214,7 +219,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 	
 		// grab bracketCells.last! to get the furthest DOWN cell
 		// that's the low point of our view
-		//frameWidth = bracketCells.last!.frame.maxY + 50
+		frameHeight = Int(bracketCells.last!.frame.maxY)
     }
     
     // sets position of bracket cells for each subsequent match up
@@ -308,8 +313,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 			
 			updateBracketView()
 			//grab bracketCells.last OR this one cell to get the first RIGHT a bracket should be.
-			//let height = bracketCell.frame.maxX + 50
-			//scrollView.contentSize = CGSize(width: frameWidth, height: height)
+			frameWidth = Int(bracketCell.frame.maxX)
 		}
     }
     
@@ -406,16 +410,25 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 						var teamOneWins = 0
 						var teamTwoWins = 0
 						
-						for index in 0...2 {
-							if matchup.teamOneScores[index] > matchup.teamTwoScores[index] {
-								teamOneWins += 1
-							} else if matchup.teamTwoScores[index] > matchup.teamOneScores[index] {
-								teamTwoWins += 1
+						if matchup.teamOneScores.count > 0 {
+							for index in 0..<matchup.teamOneScores.count {
+								if matchup.teamOneScores[index] > matchup.teamTwoScores[index] {
+									teamOneWins += 1
+								} else if matchup.teamTwoScores[index] > matchup.teamOneScores[index] {
+									teamTwoWins += 1
+								}
 							}
 						}
 						
-						bracketView.teamOneWinsLabel.text = "\(teamOneWins)"
-						bracketView.teamTwoWinsLabel.text = "\(teamTwoWins)"
+						// make sure our matchup.teamOne && bracketView.teamOne are the same! otherwise flip
+						if matchup.teamOne?.name == teamOneName {
+							bracketView.teamOneWinsLabel.text = "\(teamOneWins)"
+							bracketView.teamTwoWinsLabel.text = "\(teamTwoWins)"
+						} else {
+							bracketView.teamOneWinsLabel.text = "\(teamTwoWins)"
+							bracketView.teamTwoWinsLabel.text = "\(teamOneWins)"
+						}
+						
 						
 						break
 					}
@@ -555,7 +568,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 		if tournament.isOnline {
 			activityIndicator?.isHidden = false
 			activityIndicator?.startAnimating()
-		
+			showAlert(title: "Please Wait", message: "Challonge data syncing...")
 			// add teams in current order as tournament starts. will prevent later calls when editing
 			let challongeTournamentStarter = ChallongeTournamentStarter()
 			challongeTournamentStarter.delegate = self
@@ -580,6 +593,7 @@ class LiveBracketViewController: UIViewController, UIScrollViewDelegate, LiveBra
 				tournament.isStarted = true
 			}
 			
+			self.dismiss(animated: true, completion: nil)
 			updateBracketView()
 			showAlert(title: "Success", message: "Tournament started and synced with Challonge!")
 		} else {

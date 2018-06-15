@@ -48,7 +48,8 @@ class RPHistoryView : UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
         gameList = (session.gameList)
         updateHistoryList()
         historyTableView.reloadData()

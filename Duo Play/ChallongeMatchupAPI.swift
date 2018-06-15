@@ -75,14 +75,24 @@ match[winner_id]	The participant ID of the winner or "tie" if applicable (Round 
                 // Fallback on earlier versions
             }
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-				if error == nil {
+				// let's check the response to verify it was all good.
+				if error == nil  {
 					do {
-						DispatchQueue.main.sync {
-							self.getMatchupsForTournament(tournament: tournament)
+						if let httpResponse = response as? HTTPURLResponse {
+							let statusCode = httpResponse.statusCode
+							
+							if statusCode == 200 {
+								self.delegate?.didPostGameToChallonge(success: true)
+								print("Challonge match submission success")
+							} else {
+								self.delegate?.didPostGameToChallonge(success: false)
+							}
+							self.delegate?.didPostGameToChallonge(success: false)
 						}
-					} catch {
-						print("Challonge match submission error")
+						self.delegate?.didPostGameToChallonge(success: false)
 					}
+				} else {
+					self.delegate?.didPostGameToChallonge(success: false)
 				}
 			})
 			

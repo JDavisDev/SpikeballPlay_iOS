@@ -164,7 +164,6 @@ public class ChallongeTournamentAPI {
 	
 	func deleteChallongeTournament(tournament: Tournament) {
 		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
-		let personalAPIKey = ChallongeUtil.PERSONAL_API_KEY
 		let finalString = baseUrl + "tournaments/" +
 			tournament.url + ".json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY
 		
@@ -181,6 +180,56 @@ public class ChallongeTournamentAPI {
 			}
 			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
 				// eat the response?
+			})
+			
+			task.resume()
+		}
+	}
+	
+	//https://api.challonge.com/v1/tournaments/{tournament}/participants.{json|xml}
+	func getParticipantsInTournament(tournament: Tournament) {
+		var participants = [[String:Any]]()
+		
+		let baseUrl = ChallongeTournamentAPI.challongeBaseUrl
+		let finalString = baseUrl + "tournaments/" +
+			tournament.url + "/participants.json?api_key=" + ChallongeUtil.ROUNDNET_API_KEY
+		
+		let squareBracketSet = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?=:&/-._~[]")
+		
+		let urlString = finalString.addingPercentEncoding(withAllowedCharacters: squareBracketSet)
+		if let myURL = URL(string: urlString!) {
+			var request = URLRequest(url: myURL)
+			request.httpMethod = "GET"
+			let session = URLSession.shared; if #available(iOS 11.0, *) {
+				session.configuration.waitsForConnectivity = true
+			} else {
+				// Fallback on earlier versions
+			}
+			let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+				do {
+					if error != nil || data == nil {
+						self.delegate?.didGetParticipantsFromTournament!(participants: nil, success: false)
+						
+					}
+					
+					if let json = try JSONSerialization.jsonObject(with: data!) as? NSArray {
+						for obj in json {
+							participants.append(obj as! [String : Any])
+						}
+						
+						if participants.count <= 0 {
+							self.delegate?.didGetParticipantsFromTournament!(participants: nil, success: false)
+						} else {
+							// send to delegate to parse and save that dude
+							self.delegate?.didGetParticipantsFromTournament!(participants: participants, success: true)
+						}
+					} else {
+						self.delegate?.didGetParticipantsFromTournament!(participants: nil, success: false)
+					}
+				} catch {
+					print("create challonge team error")
+					self.delegate?.didGetParticipantsFromTournament!(participants: nil, success: false)
+				}
 			})
 			
 			task.resume()

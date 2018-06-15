@@ -34,8 +34,13 @@ class BracketMatchCell : UIView {
 	}
 	
 	func commonInit() {
+		let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+		let blurEffectView = UIVisualEffectView(effect: blurEffect)
+		blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		
 		Bundle.main.loadNibNamed("BracketMatchupCellView", owner: self, options: nil)
 		addSubview(contentView)
+		contentView.addSubview(blurEffectView)
 		contentView.frame = self.bounds
 		contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
 	}
